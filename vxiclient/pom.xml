@@ -1,0 +1,163 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.spurtikus</groupId>
+	<artifactId>vxiclient</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>VXIClient</name>
+	<description>VXI client implementation</description>
+
+	<properties>
+		<remotetea.version>1.1.3</remotetea.version>
+		<jersey.version>2.25.1</jersey.version>
+	</properties>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0-M1</version>
+				<executions>
+					<execution>
+						<id>enforce-java</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireJavaVersion>
+									<version>1.8.0</version>
+								</requireJavaVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.acplt.remotetea</groupId>
+				<artifactId>remotetea-maven-plugin</artifactId>
+				<version>${remotetea.version}</version>
+				<executions>
+					<execution>
+						<id>jrpcgen</id>
+						<goals>
+							<goal>clientandserver</goal>
+						</goals>
+						<configuration>
+							<xFile>src/main/rpcgen/vxi11.x</xFile>
+							<destDir>src/gen/java</destDir>
+							<packageName>de.spurtikus.rpcgen</packageName>
+							<!-- Force the creation of the destination directory if it does not 
+								already exist at generation time. -->
+							<createDir>true</createDir>
+							<!-- Uncomment the following line to create an RPC server listening 
+								only on TCP. -->
+							<!-- <serverTcpOnly>true</serverTcpOnly> -->
+							<!-- Uncomment the following line to create an RPC server listening 
+								only on UDP. -->
+							<!-- <serverUdpOnly>true</serverUdpOnly> -->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.9.1</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/gen/java</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.22</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.22</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- XMLRPC & ONC -->
+		<dependency>
+			<groupId>org.acplt.remotetea</groupId>
+			<artifactId>remotetea</artifactId>
+			<version>${remotetea.version}</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>org.acplt.remotetea</groupId>
+			<artifactId>remotetea-jportmap</artifactId>
+			<version>${remotetea.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.acplt.remotetea</groupId>
+			<artifactId>remotetea-oncrpc</artifactId>
+			<version>${remotetea.version}</version>
+		</dependency>
+
+		<!-- Server part -->
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet</artifactId>
+			<version>${jersey.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet-core</artifactId>
+			<version>${jersey.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>${jersey.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.0.1</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- Logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+	</dependencies>
+</project>
