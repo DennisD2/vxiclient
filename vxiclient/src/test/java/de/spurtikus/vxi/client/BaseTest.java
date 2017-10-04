@@ -9,7 +9,7 @@ import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
 
 public class BaseTest {
 
-	//String host = "192.168.178.78";
+	// String host = "192.168.178.78";
 	String host = "vxi1";
 
 	static final int CLIENT_ID = 12345;
@@ -22,11 +22,12 @@ public class BaseTest {
 
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector();
 
-		RPCConnectorConfig config = new RPCConnectorConfig(host, CLIENT_ID, TEST_DEVICE_ID);
-		DeviceLink theLid = vxiConnector.initialize(config);
+		RPCConnectorConfig config = new RPCConnectorConfig(host, CLIENT_ID,
+				TEST_DEVICE_ID);
 
+		DeviceLink theLid = vxiConnector.initialize(config);
 		// Send command
-		//String cmd = "MEAS:VOLT:AC? 1, 0.001";
+		// String cmd = "MEAS:VOLT:AC? 1, 0.001";
 		String cmd = "*IDN?";
 		System.out.println("Command: " + cmd);
 		vxiConnector.send(theLid, cmd);

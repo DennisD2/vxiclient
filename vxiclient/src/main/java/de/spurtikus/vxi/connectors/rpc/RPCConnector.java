@@ -67,8 +67,13 @@ public class RPCConnector implements VXIConnector {
 		client = createVXICoreDevice();
 		Device_Link device_link = createVXILink(theConfig.getClientId(),
 				theConfig.getDeviceId());
+		if (device_link==null) {
+			throw new Exception("Cannot create device link.");
+		}
 		return new DeviceLink(device_link);
 	}
+
+	static PortmapperClient portmapperClient = null;
 
 	/**
 	 * Creates portmapper client for remote machine and get port to use.
@@ -78,8 +83,9 @@ public class RPCConnector implements VXIConnector {
 	 * @throws IOException
 	 */
 	private int getPortFromPortmapper() throws OncRpcException, IOException {
-		PortmapperClient portmapperClient = new PortmapperClient(
-				theConfig.getHost());
+		if (portmapperClient == null) {
+			portmapperClient = new PortmapperClient(theConfig.getHost());
+		}
 		return portmapperClient.getVXIPort();
 	}
 
@@ -128,11 +134,15 @@ public class RPCConnector implements VXIConnector {
 		} catch (OncRpcException e) {
 			System.out.println("OnRpc failed during client call");
 			e.printStackTrace();
+			return null;
 		} catch (IOException e) {
 			System.out.println("IOException failure during client call");
 			e.printStackTrace();
+			return null;
 		}
-		logger.info("Created successfully a device link (Link ID={}) for device {}.",response.lid.value, deviceId);
+		logger.info(
+				"Created successfully a device link (Link ID={}) for device {}.",
+				response.lid.value, deviceId);
 		logger.debug("Max Recv Size: {}", response.maxRecvSize);
 
 		return response.lid;
@@ -140,22 +150,28 @@ public class RPCConnector implements VXIConnector {
 
 	@Override
 	public void send(DeviceLink link, String message) throws Exception {
+		logger.debug("Send: {}", message);
 		Device_WriteParms params = new Device_WriteParms();
 		params.lid = link.getWrapped();
 		params.flags = new Device_Flags();
 		params.flags.value = 8;
 		params.io_timeout = VXI11_DEFAULT_TIMEOUT;
 		params.lock_timeout = VXI11_DEFAULT_TIMEOUT;
-		params.data = ConversionUtil.toBytes(message);
+		params.data = ConversionUtil.toBytes(message + "\n");
 
 		Device_WriteResp wresp = client.device_write_1(params);
 
-		logger.debug("Error value: {}", wresp.error.value);
+		// logger.debug("Error value: {}", wresp.error.value);
+		if (wresp.error.value != 0) {
+			throw new Exception(
+					"Error during send, error code" + wresp.error.value);
+		}
 		logger.debug("Response Data size: {}", wresp.size);
 	}
 
 	@Override
 	public String receive(DeviceLink link) throws Exception {
+		logger.debug("Receiving...");
 		Device_ReadParms params = new Device_ReadParms();
 		params.lid = link.getWrapped();
 		params.requestSize = 4096;
@@ -165,10 +181,21 @@ public class RPCConnector implements VXIConnector {
 		params.termChar = 0;
 
 		Device_ReadResp read_resp = client.device_read_1(params);
-		logger.debug("Error value: {}", read_resp.error.value);
+		if (read_resp.error.value != 0) {
+			throw new Exception(
+					"Error during send, error code" + read_resp.error.value);
+		}
 		logger.debug("Response Data size: {}", read_resp.data.length);
 		logger.debug("{}", ConversionUtil.toString(read_resp.data));
 		return ConversionUtil.toString(read_resp.data);
+	}
+
+	@Override
+	public String send_and_receive(DeviceLink link, String message)
+			throws Exception {
+		send(link, message);
+		// Thread.sleep(10000);
+		return receive(link);
 	}
 
 }

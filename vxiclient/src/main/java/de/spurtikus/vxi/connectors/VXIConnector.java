@@ -40,4 +40,16 @@ public interface VXIConnector {
 	 */
 	String receive(DeviceLink link) throws Exception;
 
+	/**
+	 * Send and receive.
+	 * 
+	 * @param link
+	 *            link to device.
+	 * @param message
+	 *            the message.
+	 * @return
+	 * @throws Exception
+	 */
+	String send_and_receive(DeviceLink link, String message) throws Exception;
+
 }

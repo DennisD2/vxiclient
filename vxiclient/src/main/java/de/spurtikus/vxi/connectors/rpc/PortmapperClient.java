@@ -30,7 +30,10 @@ public class PortmapperClient {
 	// static final int PORTMAPPER_PORT = 111;
 
 	/** Portmapper object */
-	OncRpcPortmapClient portmapper;
+	OncRpcPortmapClient portmapper = null;
+
+	/** port to use */
+	int port = 0;
 
 	public PortmapperClient(String host) throws OncRpcException, IOException {
 		// Create RpcPortMapper Client
@@ -54,14 +57,14 @@ public class PortmapperClient {
 	 * @throws OncRpcException
 	 */
 	public int getVXIPort() throws OncRpcException {
-		//
-		int port = 0;
-		try {
-			port = portmapper.getPort(vxi11.DEVICE_CORE, 1,
-					OncRpcProtocols.ONCRPC_TCP);
-		} catch (OncRpcProgramNotRegisteredException e) {
-			logger.error("ONC/RPC program server not found");
-			System.exit(0);
+		if (port == 0) {
+			try {
+				port = portmapper.getPort(vxi11.DEVICE_CORE, 1,
+						OncRpcProtocols.ONCRPC_TCP);
+			} catch (OncRpcProgramNotRegisteredException e) {
+				logger.error("ONC/RPC program server not found");
+				System.exit(0);
+			}
 		}
 		logger.info("VXI ONC RPC Program available at port {}", port);
 		return port;
