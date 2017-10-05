@@ -2,6 +2,8 @@ package de.spurtikus.vxi.connectors.rpc;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.acplt.oncrpc.OncRpcException;
 import org.acplt.oncrpc.OncRpcProtocols;
@@ -51,6 +53,9 @@ public class RPCConnector implements VXIConnector {
 
 	private RPCConnector() {
 		// Singleton
+		
+		// Initialize error array
+		RPCErrors.initErrorMap();
 	}
 
 	public static VXIConnector getInstance() {
@@ -67,7 +72,7 @@ public class RPCConnector implements VXIConnector {
 		client = createVXICoreDevice();
 		Device_Link device_link = createVXILink(theConfig.getClientId(),
 				theConfig.getDeviceId());
-		if (device_link==null) {
+		if (device_link == null) {
 			throw new Exception("Cannot create device link.");
 		}
 		return new DeviceLink(device_link);
@@ -140,6 +145,10 @@ public class RPCConnector implements VXIConnector {
 			e.printStackTrace();
 			return null;
 		}
+		if (response.lid.value==0) {
+			logger.error("Link ID is 0, this seems to be wrong.");
+			return null;
+		}
 		logger.info(
 				"Created successfully a device link (Link ID={}) for device {}.",
 				response.lid.value, deviceId);
@@ -159,14 +168,16 @@ public class RPCConnector implements VXIConnector {
 		params.lock_timeout = VXI11_DEFAULT_TIMEOUT;
 		params.data = ConversionUtil.toBytes(message + "\n");
 
-		Device_WriteResp wresp = client.device_write_1(params);
+		Device_WriteResp response = client.device_write_1(params);
 
-		// logger.debug("Error value: {}", wresp.error.value);
-		if (wresp.error.value != 0) {
-			throw new Exception(
-					"Error during send, error code" + wresp.error.value);
+		if (response.error.value != 0) {
+			String es = "Error during receive: '"
+					+ RPCErrors.toErrorString(response.error.value) + "' ("
+					+ response.error.value + ")";
+			logger.error(es);
+			throw new Exception(es);
 		}
-		logger.debug("Response Data size: {}", wresp.size);
+		logger.debug("Response Data size: {}", response.size);
 	}
 
 	@Override
@@ -180,14 +191,17 @@ public class RPCConnector implements VXIConnector {
 		params.flags = new Device_Flags();
 		params.termChar = 0;
 
-		Device_ReadResp read_resp = client.device_read_1(params);
-		if (read_resp.error.value != 0) {
-			throw new Exception(
-					"Error during send, error code" + read_resp.error.value);
+		Device_ReadResp response = client.device_read_1(params);
+		if (response.error.value != 0) {
+			String es = "Error during receive: '"
+					+ RPCErrors.toErrorString(response.error.value) + "' ("
+					+ response.error.value + ")";
+			logger.error(es);
+			throw new Exception(es);
 		}
-		logger.debug("Response Data size: {}", read_resp.data.length);
-		logger.debug("{}", ConversionUtil.toString(read_resp.data));
-		return ConversionUtil.toString(read_resp.data);
+		logger.debug("Response Data size: {}", response.data.length);
+		logger.debug("{}", ConversionUtil.toString(response.data));
+		return ConversionUtil.toString(response.data);
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class HP1326Test {
 		System.out.println(s);
 	}
 
-	//@Test 
+	@Test 
 	public void HP1326_DMM_Test() throws Exception {
 		System.out.println("Tests using channels require DVM+Switch configurtation!");
 		List<Integer> channels = generateChannels();
