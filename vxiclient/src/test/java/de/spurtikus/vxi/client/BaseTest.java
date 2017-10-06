@@ -14,8 +14,8 @@ public class BaseTest {
 
 	static final int CLIENT_ID = 12345;
 
-	//static final String TEST_DEVICE_ID = "iscpi,37";
-	static final String TEST_DEVICE_ID = "iscpi,8";
+	static final String TEST_DEVICE_ID = "iscpi,37";
+	//static final String TEST_DEVICE_ID = "iscpi,8";
 
 	@Test
 	public void VXIConnectorTest() throws Exception {

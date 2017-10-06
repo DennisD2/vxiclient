@@ -1,6 +1,7 @@
 
 Todos
 -----
+- harmonize methods in ConversionUtil (see @deprecated)
 
 Done
 ----

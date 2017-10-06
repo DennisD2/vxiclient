@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
+import de.spurtikus.vxi.util.ConversionUtil;
 
 /**
  * HP/Agilent/Keysight E1326B Digital Multimeter (DMM) control.
@@ -27,7 +28,7 @@ import de.spurtikus.vxi.connectors.VXIConnector;
  *
  */
 public class HP1326 extends BaseHPDevice {
-	static Logger logger = LoggerFactory.getLogger("RPCConnector");
+	static Logger logger = LoggerFactory.getLogger(HP1326.class);
 
 	public static final double OVERFLOW_VALUE = 9.9E37; // See manual page 67
 	/**
@@ -44,21 +45,15 @@ public class HP1326 extends BaseHPDevice {
 	 */
 
 	/**
-	 * The mainframe object containing this device
-	 */
-	private VXIConnector mainFrame;
-
-	private DeviceLink deviceLink;
-
-	/**
-	 * CTR. Requires mainframe object as parameter.
+	 * CTR. Requires vxiConnector object as parameter.
 	 * 
 	 * @param parent
-	 *            Mainframe containing this device.
+	 *            VXI connector
+	 * @param link
+	 *            device link
 	 */
 	public HP1326(VXIConnector parent, DeviceLink link) {
-		mainFrame = parent;
-		deviceLink = link;
+		super(parent,link);
 	}
 
 	/**
@@ -73,9 +68,9 @@ public class HP1326 extends BaseHPDevice {
 	 * @throws Exception
 	 */
 	public void initialize() throws Exception {
-		mainFrame.send(deviceLink, "*RST");
-		mainFrame.send(deviceLink, "ABOR");
-		mainFrame.send(deviceLink, "CAL:LFR 50");
+		vxiConnector.send(deviceLink, "*RST");
+		vxiConnector.send(deviceLink, "ABOR");
+		vxiConnector.send(deviceLink, "CAL:LFR 50");
 	}
 
 	/**
@@ -89,11 +84,11 @@ public class HP1326 extends BaseHPDevice {
 		 * 10 ms* 0.0005 100 ms 0.005 2.5 ms 0.125 16.7 ms 1 20 ms 1 267 ms 16
 		 * 320 ms 16
 		 */
-		mainFrame.send(deviceLink, "VOLTage:APERture MAX");
+		vxiConnector.send(deviceLink, "VOLTage:APERture MAX");
 		setVoltageRange(voltageRange, channels);
-		mainFrame.send(deviceLink, "CAL:ZERO:AUTO ON");
-		mainFrame.send(deviceLink, "VOLTage:RESolution MAX");
-		mainFrame.send(deviceLink, "INIT");
+		vxiConnector.send(deviceLink, "CAL:ZERO:AUTO ON");
+		vxiConnector.send(deviceLink, "VOLTage:RESolution MAX");
+		vxiConnector.send(deviceLink, "INIT");
 	}
 
 	/**
@@ -133,8 +128,8 @@ public class HP1326 extends BaseHPDevice {
 				+ " to channels " + channelString);
 
 		// TODO: do we need both lines or only second?
-		mainFrame.send(deviceLink, "CONF:VOLT:DC " + channelString);
-		mainFrame.send(deviceLink, "CONF:VOLT:DC:RANGE " + voltageRangeString
+		vxiConnector.send(deviceLink, "CONF:VOLT:DC " + channelString);
+		vxiConnector.send(deviceLink, "CONF:VOLT:DC:RANGE " + voltageRangeString
 				+ "," + channelString);
 	}
 
@@ -145,10 +140,10 @@ public class HP1326 extends BaseHPDevice {
 	 * @throws Exception
 	 */
 	public Double measureSingle() throws Exception {
-		String s = mainFrame.send_and_receive(deviceLink, "MEAS:VOLT:DC?");
+		String s = vxiConnector.send_and_receive(deviceLink, "MEAS:VOLT:DC?");
 		s = s.replace("V", "");
 		logger.trace("DEV: " + s);
-		return ChannelHelper.stringToDouble(s);
+		return ConversionUtil.stringToDouble(s);
 	}
 
 	/**
@@ -165,7 +160,7 @@ public class HP1326 extends BaseHPDevice {
 	public Map<Integer, Double> measureChannels(List<Integer> channels)
 			throws Exception {
 		String channelDefinition = ChannelHelper.toChannelString(channels);
-		String s = mainFrame.send_and_receive(deviceLink,
+		String s = vxiConnector.send_and_receive(deviceLink,
 				"MEAS:VOLT:DC? " + channelDefinition);
 		s = s.replace("V", "");
 		logger.trace("DEV: " + s);

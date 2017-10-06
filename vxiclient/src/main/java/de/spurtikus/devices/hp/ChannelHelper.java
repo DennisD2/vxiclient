@@ -2,10 +2,14 @@ package de.spurtikus.devices.hp;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.spurtikus.vxi.util.ConversionUtil;
 
 public class ChannelHelper {
-	private static Logger log = Logger.getLogger("ChannelHelper");
+	private static Logger logger = LoggerFactory.getLogger(ChannelHelper.class);
 
 	/**
 	 * Creates a channel list as understood by HP 1326B.
@@ -16,7 +20,7 @@ public class ChannelHelper {
 	 */
 	public static String toChannelString(List<Integer> channels) {
 		if (channels.size() == 0) {
-			log.severe("No channels defined");
+			logger.warn("No channels defined");
 			return null;
 		}
 		StringBuilder sb = new StringBuilder();
@@ -52,31 +56,14 @@ public class ChannelHelper {
 			// add ( key = channel name at position i, value = value to double
 			// at position i )
 			if (values[i] != null && !values[i].isEmpty()) {
-				Double value = stringToDouble(values[i]);
+				Double value = ConversionUtil.stringToDouble(values[i]);
 				if (value.equals(HP1326.OVERFLOW_VALUE)) {
-					log.severe("Overflow condition: " + value);
+					logger.warn("Overflow condition: " + value);
 				}
 				m.put(channels.get(i), value);
 			}
 		}
 		return m;
-	}
-
-	/**
-	 * Convert a String as returned by HP1326B into a double.
-	 * 
-	 * @param s
-	 *            String to convert
-	 * @return Double value
-	 */
-	public static Double stringToDouble(String s) {
-		Double d = 0.0;
-		try {
-			d = Double.parseDouble(s);
-		} catch (NumberFormatException e) {
-
-		}
-		return d;
 	}
 
 }

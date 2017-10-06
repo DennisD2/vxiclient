@@ -51,7 +51,6 @@ public class HP1326Test {
 		for (int channel : m.keySet()) {
 			System.out.println(channel + " : " + m.get(channel));
 		}
-
 	}
 
 	protected List<Integer> generateChannels() {
@@ -73,7 +72,7 @@ public class HP1326Test {
 		return channels;
 	}
 
-	@Test
+	//@Test
 	public void testMeasureChannelsLoop() throws Exception {
 		System.out.println("Tests using channels require DVM+Switch configuration!");
 		// MEAS:VOLT:DC? (@100,101,102,103,104,105,106)
@@ -87,7 +86,7 @@ public class HP1326Test {
 		for (int i = 0; i < max; i++) {
 			Map<Integer, Double> m = testee.measureChannels(channels);
 			for (int channel : m.keySet()) {
-				//System.out.println(channel + " : " + m.get(channel));
+				System.out.println(channel + " : " + m.get(channel));
 			}
 		}
 		long time = System.currentTimeMillis() - start;

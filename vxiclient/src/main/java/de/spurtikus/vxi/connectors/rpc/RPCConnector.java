@@ -2,8 +2,6 @@ package de.spurtikus.vxi.connectors.rpc;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.acplt.oncrpc.OncRpcException;
 import org.acplt.oncrpc.OncRpcProtocols;
@@ -23,7 +21,7 @@ import de.spurtikus.rpcgen.vxi11_DEVICE_CORE_Client;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
-import de.spurtikus.vxi.utilConversionUtil.ConversionUtil;
+import de.spurtikus.vxi.util.ConversionUtil;
 
 /**
  * ONC RPC Connector implementation.
