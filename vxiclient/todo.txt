@@ -2,6 +2,10 @@
 Todos
 -----
 - harmonize methods in ConversionUtil (see @deprecated)
+- Check methods in CommunicationUtil where they should go. maybe stay there :-)
+- Also import old Tests for HP1333,1340,1300* and make them at least compilable.
+
+- Write SerialToGPIBConnector (much work)
 
 Done
 ----
