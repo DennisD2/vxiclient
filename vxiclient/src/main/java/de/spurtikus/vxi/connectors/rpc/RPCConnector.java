@@ -159,7 +159,7 @@ public class RPCConnector implements VXIConnector {
 	public void send(DeviceLink link, String message) throws Exception {
 		logger.debug("Send: {}", message);
 		Device_WriteParms params = new Device_WriteParms();
-		params.lid = link.getWrapped();
+		params.lid = (Device_Link) link.getWrapped();
 		params.flags = new Device_Flags();
 		params.flags.value = 8;
 		params.io_timeout = VXI11_DEFAULT_TIMEOUT;
@@ -182,7 +182,7 @@ public class RPCConnector implements VXIConnector {
 	public String receive(DeviceLink link) throws Exception {
 		logger.debug("Receiving...");
 		Device_ReadParms params = new Device_ReadParms();
-		params.lid = link.getWrapped();
+		params.lid = (Device_Link) link.getWrapped();
 		params.requestSize = 4096;
 		params.io_timeout = VXI11_DEFAULT_TIMEOUT;
 		params.lock_timeout = VXI11_DEFAULT_TIMEOUT;

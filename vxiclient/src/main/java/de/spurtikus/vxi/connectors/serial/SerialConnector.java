@@ -91,11 +91,21 @@ public class SerialConnector implements VXIConnector {
 			logger.info("port is already started");
 		}
 		theConfig = (SerialConnectorConfig) config;
-		
+
 		open();
 		start();
 
-		return new DeviceLink(this);
+		DeviceLink link = new DeviceLink(serialPort);
+		if (theConfig
+				.getAdapterType() == SerialConnectorConfig.ADAPTER_PROLOGIX) {
+			String s;
+			s = send_and_receive(link, "++ver");
+			logger.debug("DEV: " + s);
+			// s = port.writeWithAnswer("++auto");
+			// log.xxx("DEV: " + s);
+			selectDevice(link, 9, 0);
+		}
+		return link;
 	}
 
 	/**
@@ -112,17 +122,14 @@ public class SerialConnector implements VXIConnector {
 		if (message == null) {
 			return;
 		}
-		byte[] b = new byte[message.length()];
-		for (int i = 0; i < message.length(); i++) {
-			b[i] = (byte) message.charAt(i);
-		}
-		write(b);
+		logger.debug("send(\"" + message + "\")");
+		write(ConversionUtil.toBytes(message + "\n\r"));
 	}
 
 	public void write(byte[] s) throws IOException {
 		if (s == null)
 			return;
-		// log.xxx("write(\"" + s + "\")");
+		// logger.debug("write(\"" + new String(s) + "\")");
 		if (outputStream == null) {
 			logger.error("Output stream not initialized when writing data");
 			return;
@@ -132,12 +139,8 @@ public class SerialConnector implements VXIConnector {
 			while (serialReader.xoffReceived()) {
 				sleep(WAIT_TIME_AFTER_SEND);
 			}
-			write(s[i]);
+			outputStream.write((int) s[i]);
 		}
-	}
-
-	public void write(byte c) throws IOException {
-		outputStream.write((int) c);
 	}
 
 	@Override
@@ -299,21 +302,6 @@ public class SerialConnector implements VXIConnector {
 	}
 
 	/**
-	 * Write char to port
-	 * 
-	 * Single char is written to port.
-	 * 
-	 * @param c
-	 *            char to be written
-	 * @throws IOException
-	 * 
-	 * @deprecated
-	 */
-	public void write(char c) throws IOException {
-		write((byte) c);
-	}
-
-	/**
 	 * * @deprecated
 	 * 
 	 * @param s
@@ -391,6 +379,32 @@ public class SerialConnector implements VXIConnector {
 		} catch (InterruptedException e) {
 			logger.error("Can't sleep");
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 
+	 * Selects a device by its primary/secondary GPIB address. Used with serial
+	 * gpib communication.
+	 * 
+	 * @param link
+	 * @param primary
+	 * @param secondary
+	 * @throws Exception
+	 */
+	public void selectDevice(DeviceLink link, int primary, int secondary)
+			throws Exception {
+		if (theConfig
+				.getAdapterType() == SerialConnectorConfig.ADAPTER_SERIAL_GPIB) {
+			String s = send_and_receive(link,
+					".a " + primary + " " + secondary);
+			logger.debug("DEV: " + s);
+		}
+		if (theConfig
+				.getAdapterType() == SerialConnectorConfig.ADAPTER_PROLOGIX) {
+			// Prologix wants for secondary adress: gpib-adress+96
+			int realAdr = secondary + 96;
+			send(link, "++addr " + primary + " " + realAdr );
 		}
 	}
 

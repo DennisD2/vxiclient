@@ -4,6 +4,10 @@ import de.spurtikus.vxi.connectors.ConnectorConfig;
 import gnu.io.SerialPort;
 
 public class SerialConnectorConfig implements ConnectorConfig {
+	public static final int ADAPTER_SERIAL_DIRECT = 0;
+	public static final int ADAPTER_SERIAL_GPIB = 1;
+	public static final int ADAPTER_PROLOGIX = 2;
+
 	public static enum Protocol {
 		UNDEFINED(0), XONXOFF(1), CTSRTS(2), NONE(3);
 		private int p;
@@ -35,6 +39,8 @@ public class SerialConnectorConfig implements ConnectorConfig {
 	private int stopBits= SerialPort.STOPBITS_1;
 
 	private Protocol protocol = Protocol.CTSRTS;
+	
+	private int adapterType = ADAPTER_PROLOGIX;
 
 	public String getPort() {
 		return port;
@@ -82,6 +88,14 @@ public class SerialConnectorConfig implements ConnectorConfig {
 
 	public void setProtocol(Protocol protocol) {
 		this.protocol = protocol;
+	}
+
+	public int getAdapterType() {
+		return adapterType;
+	}
+
+	public void setAdapterType(int adapterType) {
+		this.adapterType = adapterType;
 	}
 
 }
