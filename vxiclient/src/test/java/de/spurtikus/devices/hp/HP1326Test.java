@@ -23,9 +23,9 @@ public class HP1326Test {
 	public void before() throws Exception {
 		System.out.println("Start...");
 
-		VXIConnector vxiConnector = VXIConnectorFactory.getConnector();
-
 		RPCConnectorConfig config = new RPCConnectorConfig(host, CLIENT_ID, TEST_DEVICE_ID);
+		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
+
 		DeviceLink theLid = vxiConnector.initialize(config);
 		
 		testee = new HP1326(vxiConnector, theLid);

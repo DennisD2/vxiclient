@@ -117,6 +117,13 @@
 			<artifactId>remotetea-oncrpc</artifactId>
 			<version>${remotetea.version}</version>
 		</dependency>
+		
+		<!-- Serial Connectivity -->
+		<dependency>
+		    <groupId>org.rxtx</groupId>
+		    <artifactId>rxtx</artifactId>
+		    <version>2.1.7</version>
+		</dependency>
 
 		<!-- Server part -->
 		<dependency>

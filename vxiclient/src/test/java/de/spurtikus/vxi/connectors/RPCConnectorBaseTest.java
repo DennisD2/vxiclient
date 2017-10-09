@@ -1,4 +1,4 @@
-package de.spurtikus.vxi.client;
+package de.spurtikus.vxi.connectors;
 
 import org.junit.Test;
 
@@ -7,7 +7,7 @@ import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
 
-public class BaseTest {
+public class RPCConnectorBaseTest {
 
 	// String host = "192.168.178.78";
 	String host = "vxi1";
@@ -15,16 +15,16 @@ public class BaseTest {
 	static final int CLIENT_ID = 12345;
 
 	static final String TEST_DEVICE_ID = "iscpi,37";
-	//static final String TEST_DEVICE_ID = "iscpi,8";
+	// static final String TEST_DEVICE_ID = "iscpi,8";
 
 	@Test
-	public void VXIConnectorTest() throws Exception {
+	public void vxiConnectorTest() throws Exception {
 		System.out.println("Start...");
-
-		VXIConnector vxiConnector = VXIConnectorFactory.getConnector();
 
 		RPCConnectorConfig config = new RPCConnectorConfig(host, CLIENT_ID,
 				TEST_DEVICE_ID);
+
+		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
 
 		DeviceLink theLid = vxiConnector.initialize(config);
 		// Send command

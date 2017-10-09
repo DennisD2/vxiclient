@@ -34,14 +34,14 @@ import de.spurtikus.vxi.util.ConversionUtil;
 public class RPCConnector implements VXIConnector {
 	static Logger logger = LoggerFactory.getLogger("RPCConnector");
 
-	/** timeout value in [ms] */
-	static final int VXI11_DEFAULT_TIMEOUT = 50000;
-
 	/** Singleton */
 	static RPCConnector INSTANCE = null;
 
 	/** Config to use */
 	static RPCConnectorConfig theConfig = null;
+
+	/** timeout value in [ms] */
+	static final int VXI11_DEFAULT_TIMEOUT = 50000;
 
 	/** VXI Device Core Client to use in all calls */
 	private static vxi11_DEVICE_CORE_Client client = null;

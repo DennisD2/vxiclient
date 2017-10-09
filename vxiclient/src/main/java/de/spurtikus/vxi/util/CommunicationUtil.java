@@ -140,13 +140,13 @@ public class CommunicationUtil {
 	 *            number of bytes to convert
 	 * @return String containing the bytes from byte array as chars.
 	 */
-//	public static String asString(byte[] source, int n) {
-//		StringBuilder sb = new StringBuilder();
-//		for (int i = 0; i < n; i++) {
-//			sb.append((char) source[i]);
-//		}
-//		return sb.toString();
-//	}
+public static String asString(byte[] source, int n) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < n; i++) {
+			sb.append((char) source[i]);
+		}
+		return sb.toString();
+}
 
 //	public static String asString(byte[] source) {
 //		StringBuilder sb = new StringBuilder();

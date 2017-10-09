@@ -6,5 +6,4 @@ package de.spurtikus.vxi.connectors;
  * @author dennis
  *
  */
-public interface ConnectorConfig {
-}
+public interface ConnectorConfig { /* empty */ }
