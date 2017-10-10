@@ -6,8 +6,7 @@ import de.spurtikus.vxi.connectors.serial.SerialConnectorConfig;
 
 public class SerialConnectorBaseTest {
 
-
-	static final String TEST_DEVICE_ID = "iscpi,37";
+	//static final String TEST_DEVICE_ID = "iscpi,37";
 	//static final String TEST_DEVICE_ID = "iscpi,8";
 
 	@Test

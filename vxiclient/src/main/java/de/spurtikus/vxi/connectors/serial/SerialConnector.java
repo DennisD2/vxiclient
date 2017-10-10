@@ -54,20 +54,18 @@ public class SerialConnector implements VXIConnector {
 
 	public static final char LF = 0xa;
 	public static final char CR = 0xd;
-
 	public static final char XON = 0x11;
 	public static final char XOFF = 0x13;
 
-	private CommPortIdentifier serialPortId;
 	private SerialPort serialPort;
 	private OutputStream outputStream;
-	protected Boolean open = false;
-
-	/** true if port is started. */
-	protected volatile Boolean started = false;
-
 	private SerialReader serialReader;
 	private Thread serialReaderThread;
+
+	/** True if port is open */
+	protected Boolean open = false;
+	/** true if port is started. */
+	protected volatile Boolean started = false;
 
 	private static final int WAIT_TIME_AFTER_SEND = 1;
 
@@ -92,8 +90,8 @@ public class SerialConnector implements VXIConnector {
 		}
 		theConfig = (SerialConnectorConfig) config;
 
-		open();
-		start();
+		initializePhysicalPort();
+		startReaderThread();
 
 		DeviceLink link = new DeviceLink(serialPort);
 		if (theConfig
@@ -167,9 +165,9 @@ public class SerialConnector implements VXIConnector {
 	/**
 	 * Starts communication
 	 * 
-	 * Start the thread. See run() what is happening in thread.
+	 * Start the reader thread. See run() what is happening in thread.
 	 */
-	public void start() {
+	public void startReaderThread() {
 		if (started) {
 			logger.info("port is already started");
 			return;
@@ -192,66 +190,122 @@ public class SerialConnector implements VXIConnector {
 	}
 
 	/**
-	 * Opens a port. Adds event listeners.
+	 * Opens a port, configures it and connects input stream, output stream and
+	 * an event listener to it.
 	 * 
-	 * @return true on success, false otherwise.
+	 * @throws Exception
 	 */
-	public boolean open() {
-		Boolean foundPort = false;
-
+	public void initializePhysicalPort() throws Exception {
 		if (open) {
 			logger.info("port is already open");
-			return false;
+			return;
 		}
-		logger.debug("open port");
+		logger.debug("Open port");
 
-		// search for this port in list of available ports
+		CommPortIdentifier serialPortId = getSerialPort(theConfig.getPort());
+		if (serialPortId == null) {
+			// We have problems with this port.
+			throw new Exception("Unable to open or use port.");
+		}
+
+		// Open physical port
+		serialPort = openPhysicalPort(serialPortId);
+		// Connect input and output streams/input listener to physical port
+		connectStreams(serialPort, serialPortId.getName());
+		// Set physical port characteristics
+		setPortMode(serialPortId);
+
+		// All good
+		open = true;
+		logger.debug("Port opened.");
+	}
+
+	/**
+	 * Gets CommPortIdentifier known to the RXTX Serial subsystem.
+	 * 
+	 * @param port
+	 *            port to get identifier for, e.g. "/dev/tty0"
+	 * @return true if port is known.
+	 */
+	protected CommPortIdentifier getSerialPort(String port) {
 		Enumeration<?> enumComm = CommPortIdentifier.getPortIdentifiers();
+		// search for this port in list of available ports
 		while (enumComm.hasMoreElements()) {
-			serialPortId = (CommPortIdentifier) enumComm.nextElement();
-			if (theConfig.getPort().contentEquals(serialPortId.getName())) {
-				foundPort = true;
-				break;
+			CommPortIdentifier serialPortId = (CommPortIdentifier) enumComm
+					.nextElement();
+			if (port.contentEquals(serialPortId.getName())) {
+				return serialPortId;
 			}
 		}
-		if (!foundPort) {
-			logger.error("port " + theConfig.getPort() + " not found");
-			return false;
-		}
+		logger.error("port " + theConfig.getPort()
+				+ " not found. Either it does not exist or is occupied by another process.");
+		return null;
+	}
 
-		// open port
+	/**
+	 * Opens physical port.
+	 * 
+	 * @param portId
+	 * @return port
+	 * @throws Exception
+	 */
+	protected SerialPort openPhysicalPort(CommPortIdentifier portId)
+			throws Exception {
+		SerialPort port = null;
 		try {
-			serialPort = (SerialPort) serialPortId.open("de.spurtikus.comm",
-					500);
+			port = (SerialPort) portId.open("de.spurtikus.comm", 500);
 		} catch (PortInUseException e) {
-			logger.error("port in use.");
-			return false;
+			logger.error("Port {} already in use.", portId.getName());
+			throw new Exception("Port already in use.", e);
 		}
+		return port;
+	}
 
-		// get output stream for that port (used for writing to serial port)
+	/**
+	 * Connect streams and reader thread to physical port.
+	 * 
+	 * @param port physical port to use
+	 * @param portId port id of physical port
+	 * @throws Exception
+	 */
+	protected void connectStreams(SerialPort port, String portId)
+			throws Exception {
+		// Get output stream for the port (used for writing to serial port)
 		try {
-			outputStream = serialPort.getOutputStream();
+			outputStream = port.getOutputStream();
 		} catch (IOException e) {
-			logger.error("cannot access OutputStream");
-			return false;
+			logger.error("Cannot create output stream for port {}.", portId);
+			throw new Exception("Cannot create output stream for port.", e);
+		}
+		if (outputStream == null) {
+			logger.error("Failed in getting output stream (is null).");
 		}
 
-		// set port configuration
+		// Setup serial reader
+		serialReader = new SerialReader(port);
+	}
+
+	/**
+	 * Sets physical port characteristics.
+	 * 
+	 * @param portId port id of physical port
+	 * @throws Exception
+	 */
+	protected void setPortMode(CommPortIdentifier portId) throws Exception {
+		// Set port configuration
 		try {
 			serialPort.setSerialPortParams(theConfig.getBaudRate(),
 					theConfig.getDataBits(), theConfig.getStopBits(),
 					theConfig.getParity());
 		} catch (UnsupportedCommOperationException e) {
-			logger.error("cannot set port configuration");
-			return false;
+			logger.error("Cannot set port configuration for port {}.",
+					portId.getName());
+			throw new Exception("Cannot set port configuration for port.", e);
 		}
-
-		if (/* inputStream == null || */outputStream == null) {
-			logger.error("Failed in getting input or output stream");
-		}
-
 		// serialPort.setOutputBufferSize(80000);
 		// serialPort.setInputBufferSize(80000);
+
+		// Set flow control
 		try {
 			switch (theConfig.getProtocol()) {
 			case CTSRTS:
@@ -270,18 +324,10 @@ public class SerialConnector implements VXIConnector {
 				// do nothing
 			}
 		} catch (UnsupportedCommOperationException e) {
-			logger.error("cannot set flow control");
-			return false;
+			logger.error("Cannot set flow control for port {}.",
+					portId.getName());
+			throw new Exception("Cannot set flow control for port.", e);
 		}
-
-		// setup serial reader
-		serialReader = new SerialReader(serialPort);
-		// serialReader.setupListener(serialPort);
-
-		// all good
-		logger.debug("Port opened.");
-		open = true;
-		return true;
 	}
 
 	/**
@@ -296,7 +342,7 @@ public class SerialConnector implements VXIConnector {
 			// serialPort.close();
 			open = false;
 		} else {
-			logger.info("port is already closed.");
+			logger.info("Port is already closed.");
 		}
 		logger.debug("Port closed.");
 	}
@@ -404,7 +450,7 @@ public class SerialConnector implements VXIConnector {
 				.getAdapterType() == SerialConnectorConfig.ADAPTER_PROLOGIX) {
 			// Prologix wants for secondary adress: gpib-adress+96
 			int realAdr = secondary + 96;
-			send(link, "++addr " + primary + " " + realAdr );
+			send(link, "++addr " + primary + " " + realAdr);
 		}
 	}
 
