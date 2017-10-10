@@ -5,8 +5,10 @@ import org.slf4j.LoggerFactory;
 
 import de.spurtikus.vxi.connectors.rpc.RPCConnector;
 import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
+import de.spurtikus.vxi.connectors.serial.GPIBSerialConnector;
 import de.spurtikus.vxi.connectors.serial.SerialConnector;
 import de.spurtikus.vxi.connectors.serial.SerialConnectorConfig;
+import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
 
 /**
  * Connector factory.
@@ -28,6 +30,9 @@ public class VXIConnectorFactory {
 	public static VXIConnector getConnector(ConnectorConfig config) {
 		if (config instanceof RPCConnectorConfig) {
 			return RPCConnector.getInstance();
+		}
+		if (config instanceof GPIBSerialConnectorConfig) {
+			return GPIBSerialConnector.getInstance();
 		}
 		if (config instanceof SerialConnectorConfig) {
 			return SerialConnector.getInstance();

@@ -2,9 +2,9 @@ package de.spurtikus.vxi.connectors;
 
 import org.junit.Test;
 
-import de.spurtikus.vxi.connectors.serial.SerialConnectorConfig;
+import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
 
-public class SerialConnectorBaseTest {
+public class GPIBSerialConnectorBaseTest {
 
 	//static final String TEST_DEVICE_ID = "iscpi,37";
 	//static final String TEST_DEVICE_ID = "iscpi,8";
@@ -13,10 +13,11 @@ public class SerialConnectorBaseTest {
 	public void serialConnectorBaseTest() throws Exception {
 		System.out.println("Start...");
 
-		SerialConnectorConfig config = new SerialConnectorConfig();
-
+		GPIBSerialConnectorConfig config = new GPIBSerialConnectorConfig();
+		config.setControllerPrimaryAddress(9);
+		config.setControllerSecondaryAddress(0);
+		
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
-
 
 		DeviceLink theLid = vxiConnector.initialize(config);
 		// Send command

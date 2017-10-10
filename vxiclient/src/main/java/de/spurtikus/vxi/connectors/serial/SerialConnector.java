@@ -47,10 +47,10 @@ public class SerialConnector implements VXIConnector {
 	Logger logger = LoggerFactory.getLogger(SerialConnector.class);
 
 	/** Singleton */
-	static SerialConnector INSTANCE = null;
+	static protected SerialConnector INSTANCE = null;
 
 	/** Config to use */
-	private SerialConnectorConfig theConfig;
+	protected SerialConnectorConfig theConfig;
 
 	public static final char LF = 0xa;
 	public static final char CR = 0xd;
@@ -69,7 +69,7 @@ public class SerialConnector implements VXIConnector {
 
 	private static final int WAIT_TIME_AFTER_SEND = 1;
 
-	private SerialConnector() {
+	protected SerialConnector() {
 		// Singleton
 
 		// Initialize error array
@@ -86,7 +86,7 @@ public class SerialConnector implements VXIConnector {
 	@Override
 	public DeviceLink initialize(ConnectorConfig config) throws Exception {
 		if (started) {
-			logger.info("port is already started");
+			logger.info("Port is already started");
 		}
 		theConfig = (SerialConnectorConfig) config;
 
@@ -94,15 +94,6 @@ public class SerialConnector implements VXIConnector {
 		startReaderThread();
 
 		DeviceLink link = new DeviceLink(serialPort);
-		if (theConfig
-				.getAdapterType() == SerialConnectorConfig.ADAPTER_PROLOGIX) {
-			String s;
-			s = send_and_receive(link, "++ver");
-			logger.debug("DEV: " + s);
-			// s = port.writeWithAnswer("++auto");
-			// log.xxx("DEV: " + s);
-			selectDevice(link, 9, 0);
-		}
 		return link;
 	}
 
@@ -348,30 +339,6 @@ public class SerialConnector implements VXIConnector {
 	}
 
 	/**
-	 * * @deprecated
-	 * 
-	 * @param s
-	 * @return
-	 * @throws IOException
-	 */
-	public byte[] writeWithAnswer(byte[] s) throws IOException {
-		logger.debug(
-				"byte writeWithAnswer(\"" + ConversionUtil.toString(s) + "\")");
-		serialReader.clearReaderBuffer();
-		byte[] to = new byte[s.length + 1];
-		CommunicationUtil.copyByteArray(s, to);
-		// to[s.length] = '\n';
-		to[s.length] = '\r';
-		write(to);
-		// wait for complete answer (EOL)
-		while (!serialReader.eol()) {
-			sleep(WAIT_TIME_AFTER_SEND);
-		}
-		// return answer collected in serialReader
-		return serialReader.readAndClearBuffer(s);
-	}
-
-	/**
 	 * Returns available serial ports.
 	 * 
 	 * @return hash map with all available ports
@@ -425,32 +392,6 @@ public class SerialConnector implements VXIConnector {
 		} catch (InterruptedException e) {
 			logger.error("Can't sleep");
 			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * 
-	 * Selects a device by its primary/secondary GPIB address. Used with serial
-	 * gpib communication.
-	 * 
-	 * @param link
-	 * @param primary
-	 * @param secondary
-	 * @throws Exception
-	 */
-	public void selectDevice(DeviceLink link, int primary, int secondary)
-			throws Exception {
-		if (theConfig
-				.getAdapterType() == SerialConnectorConfig.ADAPTER_SERIAL_GPIB) {
-			String s = send_and_receive(link,
-					".a " + primary + " " + secondary);
-			logger.debug("DEV: " + s);
-		}
-		if (theConfig
-				.getAdapterType() == SerialConnectorConfig.ADAPTER_PROLOGIX) {
-			// Prologix wants for secondary adress: gpib-adress+96
-			int realAdr = secondary + 96;
-			send(link, "++addr " + primary + " " + realAdr);
 		}
 	}
 

@@ -51,5 +51,5 @@ public interface VXIConnector {
 	 * @throws Exception
 	 */
 	String send_and_receive(DeviceLink link, String message) throws Exception;
-
+	
 }
