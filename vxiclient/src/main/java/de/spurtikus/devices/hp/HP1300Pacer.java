@@ -20,7 +20,7 @@ import de.spurtikus.vxi.connectors.VXIConnector;
  *
  */
 public class HP1300Pacer extends BaseHPDevice {
-	static Logger logger = LoggerFactory.getLogger(HP1326.class);
+	static Logger logger = LoggerFactory.getLogger(HP1300Pacer.class);
 	/**
 	 * Minimum period length allowed. 500ns -> 2Mhz
 	 */
