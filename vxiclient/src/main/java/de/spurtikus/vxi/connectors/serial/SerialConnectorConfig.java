@@ -1,9 +1,11 @@
 package de.spurtikus.vxi.connectors.serial;
 
+import de.spurtikus.vxi.connectors.AbstractConnectorConfig;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import gnu.io.SerialPort;
 
-public class SerialConnectorConfig implements ConnectorConfig {
+public class SerialConnectorConfig extends AbstractConnectorConfig
+		implements ConnectorConfig {
 	public static final int ADAPTER_SERIAL_DIRECT = 0;
 	public static final int ADAPTER_SERIAL_GPIB = 1;
 	public static final int ADAPTER_PROLOGIX = 2;
@@ -28,18 +30,18 @@ public class SerialConnectorConfig implements ConnectorConfig {
 		}
 	}
 
-	private String port = "/dev/ttyUSB0";//"/dev/ttyS4";
+	private String port = "/dev/ttyUSB0";// "/dev/ttyS4";
 
-	private int baudRate = 115200;//= 38400;
+	private int baudRate = 115200;// = 38400;
 
-	private int dataBits= SerialPort.DATABITS_8;
+	private int dataBits = SerialPort.DATABITS_8;
 
-	private int parity= SerialPort.PARITY_NONE;
+	private int parity = SerialPort.PARITY_NONE;
 
-	private int stopBits= SerialPort.STOPBITS_1;
+	private int stopBits = SerialPort.STOPBITS_1;
 
 	private Protocol protocol = Protocol.CTSRTS;
-	
+
 	private int adapterType = ADAPTER_PROLOGIX;
 
 	public String getPort() {
@@ -96,6 +98,30 @@ public class SerialConnectorConfig implements ConnectorConfig {
 
 	public void setAdapterType(int adapterType) {
 		this.adapterType = adapterType;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + " port:" + port + ", baud:" + baudRate + " "
+				+ dataBits + (parity == 0 ? 'N' : 'P') + stopBits + ", flow:"
+				+ protocol + ", adapter:" + adapterType();
+	}
+
+	private String adapterType() {
+		String type="?";
+		switch (adapterType) {
+		case ADAPTER_PROLOGIX:
+			type = "Prologix";
+			break;
+
+		case ADAPTER_SERIAL_DIRECT:
+			type = "Pure Serial";
+			break;
+		case ADAPTER_SERIAL_GPIB:
+			type = "GPIB via serial";
+			break;
+		}
+		return type;
 	}
 
 }

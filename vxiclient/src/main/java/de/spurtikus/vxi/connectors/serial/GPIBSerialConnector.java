@@ -180,5 +180,5 @@ public class GPIBSerialConnector extends SerialConnector {
 			logger.debug("DEV: " + s);
 		}
 	}
-
+	
 }

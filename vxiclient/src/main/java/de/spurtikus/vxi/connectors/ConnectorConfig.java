@@ -6,4 +6,9 @@ package de.spurtikus.vxi.connectors;
  * @author dennis
  *
  */
-public interface ConnectorConfig { /* empty */ }
+public interface ConnectorConfig {
+
+	int getId();
+
+	void setId(int id);
+}

@@ -21,7 +21,6 @@ public class HP1300bTest {
 
 	@Before
 	public void beforeTest() throws Exception {
-
 		System.out.println("Start...");
 
 		GPIBSerialConnectorConfig config = new GPIBSerialConnectorConfig();

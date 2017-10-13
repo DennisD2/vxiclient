@@ -29,4 +29,9 @@ public class GPIBSerialConnectorConfig extends SerialConnectorConfig {
 		return controllerSecondaryAddress;
 	}
 
+	@Override
+	public String toString() {
+		return super.toString() + ", default gpib address "+controllerPrimaryAddress+","+controllerSecondaryAddress+"";
+	}
+
 }

@@ -1,5 +1,6 @@
 package de.spurtikus.vxi.connectors.rpc;
 
+import de.spurtikus.vxi.connectors.AbstractConnectorConfig;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 
 /**
@@ -8,7 +9,8 @@ import de.spurtikus.vxi.connectors.ConnectorConfig;
  * @author dennis
  *
  */
-public class RPCConnectorConfig implements ConnectorConfig {
+public class RPCConnectorConfig extends AbstractConnectorConfig
+		implements ConnectorConfig {
 	/** Host to use */
 	private String host;
 	/** Device to use */
@@ -16,11 +18,19 @@ public class RPCConnectorConfig implements ConnectorConfig {
 	/** Our client id; arbitrary, but should be unique between clients. */
 	private int clientId;
 
+	public RPCConnectorConfig() {
+	}
+
 	/**
 	 * RPCConnectorConfig CTR.
-	 * @param host host to use.
-	 * @param clientId Our client id; arbitrary, but should be unique between clients. 
-	 * @param deviceId device to use.
+	 * 
+	 * @param host
+	 *            host to use.
+	 * @param clientId
+	 *            Our client id; arbitrary, but should be unique between
+	 *            clients.
+	 * @param deviceId
+	 *            device to use.
 	 */
 	public RPCConnectorConfig(String host, int clientId, String deviceId) {
 		this.host = host;
@@ -50,6 +60,11 @@ public class RPCConnectorConfig implements ConnectorConfig {
 
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + " client:" + clientId + ", host:"+ host + ", device:" + deviceId ;
 	}
 
 }
