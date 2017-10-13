@@ -18,11 +18,10 @@ import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
 import de.spurtikus.vxi.connectors.serial.SerialConnectorConfig;
 
 /**
- * Configuration class for MeasurementServer.
+ * Configuration class.
  * 
  * Singleton. first getInstance() initializes the properties. These are read
- * from homePath + CONFIGFILE_LOCATION . Properties then can be retrieved via
- * getProperty().
+ * from CONFIGFILE_LOCATION .
  * 
  * @author dennis
  *
@@ -31,13 +30,6 @@ public class Configuration {
 	static private Logger logger = LoggerFactory.getLogger(Configuration.class);
 
 	public static final String PREFIX = "vxi.connector.";
-
-	// public static final String CONN_SERIAL_TTY_BAUDRATE =
-	// "connector.serial.tty.baudrate";
-	// public static final String CONN_SERIAL_TTY_NAME =
-	// "connector.serial.tty.name";
-	// public static final String CONN_SERIAL_GPIB_DEFAULT_PRIMARY =
-	// "connector.serial.gpib.default.primary";
 
 	/**
 	 * Config file relative path in classpath
@@ -53,10 +45,6 @@ public class Configuration {
 	 * Singleton var
 	 */
 	private static Configuration INSTANCE = null;
-
-	public static void setHomePath(String homePath) {
-		// Configuration.homePath = homePath;
-	}
 
 	/**
 	 * Singleton -> private
@@ -83,6 +71,11 @@ public class Configuration {
 		return INSTANCE;
 	}
 
+	/**
+	 * Initializes configuration. Reads in properties.
+	 * 
+	 * @throws Exception
+	 */
 	public static void initialize() throws Exception {
 		InputStream is = null;
 
@@ -102,10 +95,22 @@ public class Configuration {
 		}
 	}
 
+	/**
+	 * Get a property by key.
+	 * 
+	 * @param key
+	 *            property name/key.
+	 * @return property value.
+	 */
 	public static String getProperty(String key) {
 		return properties.getProperty(key);
 	}
 
+	/**
+	 * Gets list of ConnectorConfigurations.
+	 * 
+	 * @return list of ConnectorConfigurations.
+	 */
 	public static List<ConnectorConfig> getConnectorConfigs() {
 		List<ConnectorConfig> confs = new ArrayList<>();
 		// Loop 1: create empty configs with correct type
@@ -157,19 +162,30 @@ public class Configuration {
 				logger.error("Cannot read id value from '{}'", parts[0]);
 				continue;
 			}
-			ConnectorConfig cc = getConfigFor(confs, id);
+			ConnectorConfig cc = findConfigById(confs, id);
 			fillConf(cc, parts, value);
 		}
 		return confs;
 	}
 
-	private static void fillConf(ConnectorConfig cc, String[] parts, String value) {
+	/**
+	 * Fills configuration value in ConnectorConfig object.
+	 * 
+	 * @param conf
+	 *            configuration object
+	 * @param parts
+	 *            parts of key (e.g. '1.baudrate')
+	 * @param value
+	 *            value for key
+	 */
+	private static void fillConf(ConnectorConfig conf, String[] parts,
+			String value) {
 		logger.debug("keyp RPC '{}', value={}",
 				Arrays.stream(parts).reduce((a, b) -> a + "." + b).get(),
 				value);
 		if (parts.length == 2) {
 			try {
-				callSetter(cc, parts[1], value);
+				callSetter(conf, parts[1], value);
 			} catch (IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException e) {
 				// TODO Auto-generated catch block
@@ -181,33 +197,59 @@ public class Configuration {
 		}
 	}
 
-	private static void callSetter(ConnectorConfig cc, String key, String value)
-			throws IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException {
-		for (Method method : cc.getClass().getMethods()) {
+	/**
+	 * Sets 'value' for 'key' in configuration object. Uses introspection to
+	 * find setter method.
+	 * 
+	 * @param conf
+	 *            configuration object
+	 * @param key
+	 *            key attribute name to set
+	 * @param value
+	 *            value for attribute
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 */
+	private static void callSetter(ConnectorConfig conf, String key,
+			String value) throws IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException {
+		for (Method method : conf.getClass().getMethods()) {
 			String mname = method.getName();
 			// logger.debug("Method {}", mname);
 			if (mname.startsWith("set") && mname.replaceAll("set", "")
 					.toLowerCase().equals(key.toLowerCase())) {
 				logger.debug("Call setter {} with value {}", mname, value);
 				Class<?> pt = method.getParameterTypes()[0];
-				//logger.debug("Param {}", pt.getSimpleName());
+				// logger.debug("Param {}", pt.getSimpleName());
 				switch (pt.getSimpleName()) {
 				case "int":
 					int intval = Integer.parseInt(value);
-					method.invoke(cc, intval);
+					method.invoke(conf, intval);
 					break;
 				case "String":
-					method.invoke(cc, value);
+					method.invoke(conf, value);
 					break;
-					default:
-						logger.error("Cannot handle property type {}", pt.getSimpleName());
-						break;
+				default:
+					logger.error("Cannot handle property type {}",
+							pt.getSimpleName());
+					break;
 				}
 			}
 		}
 	}
 
+	/**
+	 * Gets object (new or existing) for a given connector configuration id.
+	 * 
+	 * @param confs
+	 *            list of configurations found.
+	 * @param id
+	 *            id to get object for.
+	 * @param type
+	 *            type of connector (used for CTR call).
+	 * @return object found or new object.
+	 */
 	private static ConnectorConfig getConfigFor(List<ConnectorConfig> confs,
 			int id, String type) {
 		for (ConnectorConfig c : confs) {
@@ -234,7 +276,15 @@ public class Configuration {
 		return c;
 	}
 
-	private static ConnectorConfig getConfigFor(List<ConnectorConfig> confs,
+	/**
+	 * 
+	 * @param confs
+	 *            list of configurations found.
+	 * @param id
+	 *            id to find object for.
+	 * @return object found or null.
+	 */
+	private static ConnectorConfig findConfigById(List<ConnectorConfig> confs,
 			int id) {
 		for (ConnectorConfig c : confs) {
 			if (c.getId() == id) {

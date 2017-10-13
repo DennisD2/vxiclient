@@ -43,10 +43,16 @@ public class PortmapperClient {
 		} catch (UnknownHostException e) {
 			logger.error("get inet address by name failed for {}.", host);
 			e.printStackTrace();
-			return;
+			throw e;
 		}
+		try {
 		portmapper = new OncRpcPortmapClient(address,
 				OncRpcProtocols.ONCRPC_TCP);
+		} catch  (Exception e) {
+			logger.error("Cannot create portmap client for {}.", host);
+			e.printStackTrace();
+			throw e;
+		}
 		logger.info("Created portmapper client for {}", host);
 	}
 

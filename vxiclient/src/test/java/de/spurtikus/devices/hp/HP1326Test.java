@@ -7,10 +7,12 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
+import de.spurtikus.vxi.service.Configuration;
 
 public class HP1326Test {
 	String host = "vxi1";
@@ -22,8 +24,11 @@ public class HP1326Test {
 	@Before
 	public void before() throws Exception {
 		System.out.println("Start...");
-
-		RPCConnectorConfig config = new RPCConnectorConfig(host, CLIENT_ID, TEST_DEVICE_ID);
+		Configuration configuration = Configuration.getInstance();
+		List<ConnectorConfig> confs = configuration.getConnectorConfigs();
+		ConnectorConfig config = confs.get(1);
+		System.out.println(config);
+		// config = new RPCConnectorConfig(host, CLIENT_ID, TEST_DEVICE_ID);
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
 
 		DeviceLink theLid = vxiConnector.initialize(config);
@@ -42,7 +47,7 @@ public class HP1326Test {
 
 	@Test 
 	public void HP1326_DMM_Test() throws Exception {
-		System.out.println("Tests using channels require DVM+Switch configurtation!");
+		System.out.println("Tests using channels require DVM+Switch configuration!");
 		List<Integer> channels = generateChannels();
 		
 		testee.initializeVoltageMeasurement(7.27, channels);
