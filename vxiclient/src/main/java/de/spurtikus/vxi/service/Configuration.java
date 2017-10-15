@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,68 +103,72 @@ public class Configuration {
 	 *            property name/key.
 	 * @return property value.
 	 */
-	public static String getProperty(String key) {
+	public String getProperty(String key) {
 		return properties.getProperty(key);
 	}
+
+	static List<ConnectorConfig> confs = null;
 
 	/**
 	 * Gets list of ConnectorConfigurations.
 	 * 
 	 * @return list of ConnectorConfigurations.
 	 */
-	public static List<ConnectorConfig> getConnectorConfigs() {
-		List<ConnectorConfig> confs = new ArrayList<>();
-		// Loop 1: create empty configs with correct type
-		for (Object k : properties.keySet()) {
-			String key = (String) k;
-			if (!key.startsWith(PREFIX)) {
-				logger.error("Unknown property key '{}'", key);
-				continue;
+	public List<ConnectorConfig> getConfigs() {
+		if (confs == null) {
+			confs = new ArrayList<>();
+			// Loop 1: create empty configs with correct type
+			for (Object k : properties.keySet()) {
+				String key = (String) k;
+				if (!key.startsWith(PREFIX)) {
+					logger.error("Unknown property key '{}'", key);
+					continue;
+				}
+				String value = properties.getProperty(key);
+				// logger.debug("key '{}', value={}", key, value);
+				String keypart = key.replaceAll(PREFIX, "");
+				// logger.debug(keypart);
+				String[] parts = keypart.split("\\.");
+				int id = 0;
+				try {
+					id = Integer.parseInt(parts[0]);
+				} catch (Exception e) {
+					logger.error("Cannot read id value from '{}'", parts[0]);
+					continue;
+				}
+				if (parts.length != 2) {
+					continue;
+				}
+				if (parts[1].equals("type")) {
+					logger.info("type found, id={}, type={}", id, value);
+					ConnectorConfig c = getConfigFor(confs, id, value);
+					// add to list
+					confs.add(c);
+				}
 			}
-			String value = properties.getProperty(key);
-			// logger.debug("key '{}', value={}", key, value);
-			String keypart = key.replaceAll(PREFIX, "");
-			// logger.debug(keypart);
-			String[] parts = keypart.split("\\.");
-			int id = 0;
-			try {
-				id = Integer.parseInt(parts[0]);
-			} catch (Exception e) {
-				logger.error("Cannot read id value from '{}'", parts[0]);
-				continue;
-			}
-			if (parts.length != 2) {
-				continue;
-			}
-			if (parts[1].equals("type")) {
-				logger.info("type found, id={}, type={}", id, value);
-				ConnectorConfig c = getConfigFor(confs, id, value);
-				// add to list
-				confs.add(c);
-			}
-		}
 
-		// Loop 2: fill configs
-		for (Object k : properties.keySet()) {
-			String key = (String) k;
-			if (!key.startsWith(PREFIX)) {
-				logger.error("Unknown property key '{}'", key);
-				continue;
+			// Loop 2: fill configs
+			for (Object k : properties.keySet()) {
+				String key = (String) k;
+				if (!key.startsWith(PREFIX)) {
+					logger.error("Unknown property key '{}'", key);
+					continue;
+				}
+				String value = properties.getProperty(key);
+				// logger.debug("key '{}', value={}", key, value);
+				String keypart = key.replaceAll(PREFIX, "");
+				// logger.info(keypart);
+				String[] parts = keypart.split("\\.");
+				int id = 0;
+				try {
+					id = Integer.parseInt(parts[0]);
+				} catch (Exception e) {
+					logger.error("Cannot read id value from '{}'", parts[0]);
+					continue;
+				}
+				ConnectorConfig cc = findConfigById(confs, id);
+				fillConf(cc, parts, value);
 			}
-			String value = properties.getProperty(key);
-			// logger.debug("key '{}', value={}", key, value);
-			String keypart = key.replaceAll(PREFIX, "");
-			// logger.info(keypart);
-			String[] parts = keypart.split("\\.");
-			int id = 0;
-			try {
-				id = Integer.parseInt(parts[0]);
-			} catch (Exception e) {
-				logger.error("Cannot read id value from '{}'", parts[0]);
-				continue;
-			}
-			ConnectorConfig cc = findConfigById(confs, id);
-			fillConf(cc, parts, value);
 		}
 		return confs;
 	}
@@ -180,9 +185,9 @@ public class Configuration {
 	 */
 	private static void fillConf(ConnectorConfig conf, String[] parts,
 			String value) {
-		logger.debug("keyp RPC '{}', value={}",
-				Arrays.stream(parts).reduce((a, b) -> a + "." + b).get(),
-				value);
+		// logger.debug("key RPC '{}', value={}",
+		// Arrays.stream(parts).reduce((a, b) -> a + "." + b).get(),
+		// value);
 		if (parts.length == 2) {
 			try {
 				callSetter(conf, parts[1], value);
@@ -214,6 +219,7 @@ public class Configuration {
 	private static void callSetter(ConnectorConfig conf, String key,
 			String value) throws IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
+		boolean called = false;
 		for (Method method : conf.getClass().getMethods()) {
 			String mname = method.getName();
 			// logger.debug("Method {}", mname);
@@ -223,12 +229,19 @@ public class Configuration {
 				Class<?> pt = method.getParameterTypes()[0];
 				// logger.debug("Param {}", pt.getSimpleName());
 				switch (pt.getSimpleName()) {
+				case "boolean":
+					boolean boolval = Boolean.parseBoolean(value);
+					method.invoke(conf, boolval);
+					called = true;
+					break;
 				case "int":
 					int intval = Integer.parseInt(value);
 					method.invoke(conf, intval);
+					called = true;
 					break;
 				case "String":
 					method.invoke(conf, value);
+					called = true;
 					break;
 				default:
 					logger.error("Cannot handle property type {}",
@@ -236,6 +249,10 @@ public class Configuration {
 					break;
 				}
 			}
+		}
+		if (!called) {
+			logger.error("No setter for key {}", key);
+
 		}
 	}
 
@@ -293,5 +310,16 @@ public class Configuration {
 		}
 		logger.error("Could not find config with id={}", id);
 		return null;
+	}
+
+	/**
+	 * Get all enabled configs
+	 * 
+	 * @return
+	 */
+	public List<ConnectorConfig> getEnabledConfigs() {
+		getConfigs(); // assert that conf is set
+		return confs.stream().filter(c -> c.isEnabled())
+				.collect(Collectors.toList());
 	}
 }

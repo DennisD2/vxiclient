@@ -11,4 +11,8 @@ public interface ConnectorConfig {
 	int getId();
 
 	void setId(int id);
+	
+	public boolean isEnabled();
+
+	public void setEnabled(boolean enabled) ;
 }

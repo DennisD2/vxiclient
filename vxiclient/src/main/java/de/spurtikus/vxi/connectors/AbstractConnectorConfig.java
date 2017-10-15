@@ -1,8 +1,9 @@
 package de.spurtikus.vxi.connectors;
 
 public abstract class AbstractConnectorConfig implements ConnectorConfig {
-	int id = 0;
-
+	private int id = 0;
+	private boolean enabled=true;
+	
 	@Override
 	public int getId() {
 		return id;
@@ -12,6 +13,15 @@ public abstract class AbstractConnectorConfig implements ConnectorConfig {
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 
 	@Override
 	public String toString() {

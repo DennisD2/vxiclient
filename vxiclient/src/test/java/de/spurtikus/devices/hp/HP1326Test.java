@@ -15,20 +15,23 @@ import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
 import de.spurtikus.vxi.service.Configuration;
 
 public class HP1326Test {
-	String host = "vxi1";
-	static final int CLIENT_ID = 12345;
-	static final String TEST_DEVICE_ID = "iscpi,8";
 
 	HP1326 testee = null;
 	
+	private ConnectorConfig simpleConfig() {
+		//String host = "vxi1";
+		//static final int CLIENT_ID = 12345;
+		//static final String TEST_DEVICE_ID = "iscpi,8";
+		//return new RPCConnectorConfig(host, CLIENT_ID, TEST_DEVICE_ID);	
+		return null;
+	}
+	
 	@Before
 	public void before() throws Exception {
-		System.out.println("Start...");
 		Configuration configuration = Configuration.getInstance();
-		List<ConnectorConfig> confs = configuration.getConnectorConfigs();
+		List<ConnectorConfig> confs = configuration.getConfigs();
 		ConnectorConfig config = confs.get(1);
 		System.out.println(config);
-		// config = new RPCConnectorConfig(host, CLIENT_ID, TEST_DEVICE_ID);
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
 
 		DeviceLink theLid = vxiConnector.initialize(config);
@@ -38,16 +41,19 @@ public class HP1326Test {
 	
 	@Test
 	public void testMeasureSingle() throws Exception {
+		System.out.println("Start...");
 		testee.initialize();
 		testee.initializeVoltageMeasurement(7.27, null);
 
 		Double s = testee.measureSingle();
 		System.out.println(s);
+		System.out.println("... End");
 	}
 
 	@Test 
 	public void HP1326_DMM_Test() throws Exception {
 		System.out.println("Tests using channels require DVM+Switch configuration!");
+		System.out.println("Start...");
 		List<Integer> channels = generateChannels();
 		
 		testee.initializeVoltageMeasurement(7.27, channels);
@@ -56,6 +62,7 @@ public class HP1326Test {
 		for (int channel : m.keySet()) {
 			System.out.println(channel + " : " + m.get(channel));
 		}
+		System.out.println("... End");
 	}
 
 	protected List<Integer> generateChannels() {

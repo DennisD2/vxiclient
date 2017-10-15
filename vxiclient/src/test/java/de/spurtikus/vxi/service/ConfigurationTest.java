@@ -1,9 +1,11 @@
 package de.spurtikus.vxi.service;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.hamcrest.core.IsEqual;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -23,11 +25,18 @@ public class ConfigurationTest {
 
 	@Test
 	public void testGetConnectorConfigs() throws Exception {
-		List<ConnectorConfig> confs = conf.getConnectorConfigs();
+		List<ConnectorConfig> confs = conf.getConfigs();
 		assertNotNull(confs);
 		for (ConnectorConfig c: confs) {
 			System.out.println(c.toString());
 		}
+	}
+	
+	@Test
+	public void testGetEnabledConnectorConfigs() throws Exception {
+		List<ConnectorConfig> confs = conf.getEnabledConfigs();
+		assertNotNull(confs);
+		assertThat(confs.size(), IsEqual.equalTo(2));
 	}
 
 }
