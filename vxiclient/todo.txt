@@ -1,11 +1,13 @@
 
 Todos
 -----
+- Extend config to allow multiple devices per connector
+  - Add methods to get each device by its name (e.g. 'hp1330')
 - harmonize methods in ConversionUtil (see @deprecated)
 - Check methods in CommunicationUtil where they should go. maybe stay there :-)
 - Also import old Tests for HP1333,1340 and make them at least compilable.
 
-- Write SerialToGPIBConnector (much work)
-
 Done
 ----
+- Write SerialToGPIBConnector (much work)
+

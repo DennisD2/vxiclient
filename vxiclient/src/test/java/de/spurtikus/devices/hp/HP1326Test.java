@@ -1,9 +1,12 @@
 package de.spurtikus.devices.hp;
 
+import static org.junit.Assert.assertThat;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,12 +31,17 @@ public class HP1326Test {
 	
 	@Before
 	public void before() throws Exception {
+		// Get usable configuration
 		Configuration configuration = Configuration.getInstance();
 		List<ConnectorConfig> confs = configuration.getConfigs();
+		// We assume usable config is confs[0]
 		ConnectorConfig config = confs.get(1);
+		// We like to test a net device 
+		assertThat(config.getClass(), IsEqual.equalTo(RPCConnectorConfig.class));
 		System.out.println(config);
+		
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
-
+		
 		DeviceLink theLid = vxiConnector.initialize(config);
 		
 		testee = new HP1326(vxiConnector, theLid);

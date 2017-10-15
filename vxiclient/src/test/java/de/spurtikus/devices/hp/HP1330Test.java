@@ -1,27 +1,48 @@
 package de.spurtikus.devices.hp;
 
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
+
+import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import de.spurtikus.devices.hp.HP1330.PortDescription;
+import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
+import de.spurtikus.vxi.service.Configuration;
 
 public class HP1330Test {
-	String host = "vxi1";
-	static final int CLIENT_ID = 12345;
-	static final String TEST_DEVICE_ID = "iscpi,37";
-
 	HP1330 testee = null;
-	
+
+	private ConnectorConfig simpleConfig() {
+		//String host = "vxi1";
+		//static final int CLIENT_ID = 12345;
+		//static final String TEST_DEVICE_ID = "iscpi,37";
+		//return new RPCConnectorConfig(host, CLIENT_ID, TEST_DEVICE_ID);	
+		return null;
+	}
+
 	@Before
 	public void before() throws Exception {
 		System.out.println("Start...");
 
-		RPCConnectorConfig config = new RPCConnectorConfig(host, CLIENT_ID, TEST_DEVICE_ID);
+		// Get usable configuration
+		Configuration configuration = Configuration.getInstance();
+		List<ConnectorConfig> confs = configuration.getConfigs();
+		// We assume usable config is confs[0]
+		ConnectorConfig config = confs.get(1);
+		// We like to test a net device 
+		assertThat(config.getClass(), IsEqual.equalTo(RPCConnectorConfig.class));
+		// FIX TODO improve config to handle multiple devices
+		((RPCConnectorConfig)config).setDeviceId("iscpi,37");
+		System.out.println(config);
+		
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
 
 		DeviceLink theLid = vxiConnector.initialize(config);
