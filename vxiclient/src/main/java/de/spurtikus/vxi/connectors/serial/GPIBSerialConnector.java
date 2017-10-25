@@ -23,42 +23,73 @@ public class GPIBSerialConnector extends SerialConnector {
 		return INSTANCE;
 	}
 
+	boolean gpibInitialized = false;
+
 	protected GPIBSerialConnectorConfig getConfig() {
 		return (GPIBSerialConnectorConfig) theConfig;
 	}
 
 	@Override
-	public DeviceLink initialize(ConnectorConfig config) throws Exception {
-		DeviceLink l = super.initialize(config);
+	public DeviceLink initialize(ConnectorConfig config, String deviceId)
+			throws Exception {
+		/** reuse device link if possible */
+		if (deviceLinks.containsKey(deviceId)) {
+			logger.debug("Reuse device link for: " + deviceId);
+			return deviceLinks.get(deviceId);
+		}
+		logger.debug("Creating new device link for: " + deviceId);
+
+		/** Create new device link */
+		DeviceLink l = super.initialize(config, deviceId);
 
 		GPIBSerialConnectorConfig c = getConfig();
 
-		initializeCommunication(l);
+		if (!initialized) {
+			initializeCommunication(l);
 
-		if (c.getAdapterType() == ADAPTER_SERIAL_DIRECT) {
-			initializeSerialProtocol();
-		}
-		if (c.getAdapterType() == ADAPTER_SERIAL_GPIB) {
-			String s = send_and_receive(l, ".y");
+			if (c.getAdapterType() == ADAPTER_SERIAL_DIRECT) {
+				initializeSerialProtocol();
+			}
+			if (c.getAdapterType() == ADAPTER_SERIAL_GPIB) {
+				String s = send_and_receive(l, ".y");
+				logger.debug("DEV: " + s);
+			}
+			if (c.getAdapterType() == ADAPTER_PROLOGIX) {
+				String s;
+				s = send_and_receive(l, "++ver");
+				logger.debug("DEV: " + s);
+				// s = vxiConnector.send_and_receive(deviceLink, "++auto");
+				// log.xxx("DEV: " + s);
+			}
+
+			String s = send_and_receive(l, "++ver");
 			logger.debug("DEV: " + s);
-		}
-		if (c.getAdapterType() == ADAPTER_PROLOGIX) {
-			String s;
-			s = send_and_receive(l, "++ver");
-			logger.debug("DEV: " + s);
-			// s = vxiConnector.send_and_receive(deviceLink, "++auto");
-			// log.xxx("DEV: " + s);
+			// s = send_and_receive("++auto");
+			// logger.debug("DEV: " + s);
+			
+			initialized=true;
 		}
 
-		String s = send_and_receive(l, "++ver");
-		logger.debug("DEV: " + s);
-		// s = send_and_receive("++auto");
-		// logger.debug("DEV: " + s);
+		int primary = getPrimaryAddressFrom(deviceId);
+		int secondary = getSecondaryAddressFrom(deviceId);
+		// Select device
+		selectDevice(l, primary, secondary);
 
-		// Select mainframe
-		selectDevice(l, c.getControllerPrimaryAddress(),
-				c.getControllerSecondaryAddress());
+		// Put new link to deviceLink map
+		deviceLinks.put(deviceId, l);
 		return l;
+	}
+
+	private int getPrimaryAddressFrom(String deviceId) {
+		String[] p = deviceId.split(",");
+		int r = Integer.parseInt(p[0]);
+		return r;
+	}
+
+	private int getSecondaryAddressFrom(String deviceId) {
+		String[] p = deviceId.split(",");
+		int r = Integer.parseInt(p[1]);
+		return r;
 	}
 
 	/**
@@ -163,7 +194,7 @@ public class GPIBSerialConnector extends SerialConnector {
 			send(link, "++addr " + primary + " " + realAdr);
 		}
 	}
-	
+
 	/**
 	 * Selects a device by its name. Used with direct serial communication.
 	 * UNTESTED.
@@ -172,7 +203,8 @@ public class GPIBSerialConnector extends SerialConnector {
 	 *            Device name
 	 * @throws Exception
 	 */
-	public void selectDevice(DeviceLink deviceLink, String device) throws Exception {
+	public void selectDevice(DeviceLink deviceLink, String device)
+			throws Exception {
 		if (theConfig.getAdapterType() == ADAPTER_SERIAL_DIRECT) {
 			String s = send_and_receive(deviceLink, CRTL_D_STRING);
 			logger.debug("DEV: " + s);
@@ -180,5 +212,5 @@ public class GPIBSerialConnector extends SerialConnector {
 			logger.debug("DEV: " + s);
 		}
 	}
-	
+
 }

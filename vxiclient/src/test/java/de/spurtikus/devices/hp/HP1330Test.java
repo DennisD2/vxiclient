@@ -19,11 +19,11 @@ import de.spurtikus.vxi.service.Configuration;
 
 public class HP1330Test {
 	HP1330 testee = null;
+	static final String TEST_DEVICE_ID = "iscpi,37";
 
 	private ConnectorConfig simpleConfig() {
 		//String host = "vxi1";
 		//static final int CLIENT_ID = 12345;
-		//static final String TEST_DEVICE_ID = "iscpi,37";
 		//return new RPCConnectorConfig(host, CLIENT_ID, TEST_DEVICE_ID);	
 		return null;
 	}
@@ -39,13 +39,11 @@ public class HP1330Test {
 		ConnectorConfig config = confs.get(1);
 		// We like to test a net device 
 		assertThat(config.getClass(), IsEqual.equalTo(RPCConnectorConfig.class));
-		// FIX TODO improve config to handle multiple devices
-		((RPCConnectorConfig)config).setDeviceId("iscpi,37");
 		System.out.println(config);
 		
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
 
-		DeviceLink theLid = vxiConnector.initialize(config);
+		DeviceLink theLid = vxiConnector.initialize(config, TEST_DEVICE_ID);
 		
 		testee = new HP1330(vxiConnector, theLid);
 	}

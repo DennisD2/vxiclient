@@ -8,30 +8,15 @@ package de.spurtikus.vxi.connectors.serial;
  *
  */
 public class GPIBSerialConnectorConfig extends SerialConnectorConfig {
-	/** Controller primary address */
-	int controllerPrimaryAddress = 9;
-	/** Controller secondary address */
-	int controllerSecondaryAddress = 0;
+	int primary=9;
+	int secondary=0;
 
-	public void setControllerPrimaryAddress(int controllerPrimaryAddress) {
-		this.controllerPrimaryAddress = controllerPrimaryAddress;
+	public int getPrimaryAddress(String deviceId) {
+		return primary;
 	}
 
-	public int getControllerPrimaryAddress() {
-		return controllerPrimaryAddress;
-	}
-
-	public void setControllerSecondaryAddress(int controllerSecondaryAddress) {
-		this.controllerSecondaryAddress = controllerSecondaryAddress;
-	}
-
-	public int getControllerSecondaryAddress() {
-		return controllerSecondaryAddress;
-	}
-
-	@Override
-	public String toString() {
-		return super.toString() + ", default gpib address "+controllerPrimaryAddress+","+controllerSecondaryAddress+"";
+	public int getSecondaryAddress(String deviceId) {
+		return secondary;
 	}
 
 }

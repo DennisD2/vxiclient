@@ -7,11 +7,15 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
@@ -28,24 +32,25 @@ import de.spurtikus.vxi.connectors.serial.SerialConnectorConfig;
  *
  */
 public class Configuration {
+	private static final String TYPE_PROP__KEY = "type";
+
 	static private Logger logger = LoggerFactory.getLogger(Configuration.class);
 
+	/** Prefix for all vxiclient properties */
 	public static final String PREFIX = "vxi.connector.";
 
-	/**
-	 * Config file relative path in classpath
-	 */
+	/** Config file relative path in classpath */
 	private static final String CONFIGFILE_LOCATION = "vxiserver.properties";
 
-	/**
-	 * Properties loaded from CONFIGFILE_LOCATION
-	 */
+	/** Properties loaded from CONFIGFILE_LOCATION */
 	private static Properties properties = null;
 
-	/**
-	 * Singleton var
-	 */
+	/** Singleton var */
 	private static Configuration INSTANCE = null;
+
+	/** List of confis */
+	static List<ConnectorConfig> confs = null;
+
 
 	/**
 	 * Singleton -> private
@@ -59,14 +64,14 @@ public class Configuration {
 	 * @return the singleton
 	 * @throws Exception
 	 */
-	public static Configuration getInstance() {
+	public static Configuration getInstance() throws Exception {
 		if (INSTANCE == null) {
 			INSTANCE = new Configuration();
 			try {
 				initialize();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Cannot initialize Configuration.", e);
+				throw new Exception("annot initialize Configuration.", e);
 			}
 		}
 		return INSTANCE;
@@ -80,7 +85,8 @@ public class Configuration {
 	public static void initialize() throws Exception {
 		InputStream is = null;
 
-		logger.info("Read configuration from file {}", CONFIGFILE_LOCATION);
+		logger.info("Read configuration from classpath resource {}",
+				CONFIGFILE_LOCATION);
 		is = Configuration.class.getClassLoader()
 				.getResourceAsStream(CONFIGFILE_LOCATION);
 		if (is == null) {
@@ -93,7 +99,11 @@ public class Configuration {
 		} catch (IOException e) {
 			logger.info(
 					"Failed loading properties from " + CONFIGFILE_LOCATION);
+			throw new Exception(
+					"Failed loading properties from " + CONFIGFILE_LOCATION);
 		}
+		// set up config list
+		confs = getConfigs();
 	}
 
 	/**
@@ -107,14 +117,12 @@ public class Configuration {
 		return properties.getProperty(key);
 	}
 
-	static List<ConnectorConfig> confs = null;
-
 	/**
 	 * Gets list of ConnectorConfigurations.
 	 * 
 	 * @return list of ConnectorConfigurations.
 	 */
-	public List<ConnectorConfig> getConfigs() {
+	public static List<ConnectorConfig> getConfigs() {
 		if (confs == null) {
 			confs = new ArrayList<>();
 			// Loop 1: create empty configs with correct type
@@ -139,7 +147,7 @@ public class Configuration {
 				if (parts.length != 2) {
 					continue;
 				}
-				if (parts[1].equals("type")) {
+				if (parts[1].equals(TYPE_PROP__KEY)) {
 					logger.info("type found, id={}, type={}", id, value);
 					ConnectorConfig c = getConfigFor(confs, id, value);
 					// add to list
@@ -166,7 +174,7 @@ public class Configuration {
 					logger.error("Cannot read id value from '{}'", parts[0]);
 					continue;
 				}
-				ConnectorConfig cc = findConfigById(confs, id);
+				ConnectorConfig cc = findConfigById(id);
 				fillConf(cc, parts, value);
 			}
 		}
@@ -183,7 +191,7 @@ public class Configuration {
 	 * @param value
 	 *            value for key
 	 */
-	private static void fillConf(ConnectorConfig conf, String[] parts,
+	protected static void fillConf(ConnectorConfig conf, String[] parts,
 			String value) {
 		// logger.debug("key RPC '{}', value={}",
 		// Arrays.stream(parts).reduce((a, b) -> a + "." + b).get(),
@@ -216,7 +224,7 @@ public class Configuration {
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	private static void callSetter(ConnectorConfig conf, String key,
+	protected static void callSetter(ConnectorConfig conf, String key,
 			String value) throws IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 		boolean called = false;
@@ -225,7 +233,8 @@ public class Configuration {
 			// logger.debug("Method {}", mname);
 			if (mname.startsWith("set") && mname.replaceAll("set", "")
 					.toLowerCase().equals(key.toLowerCase())) {
-				logger.debug("Call setter {} with value {}", mname, value);
+				logger.debug("Call config (id={}) setter {} with value {}",
+						conf.getId(), mname, value);
 				Class<?> pt = method.getParameterTypes()[0];
 				// logger.debug("Param {}", pt.getSimpleName());
 				switch (pt.getSimpleName()) {
@@ -243,6 +252,11 @@ public class Configuration {
 					method.invoke(conf, value);
 					called = true;
 					break;
+				case "Map":
+					Map<String, String> mval = JSonStringToMap(value);
+					method.invoke(conf, mval);
+					called = true;
+					break;
 				default:
 					logger.error("Cannot handle property type {}",
 							pt.getSimpleName());
@@ -250,10 +264,17 @@ public class Configuration {
 				}
 			}
 		}
-		if (!called) {
+		if (!called && !key.equals(TYPE_PROP__KEY)) {
 			logger.error("No setter for key {}", key);
-
 		}
+	}
+
+	protected static Map<String, String> JSonStringToMap(String value) {
+		java.lang.reflect.Type mapType = new TypeToken<Map<String, String>>() {
+		}.getType();
+		Gson gson = new Gson();
+		Map<String, String> devs = gson.fromJson(value, mapType);
+		return devs;
 	}
 
 	/**
@@ -267,7 +288,7 @@ public class Configuration {
 	 *            type of connector (used for CTR call).
 	 * @return object found or new object.
 	 */
-	private static ConnectorConfig getConfigFor(List<ConnectorConfig> confs,
+	protected static ConnectorConfig getConfigFor(List<ConnectorConfig> confs,
 			int id, String type) {
 		for (ConnectorConfig c : confs) {
 			if (c.getId() == id) {
@@ -294,15 +315,13 @@ public class Configuration {
 	}
 
 	/**
+	 * Find a configuration by its id.
 	 * 
-	 * @param confs
-	 *            list of configurations found.
 	 * @param id
 	 *            id to find object for.
 	 * @return object found or null.
 	 */
-	private static ConnectorConfig findConfigById(List<ConnectorConfig> confs,
-			int id) {
+	public static ConnectorConfig findConfigById(int id) {
 		for (ConnectorConfig c : confs) {
 			if (c.getId() == id) {
 				return c;
@@ -318,8 +337,12 @@ public class Configuration {
 	 * @return
 	 */
 	public List<ConnectorConfig> getEnabledConfigs() {
-		getConfigs(); // assert that conf is set
 		return confs.stream().filter(c -> c.isEnabled())
 				.collect(Collectors.toList());
+	}
+
+	public static String getDeviceIdByName(int connectorId, String name) {
+		ConnectorConfig theConf = confs.stream().filter(c-> c.getId()==connectorId).findAny().get();
+		return theConf.getDeviceIdByName(name);
 	}
 }

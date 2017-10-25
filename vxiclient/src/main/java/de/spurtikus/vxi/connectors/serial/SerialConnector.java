@@ -9,6 +9,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.spurtikus.vxi.connectors.AbstractConnector;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
@@ -43,7 +44,7 @@ import gnu.io.UnsupportedCommOperationException;
  * @author dennis
  *
  */
-public class SerialConnector implements VXIConnector {
+public class SerialConnector extends AbstractConnector implements VXIConnector {
 	Logger logger = LoggerFactory.getLogger(SerialConnector.class);
 
 	/** Singleton */
@@ -62,10 +63,11 @@ public class SerialConnector implements VXIConnector {
 	private SerialReader serialReader;
 	private Thread serialReaderThread;
 
+	boolean initialized;
 	/** True if port is open */
-	protected Boolean open = false;
+	//protected Boolean open = false;
 	/** true if port is started. */
-	protected volatile Boolean started = false;
+	//protected volatile Boolean started = false;
 
 	private static final int WAIT_TIME_AFTER_SEND = 1;
 
@@ -84,16 +86,16 @@ public class SerialConnector implements VXIConnector {
 	}
 
 	@Override
-	public DeviceLink initialize(ConnectorConfig config) throws Exception {
-		if (started) {
-			logger.info("Port is already started");
-		}
+	public DeviceLink initialize(ConnectorConfig config, String deviceId) throws Exception {
 		theConfig = (SerialConnectorConfig) config;
 
-		initializePhysicalPort();
-		startReaderThread();
-
-		DeviceLink link = new DeviceLink(serialPort);
+		if (!initialized) {
+			// initialize physical connection and reader thread
+			initializePhysicalPort();
+			startReaderThread();
+			initialized=true;
+		}
+		DeviceLink link = new DeviceLink(config);
 		return link;
 	}
 
@@ -159,25 +161,10 @@ public class SerialConnector implements VXIConnector {
 	 * Start the reader thread. See run() what is happening in thread.
 	 */
 	public void startReaderThread() {
-		if (started) {
-			logger.info("port is already started");
-			return;
-		}
 		// start this thread, see run()
 		serialReaderThread = new Thread(serialReader);
 		serialReaderThread.start();
-		started = true;
 		logger.debug("port started");
-	}
-
-	public void stop() {
-		if (!started) {
-			logger.info("port is not started");
-			return;
-		}
-		logger.debug("stop port");
-		// serialReaderThread.stop();
-		started = false;
 	}
 
 	/**
@@ -187,10 +174,6 @@ public class SerialConnector implements VXIConnector {
 	 * @throws Exception
 	 */
 	public void initializePhysicalPort() throws Exception {
-		if (open) {
-			logger.info("port is already open");
-			return;
-		}
 		logger.debug("Open port");
 
 		CommPortIdentifier serialPortId = getSerialPort(theConfig.getPort());
@@ -207,7 +190,6 @@ public class SerialConnector implements VXIConnector {
 		setPortMode(serialPortId);
 
 		// All good
-		open = true;
 		logger.debug("Port opened.");
 	}
 
@@ -324,18 +306,10 @@ public class SerialConnector implements VXIConnector {
 	/**
 	 * Closes port
 	 * 
-	 * closes port, set CPS back to zero.
+	 * closes port
 	 * 
 	 */
 	public void close() {
-		if (open) {
-			// log.xxx("closing port.");
-			// serialPort.close();
-			open = false;
-		} else {
-			logger.info("Port is already closed.");
-		}
-		logger.debug("Port closed.");
 	}
 
 	/**
@@ -364,14 +338,6 @@ public class SerialConnector implements VXIConnector {
 			}
 		}
 		return ports;
-	}
-
-	public Boolean isStarted() {
-		return started;
-	}
-
-	public Boolean isOpen() {
-		return open;
 	}
 
 	public void UploadBinaryData(String string, byte[] demo) {

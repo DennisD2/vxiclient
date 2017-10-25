@@ -18,6 +18,7 @@ import de.spurtikus.rpcgen.Device_WriteParms;
 import de.spurtikus.rpcgen.Device_WriteResp;
 import de.spurtikus.rpcgen.vxi11;
 import de.spurtikus.rpcgen.vxi11_DEVICE_CORE_Client;
+import de.spurtikus.vxi.connectors.AbstractConnector;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
@@ -31,7 +32,7 @@ import de.spurtikus.vxi.util.ConversionUtil;
  * @author dennis
  *
  */
-public class RPCConnector implements VXIConnector {
+public class RPCConnector extends AbstractConnector implements VXIConnector {
 	static Logger logger = LoggerFactory.getLogger("RPCConnector");
 
 	/** Singleton */
@@ -64,12 +65,12 @@ public class RPCConnector implements VXIConnector {
 	}
 
 	@Override
-	public DeviceLink initialize(ConnectorConfig config) throws Exception {
+	public DeviceLink initialize(ConnectorConfig config, String deviceId) throws Exception {
 		theConfig = (RPCConnectorConfig) config;
 		vxiPort = getPortFromPortmapper();
 		client = createVXICoreDevice();
 		Device_Link device_link = createVXILink(theConfig.getClientId(),
-				theConfig.getDeviceId());
+				deviceId);
 		if (device_link == null) {
 			throw new Exception("Cannot create device link.");
 		}

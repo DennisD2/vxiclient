@@ -32,12 +32,12 @@ public class HP1340Test {
 		GPIBSerialConnectorConfig config = new GPIBSerialConnectorConfig();
 		config.setPort(tty);
 		config.setBaudRate(baudRate);
-		config.setControllerPrimaryAddress(9);
-		config.setControllerSecondaryAddress(0);
+		//config.setControllerPrimaryAddress(9);
+		//config.setControllerSecondaryAddress(0);
 
 		GPIBSerialConnector vxiConnector = (GPIBSerialConnector) VXIConnectorFactory.getConnector(config);
 
-		theLid = vxiConnector.initialize(config);
+		theLid = vxiConnector.initialize(config,"9,0");
 
 		testee = new HP1340(vxiConnector, theLid);
 

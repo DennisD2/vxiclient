@@ -13,8 +13,6 @@ public class RPCConnectorConfig extends AbstractConnectorConfig
 		implements ConnectorConfig {
 	/** Host to use */
 	private String host;
-	/** Device to use */
-	private String deviceId;
 	/** Our client id; arbitrary, but should be unique between clients. */
 	private int clientId;
 
@@ -32,10 +30,9 @@ public class RPCConnectorConfig extends AbstractConnectorConfig
 	 * @param deviceId
 	 *            device to use.
 	 */
-	public RPCConnectorConfig(String host, int clientId, String deviceId) {
+	public RPCConnectorConfig(String host, int clientId) {
 		this.host = host;
 		this.clientId = clientId;
-		this.deviceId = deviceId;
 	}
 
 	public String getHost() {
@@ -50,21 +47,13 @@ public class RPCConnectorConfig extends AbstractConnectorConfig
 		return clientId;
 	}
 
-	public String getDeviceId() {
-		return deviceId;
-	}
-
 	public void setClientId(int clientId) {
 		this.clientId = clientId;
 	}
 
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
-	}
-
 	@Override
 	public String toString() {
-		return super.toString() + " client:" + clientId + ", host:"+ host + ", device:" + deviceId ;
+		return super.toString() + " client:" + clientId + ", host:"+ host  ;
 	}
 
 }

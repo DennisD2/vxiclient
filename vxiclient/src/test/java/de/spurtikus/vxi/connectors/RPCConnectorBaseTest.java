@@ -14,19 +14,18 @@ public class RPCConnectorBaseTest {
 
 	static final int CLIENT_ID = 12345;
 
-	static final String TEST_DEVICE_ID = "iscpi,37";
-	// static final String TEST_DEVICE_ID = "iscpi,8";
+	//static final String TEST_DEVICE_ID = "iscpi,37";
+	static final String TEST_DEVICE_ID = "iscpi,8";
 
 	@Test
 	public void vxiConnectorTest() throws Exception {
 		System.out.println("Start...");
 
-		RPCConnectorConfig config = new RPCConnectorConfig(host, CLIENT_ID,
-				TEST_DEVICE_ID);
+		RPCConnectorConfig config = new RPCConnectorConfig(host, CLIENT_ID);
 
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
 
-		DeviceLink theLid = vxiConnector.initialize(config);
+		DeviceLink theLid = vxiConnector.initialize(config, TEST_DEVICE_ID);
 		// Send command
 		// String cmd = "MEAS:VOLT:AC? 1, 0.001";
 		String cmd = "*IDN?";

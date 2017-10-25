@@ -1,8 +1,10 @@
 
 Todos
 -----
-- Extend config to allow multiple devices per connector
-  - Add methods to get each device by its name (e.g. 'hp1330')
+- Extend Configuration and Connectors to have multiple "device-connections"
+	- To be done for RpcConnector
+- RPC Connector: cache all created DeviceLinks
+
 - harmonize methods in ConversionUtil (see @deprecated)
 - Check methods in CommunicationUtil where they should go. maybe stay there :-)
 - Also import old Tests for HP1333,1340 and make them at least compilable.
@@ -10,4 +12,7 @@ Todos
 Done
 ----
 - Write SerialToGPIBConnector (much work)
-
+- Extend config to allow multiple devices per connector - OK
+  - Add methods to get each device by its name (e.g. 'hp1330') - OK
+- Serial... in DeviceLink, the primary/secondary address must be located
+- Serial implement getSec/Prim Adress from String in correct way, see TODO

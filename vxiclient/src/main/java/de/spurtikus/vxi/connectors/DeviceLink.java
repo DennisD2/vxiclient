@@ -1,8 +1,6 @@
 package de.spurtikus.vxi.connectors;
 
 import de.spurtikus.rpcgen.Device_Link;
-import de.spurtikus.vxi.connectors.serial.SerialConnector;
-import gnu.io.SerialPort;
 
 /**
  * Wrapper for link to device
@@ -17,7 +15,7 @@ public class DeviceLink {
 		wrapped = link;
 	}
 
-	public DeviceLink(SerialPort port) {
+	public DeviceLink(ConnectorConfig port) {
 		wrapped = port;
 	}
 

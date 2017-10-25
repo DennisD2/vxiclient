@@ -17,7 +17,7 @@ public interface VXIConnector {
 	 * @return link to device. This link needs to be used in subsequent calls.
 	 * @throws Exception
 	 */
-	DeviceLink initialize(ConnectorConfig config) throws Exception;
+	DeviceLink initialize(ConnectorConfig config, String deviceId) throws Exception;
 
 	/**
 	 * Send a message to a link.

@@ -20,11 +20,11 @@ import de.spurtikus.vxi.service.Configuration;
 public class HP1326Test {
 
 	HP1326 testee = null;
+	final String TEST_DEVICE_ID = "iscpi,8";
 	
 	private ConnectorConfig simpleConfig() {
 		//String host = "vxi1";
 		//static final int CLIENT_ID = 12345;
-		//static final String TEST_DEVICE_ID = "iscpi,8";
 		//return new RPCConnectorConfig(host, CLIENT_ID, TEST_DEVICE_ID);	
 		return null;
 	}
@@ -42,7 +42,7 @@ public class HP1326Test {
 		
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
 		
-		DeviceLink theLid = vxiConnector.initialize(config);
+		DeviceLink theLid = vxiConnector.initialize(config, TEST_DEVICE_ID);
 		
 		testee = new HP1326(vxiConnector, theLid);
 	}
