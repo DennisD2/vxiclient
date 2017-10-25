@@ -8,5 +8,4 @@ public class AbstractConnector {
 	/** Device links */
 	protected static Map<String, DeviceLink> deviceLinks = new HashMap<>();
 	
-
 }

@@ -1,14 +1,13 @@
 
 Todos
 -----
-- Extend Configuration and Connectors to have multiple "device-connections"
-	- To be done for RpcConnector
-- RPC Connector: cache all created DeviceLinks
+- Define further work; how to continue???
+
 
 - harmonize methods in ConversionUtil (see @deprecated)
 - Check methods in CommunicationUtil where they should go. maybe stay there :-)
 - Correct 1340 test.
-- Hp1330 test fails at leat for RPC
+- Hp1330 test fails at least for RPC
 
 Done
 ----
@@ -17,3 +16,5 @@ Done
   - Add methods to get each device by its name (e.g. 'hp1330') - OK
 - Serial... in DeviceLink, the primary/secondary address must be located
 - Serial implement getSec/Prim Adress from String in correct way, see TODO
+- Extend Configuration and Connectors to have multiple "device-connections"
+- RPC Connector: cache all created DeviceLinks

@@ -66,6 +66,13 @@ public class RPCConnector extends AbstractConnector implements VXIConnector {
 
 	@Override
 	public DeviceLink initialize(ConnectorConfig config, String deviceId) throws Exception {
+		/** reuse device link if possible */
+		if (deviceLinks.containsKey(deviceId)) {
+			logger.debug("Reuse device link for: " + deviceId);
+			return deviceLinks.get(deviceId);
+		}
+		logger.debug("Creating new device link for: " + deviceId);
+
 		theConfig = (RPCConnectorConfig) config;
 		vxiPort = getPortFromPortmapper();
 		client = createVXICoreDevice();
@@ -74,7 +81,9 @@ public class RPCConnector extends AbstractConnector implements VXIConnector {
 		if (device_link == null) {
 			throw new Exception("Cannot create device link.");
 		}
-		return new DeviceLink(device_link);
+		DeviceLink l = new DeviceLink(device_link);
+		deviceLinks.put(deviceId, l);
+		return l;
 	}
 
 	static PortmapperClient portmapperClient = null;
