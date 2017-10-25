@@ -361,4 +361,5 @@ public class SerialConnector extends AbstractConnector implements VXIConnector {
 		}
 	}
 
+
 }

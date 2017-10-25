@@ -7,7 +7,6 @@ import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 
 public class GPIBSerialConnector extends SerialConnector {
-
 	public static final int ADAPTER_SERIAL_DIRECT = 0;
 	public static final int ADAPTER_SERIAL_GPIB = 1;
 	public static final int ADAPTER_PROLOGIX = 2;
@@ -23,7 +22,13 @@ public class GPIBSerialConnector extends SerialConnector {
 		return INSTANCE;
 	}
 
+	/** GPIB connector initialization state */
 	boolean gpibInitialized = false;
+
+	/** Currently selected GPIB primary address */
+	private static int selectedSecondary;
+	/** Currently selected GPIB secondary address */
+	private static int selectedPrimary;
 
 	protected GPIBSerialConnectorConfig getConfig() {
 		return (GPIBSerialConnectorConfig) theConfig;
@@ -66,8 +71,8 @@ public class GPIBSerialConnector extends SerialConnector {
 			logger.debug("DEV: " + s);
 			// s = send_and_receive("++auto");
 			// logger.debug("DEV: " + s);
-			
-			initialized=true;
+
+			initialized = true;
 		}
 
 		int primary = getPrimaryAddressFrom(deviceId);
@@ -90,23 +95,6 @@ public class GPIBSerialConnector extends SerialConnector {
 		String[] p = deviceId.split(",");
 		int r = Integer.parseInt(p[1]);
 		return r;
-	}
-
-	/**
-	 * Initialization of communication interface in HP1300B.
-	 * 
-	 * @throws Exception
-	 */
-	public void initializeCommunication(DeviceLink deviceLink)
-			throws Exception {
-		GPIBSerialConnectorConfig c = getConfig();
-		if (c.getAdapterType() == ADAPTER_SERIAL_DIRECT) {
-			String s = send_and_receive(deviceLink, CRTL_D_STRING);
-			logger.debug("DEV: " + s);
-			// set (i.e.: clear) terminal type
-			s = send_and_receive(deviceLink, "st UNKNOWN");
-			logger.debug("DEV: " + s);
-		}
 	}
 
 	/**
@@ -171,8 +159,7 @@ public class GPIBSerialConnector extends SerialConnector {
 
 	/**
 	 * 
-	 * Selects a device by its primary/secondary GPIB address. Used with serial
-	 * gpib communication.
+	 * Selects a device by its primary/secondary GPIB address.
 	 * 
 	 * @param link
 	 * @param primary
@@ -181,6 +168,12 @@ public class GPIBSerialConnector extends SerialConnector {
 	 */
 	public void selectDevice(DeviceLink link, int primary, int secondary)
 			throws Exception {
+		if (isSelected(primary, secondary)) {
+			logger.debug("Device already selected");
+			return;
+		}
+		logger.debug("Select device: " + primary + "," + secondary);
+
 		if (theConfig
 				.getAdapterType() == SerialConnectorConfig.ADAPTER_SERIAL_GPIB) {
 			String s = send_and_receive(link,
@@ -193,8 +186,38 @@ public class GPIBSerialConnector extends SerialConnector {
 			int realAdr = secondary + 96;
 			send(link, "++addr " + primary + " " + realAdr);
 		}
+		selectedPrimary = primary;
+		selectedSecondary = secondary;
 	}
 
+	/**
+	 * Checks if device is already slected
+	 * 
+	 * @param primary
+	 * @param secondary
+	 * @return
+	 */
+	private boolean isSelected(int primary, int secondary) {
+		return selectedSecondary == secondary && selectedPrimary == primary;
+	}
+	/**
+	 * Initialization of communication interface in HP1300B.
+	 * 
+	 * @throws Exception
+	 */
+	public void initializeCommunication(DeviceLink deviceLink)
+			throws Exception {
+		GPIBSerialConnectorConfig c = getConfig();
+		if (c.getAdapterType() == ADAPTER_SERIAL_DIRECT) {
+			String s = send_and_receive(deviceLink, CRTL_D_STRING);
+			logger.debug("DEV: " + s);
+			// set (i.e.: clear) terminal type
+			s = send_and_receive(deviceLink, "st UNKNOWN");
+			logger.debug("DEV: " + s);
+		}
+	}
+
+	// TODO: methode needed????
 	/**
 	 * Selects a device by its name. Used with direct serial communication.
 	 * UNTESTED.
@@ -203,6 +226,7 @@ public class GPIBSerialConnector extends SerialConnector {
 	 *            Device name
 	 * @throws Exception
 	 */
+	@Deprecated
 	public void selectDevice(DeviceLink deviceLink, String device)
 			throws Exception {
 		if (theConfig.getAdapterType() == ADAPTER_SERIAL_DIRECT) {
@@ -211,6 +235,6 @@ public class GPIBSerialConnector extends SerialConnector {
 			s = send_and_receive(deviceLink, SELECT_INSTRUMENT + " " + device);
 			logger.debug("DEV: " + s);
 		}
+		throw new Exception("???");
 	}
-
 }

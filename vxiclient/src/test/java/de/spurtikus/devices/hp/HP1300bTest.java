@@ -18,6 +18,9 @@ import de.spurtikus.vxi.service.Configuration;
 
 public class HP1300bTest {
 
+	public static final int SERIAL_CONFIG = 1;
+	public static final int RPC_CONFIG = 2;
+	
 	static final String TEST_DEVICE_NAME = "hp1301";
 
 	Configuration configuration ;
@@ -30,7 +33,7 @@ public class HP1300bTest {
 		// Get configuration
 		configuration = Configuration.getInstance();
 		// We assume usable config at some index
-		config = Configuration.findConfigById(1);
+		config = Configuration.findConfigById(SERIAL_CONFIG);
 		// We like to test a net GPIBSerial
 		assertThat(config.getClass(),IsEqual.equalTo(GPIBSerialConnectorConfig.class));
 		System.out.println(config);
@@ -101,7 +104,7 @@ public class HP1300bTest {
 			String answer = vxiConnector.receive(theLid);
 			System.out.println("Answer: " + answer);
 		}
-
+	
 		System.out.println("...done");
 	}
 

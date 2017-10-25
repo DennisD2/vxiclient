@@ -1,5 +1,6 @@
 package de.spurtikus.devices.hp;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
@@ -18,37 +19,35 @@ import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
 import de.spurtikus.vxi.service.Configuration;
 
 public class HP1330Test {
+	public static final int SERIAL_CONFIG = 1;
+	public static final int RPC_CONFIG = 2;
+	
+	static final String TEST_DEVICE_NAME = "hp1330";
+	Configuration configuration ;
+	ConnectorConfig config;
+	DeviceLink theLid = null;
 	HP1330 testee = null;
-	static final String TEST_DEVICE_ID = "iscpi,37";
-
-	private ConnectorConfig simpleConfig() {
-		//String host = "vxi1";
-		//static final int CLIENT_ID = 12345;
-		//return new RPCConnectorConfig(host, CLIENT_ID, TEST_DEVICE_ID);	
-		return null;
-	}
 
 	@Before
 	public void before() throws Exception {
-		System.out.println("Start...");
-
-		// Get usable configuration
-		Configuration configuration = Configuration.getInstance();
-		List<ConnectorConfig> confs = configuration.getConfigs();
-		// We assume usable config is confs[0]
-		ConnectorConfig config = confs.get(1);
-		// We like to test a net device 
+		// Get configuration
+		configuration = Configuration.getInstance();
+		// We assume usable config at some index
+		config = Configuration.findConfigById(RPC_CONFIG);
+		// We like to test a net GPIBSerial
 		assertThat(config.getClass(), IsEqual.equalTo(RPCConnectorConfig.class));
 		System.out.println(config);
 		
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
-
-		DeviceLink theLid = vxiConnector.initialize(config, TEST_DEVICE_ID);
+		
+		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
+		assertNotNull(deviceid);
+		theLid = vxiConnector.initialize(config, deviceid);
 		
 		testee = new HP1330(vxiConnector, theLid);
 	}
 	
-	@Ignore
+	//@Ignore
 	@Test
 	public void testGetAndSet() throws Exception {
 		testee.initialize();
@@ -59,11 +58,17 @@ public class HP1330Test {
 
 		PortDescription set = new PortDescription(HP1330.Port.DATA0, HP1330.Bit.BIT1);
 		testee.setBit(set, true);
+		b = testee.getBit(set);
+		System.out.println("Bit value: " + b);
+		
 		testee.sleep(10);
+		
 		testee.setBit(set, false);
+		b = testee.getBit(set);
+		System.out.println("Bit value: " + b);
 	}
 
-	//@Ignore
+	@Ignore
 	@Test
 	public void testSetterLoop() throws Exception {
 		testee.initialize();

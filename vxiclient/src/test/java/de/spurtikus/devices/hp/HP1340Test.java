@@ -1,27 +1,39 @@
 package de.spurtikus.devices.hp;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
+import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnector;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
+import de.spurtikus.vxi.service.Configuration;
 import de.spurtikus.vxi.util.CommunicationUtil;
 
 public class HP1340Test {
 	String tty = "/dev/ttyUSB0";
 	int baudRate = 115200;
 
-	VXIConnector vxiConnector = null;
+	public static final int SERIAL_CONFIG = 1;
+	public static final int RPC_CONFIG = 2;
+	
+	final String TEST_DEVICE_NAME = "hp1326/hp1411";
+	
+	Configuration configuration ;
+	ConnectorConfig config;
 	DeviceLink theLid = null;
 	private HP1340 testee;
 
@@ -29,22 +41,25 @@ public class HP1340Test {
 	public void beforeTest() throws Exception {
 		System.out.println("Start...");
 
-		GPIBSerialConnectorConfig config = new GPIBSerialConnectorConfig();
-		config.setPort(tty);
-		config.setBaudRate(baudRate);
-		//config.setControllerPrimaryAddress(9);
-		//config.setControllerSecondaryAddress(0);
-
-		GPIBSerialConnector vxiConnector = (GPIBSerialConnector) VXIConnectorFactory.getConnector(config);
-
-		theLid = vxiConnector.initialize(config,"9,0");
-
+		// Get configuration
+		configuration = Configuration.getInstance();
+		// We assume usable config at some index
+		config = Configuration.findConfigById(SERIAL_CONFIG);
+		// We like to test a net GPIBSerial
+		assertThat(config.getClass(), IsEqual.equalTo(RPCConnectorConfig.class));
+		System.out.println(config);
+		
+		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
+		
+		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
+		assertNotNull(deviceid);
+		theLid = vxiConnector.initialize(config, deviceid);
 		testee = new HP1340(vxiConnector, theLid);
 
-		if (config.getAdapterType() == config.ADAPTER_SERIAL_DIRECT) {
-			vxiConnector.selectDevice(theLid, "AFG");
+		if (((GPIBSerialConnectorConfig)config).getAdapterType() == ((GPIBSerialConnectorConfig)config).ADAPTER_SERIAL_DIRECT) {
+			((GPIBSerialConnector) vxiConnector).selectDevice(theLid, "AFG");
 		} else {
-			vxiConnector.selectDevice(theLid, 9, 10);
+			((GPIBSerialConnector) vxiConnector).selectDevice(theLid, 9, 10);
 		}
 	}
 	

@@ -7,7 +7,8 @@ Todos
 
 - harmonize methods in ConversionUtil (see @deprecated)
 - Check methods in CommunicationUtil where they should go. maybe stay there :-)
-- Also import old Tests for HP1333,1340 and make them at least compilable.
+- Correct 1340 test.
+- Hp1330 test fails at leat for RPC
 
 Done
 ----
