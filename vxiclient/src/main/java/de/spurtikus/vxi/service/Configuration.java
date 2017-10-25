@@ -25,8 +25,8 @@ import de.spurtikus.vxi.connectors.serial.SerialConnectorConfig;
 /**
  * Configuration class.
  * 
- * Singleton. first getInstance() initializes the properties. These are read
- * from CONFIGFILE_LOCATION .
+ * Pure static class. load() initializes the properties. These are read
+ * from CONFIGFILE_LOCATION.
  * 
  * @author dennis
  *
@@ -45,36 +45,13 @@ public class Configuration {
 	/** Properties loaded from CONFIGFILE_LOCATION */
 	private static Properties properties = null;
 
-	/** Singleton var */
-	private static Configuration INSTANCE = null;
-
 	/** List of confis */
-	static List<ConnectorConfig> confs = null;
-
+	private static List<ConnectorConfig> confs = null;
 
 	/**
-	 * Singleton -> private
+	 * Pure static class
 	 */
 	private Configuration() {
-	}
-
-	/**
-	 * Singleton -> creates privates and initializes instance.
-	 * 
-	 * @return the singleton
-	 * @throws Exception
-	 */
-	public static Configuration getInstance() throws Exception {
-		if (INSTANCE == null) {
-			INSTANCE = new Configuration();
-			try {
-				initialize();
-			} catch (Exception e) {
-				logger.error("Cannot initialize Configuration.", e);
-				throw new Exception("annot initialize Configuration.", e);
-			}
-		}
-		return INSTANCE;
 	}
 
 	/**
@@ -82,7 +59,7 @@ public class Configuration {
 	 * 
 	 * @throws Exception
 	 */
-	public static void initialize() throws Exception {
+	public static void load() throws Exception {
 		InputStream is = null;
 
 		logger.info("Read configuration from classpath resource {}",
@@ -113,7 +90,7 @@ public class Configuration {
 	 *            property name/key.
 	 * @return property value.
 	 */
-	public String getProperty(String key) {
+	public static String getProperty(String key) {
 		return properties.getProperty(key);
 	}
 
@@ -201,7 +178,6 @@ public class Configuration {
 				callSetter(conf, parts[1], value);
 			} catch (IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
@@ -315,7 +291,7 @@ public class Configuration {
 	}
 
 	/**
-	 * Find a configuration by its id.
+	 * Finds a configuration by its id.
 	 * 
 	 * @param id
 	 *            id to find object for.
@@ -332,17 +308,29 @@ public class Configuration {
 	}
 
 	/**
-	 * Get all enabled configs
+	 * Gets all enabled configs.
 	 * 
-	 * @return
+	 * @return enabled configs.
 	 */
-	public List<ConnectorConfig> getEnabledConfigs() {
+	public static List<ConnectorConfig> getEnabledConfigs() {
 		return confs.stream().filter(c -> c.isEnabled())
 				.collect(Collectors.toList());
 	}
 
+	/**
+	 * Gets device id (like "iscpi,37" or "9,0") for a device name (like
+	 * "hp1330"). Name to device id mapping is user defined in file
+	 * vxiserver.properties.
+	 * 
+	 * @param connectorId
+	 *            connector id to use.
+	 * @param name
+	 *            device name.
+	 * @return device id.
+	 */
 	public static String getDeviceIdByName(int connectorId, String name) {
-		ConnectorConfig theConf = confs.stream().filter(c-> c.getId()==connectorId).findAny().get();
+		ConnectorConfig theConf = confs.stream()
+				.filter(c -> c.getId() == connectorId).findAny().get();
 		return theConf.getDeviceIdByName(name);
 	}
 }

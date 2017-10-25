@@ -21,28 +21,30 @@ public class GPIBSerialConnectorBaseTest {
 	@Before
 	public void before() throws Exception {
 		// Get connection config for Adapter with Id==1 (serial connector)
-		Configuration conf = Configuration.getInstance();
-		Stream<ConnectorConfig> ccc = conf.getEnabledConfigs().stream().filter(c->c.getId()==1);
+		Configuration.load();
+		Stream<ConnectorConfig> ccc = Configuration.getEnabledConfigs().stream().filter(c->c.getId()==1);
 		config  = (GPIBSerialConnectorConfig) ccc.findAny().get();
 
 		// Get connector for that configuration
 		vxiConnector = VXIConnectorFactory.getConnector(config);
-		// Get deviceId for the device to use in test
-		deviceId = Configuration.getDeviceIdByName(config.getId(), TEST_DEVICE_NAME);
 	}
 
 	@Test
 	public void serialConnector_getDeviceIdByName() throws Exception {
 		System.out.println("Start...");
 
-		String deviceGpib = config.getDeviceIdByName(TEST_DEVICE_NAME);
-		assertNotNull(deviceGpib);
-		System.out.println(TEST_DEVICE_NAME + " --> " + deviceGpib);
+		String deviceId = config.getDeviceIdByName(TEST_DEVICE_NAME);
+		assertNotNull(deviceId);
+		System.out.println(TEST_DEVICE_NAME + " --> " + deviceId);
 		System.out.println("...done");
 	}
+	
 	@Test
 	public void serialConnector_SimpleTest() throws Exception {
 		System.out.println("Start...");
+		
+		// Get deviceId for the device to use in test
+		deviceId = Configuration.getDeviceIdByName(config.getId(), TEST_DEVICE_NAME);
 		
 		DeviceLink theLid = vxiConnector.initialize(config, deviceId);
 		String cmd = "*IDN?";

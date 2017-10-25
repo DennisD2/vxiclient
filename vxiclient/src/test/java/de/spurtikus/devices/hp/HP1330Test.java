@@ -3,8 +3,6 @@ package de.spurtikus.devices.hp;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
-
 import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -23,15 +21,14 @@ public class HP1330Test {
 	public static final int RPC_CONFIG = 2;
 	
 	static final String TEST_DEVICE_NAME = "hp1330";
-	Configuration configuration ;
 	ConnectorConfig config;
 	DeviceLink theLid = null;
 	HP1330 testee = null;
 
 	@Before
 	public void before() throws Exception {
-		// Get configuration
-		configuration = Configuration.getInstance();
+		// Load configuration
+		 Configuration.load();
 		// We assume usable config at some index
 		config = Configuration.findConfigById(RPC_CONFIG);
 		// We like to test a net GPIBSerial

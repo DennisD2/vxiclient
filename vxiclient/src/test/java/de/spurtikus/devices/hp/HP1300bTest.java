@@ -23,15 +23,14 @@ public class HP1300bTest {
 	
 	static final String TEST_DEVICE_NAME = "hp1301";
 
-	Configuration configuration ;
 	ConnectorConfig config;
 	VXIConnector vxiConnector = null;
 	DeviceLink theLid = null;
 
 	@Before
 	public void beforeTest() throws Exception {
-		// Get configuration
-		configuration = Configuration.getInstance();
+		// Load configuration
+		Configuration.load();
 		// We assume usable config at some index
 		config = Configuration.findConfigById(SERIAL_CONFIG);
 		// We like to test a net GPIBSerial

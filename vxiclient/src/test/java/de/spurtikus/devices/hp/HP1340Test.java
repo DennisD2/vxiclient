@@ -41,8 +41,8 @@ public class HP1340Test {
 	public void beforeTest() throws Exception {
 		System.out.println("Start...");
 
-		// Get configuration
-		configuration = Configuration.getInstance();
+		// Load configuration
+		Configuration.load();
 		// We assume usable config at some index
 		config = Configuration.findConfigById(SERIAL_CONFIG);
 		// We like to test a net GPIBSerial

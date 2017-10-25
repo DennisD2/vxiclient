@@ -4,8 +4,6 @@ import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 
 public class BaseHPDevice {
-	// static Logger logger = LoggerFactory.getLogger("BaseHPDevice");
-
 	/**
 	 * The connector object to a vxi mainframe
 	 */

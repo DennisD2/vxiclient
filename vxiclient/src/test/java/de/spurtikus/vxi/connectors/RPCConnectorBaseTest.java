@@ -1,31 +1,53 @@
 package de.spurtikus.vxi.connectors;
 
+import static org.junit.Assert.assertNotNull;
+
+import java.util.stream.Stream;
+
+import org.junit.Before;
 import org.junit.Test;
 
-import de.spurtikus.vxi.connectors.DeviceLink;
-import de.spurtikus.vxi.connectors.VXIConnector;
-import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
+import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
+import de.spurtikus.vxi.service.Configuration;
 
 public class RPCConnectorBaseTest {
 
-	// String host = "192.168.178.78";
-	String host = "vxi1";
+	static final String TEST_DEVICE_NAME = "hp1326/hp1411";
 
-	static final int CLIENT_ID = 12345;
+	RPCConnectorConfig config  = null;
+	VXIConnector vxiConnector = null;
+	String deviceId = null;
 
-	//static final String TEST_DEVICE_ID = "iscpi,37";
-	static final String TEST_DEVICE_ID = "iscpi,8";
+	@Before
+	public void before() throws Exception {
+		// Get connection config for Adapter with Id==1 (serial connector)
+		Configuration.load();
+		Stream<ConnectorConfig> ccc = Configuration.getEnabledConfigs().stream().filter(c->c.getId()==2);
+		config  = (RPCConnectorConfig) ccc.findAny().get();
 
+		// Get connector for that configuration
+		vxiConnector = VXIConnectorFactory.getConnector(config);
+	}
+	
 	@Test
-	public void vxiConnectorTest() throws Exception {
+	public void serialConnector_getDeviceIdByName() throws Exception {
 		System.out.println("Start...");
 
-		RPCConnectorConfig config = new RPCConnectorConfig(host, CLIENT_ID);
+		String deviceId = config.getDeviceIdByName(TEST_DEVICE_NAME);
+		assertNotNull(deviceId);
+		System.out.println(TEST_DEVICE_NAME + " --> " + deviceId);
+		System.out.println("...done");
+	}
+	
+	@Test
+	public void vxiConnector_SimpleTest() throws Exception {
+		System.out.println("Start...");
+		
+		// Get deviceId for the device to use in test
+		deviceId = Configuration.getDeviceIdByName(config.getId(), TEST_DEVICE_NAME);
 
-		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
-
-		DeviceLink theLid = vxiConnector.initialize(config, TEST_DEVICE_ID);
+		DeviceLink theLid = vxiConnector.initialize(config, deviceId);
 		// Send command
 		// String cmd = "MEAS:VOLT:AC? 1, 0.001";
 		String cmd = "*IDN?";

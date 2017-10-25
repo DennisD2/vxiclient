@@ -25,15 +25,14 @@ public class HP1326Test {
 	
 	final String TEST_DEVICE_NAME = "hp1326/hp1411";
 	
-	Configuration configuration ;
 	ConnectorConfig config;
 	DeviceLink theLid = null;
 	HP1326 testee = null;
 
 	@Before
 	public void before() throws Exception {
-		// Get configuration
-		configuration = Configuration.getInstance();
+		// Load configuration
+		Configuration.load();
 		// We assume usable config at some index
 		config = Configuration.findConfigById(RPC_CONFIG);
 		// We like to test a net GPIBSerial
