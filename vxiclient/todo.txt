@@ -18,3 +18,11 @@ Done
 - Serial implement getSec/Prim Adress from String in correct way, see TODO
 - Extend Configuration and Connectors to have multiple "device-connections"
 - RPC Connector: cache all created DeviceLinks
+
+- Arquillian
+
+http://localhost:8888/473a8f8b-c737-4e93-a835-c1ed1dbbd148/rest/msys/a/b
+geht
+http://localhost:8888/vxi/rest/msys/a/b
+
+WIe kann man die Kontext Root besser setzen?

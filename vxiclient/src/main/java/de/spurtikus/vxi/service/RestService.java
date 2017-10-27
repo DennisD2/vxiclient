@@ -41,6 +41,7 @@ public class RestService {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String sayPlainTextHello() {
+		System.out.println("HELLO");
 		return "Hello Jersey";
 	}
 
