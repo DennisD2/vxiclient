@@ -23,16 +23,22 @@ import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
 import de.spurtikus.vxi.service.Configuration;
 import de.spurtikus.vxi.util.CommunicationUtil;
 
+/**
+ * TODO: see NOT YET IMPLEMENTED for non working parts.
+ * 
+ * @author dennis
+ *
+ */
 public class HP1340Test {
 	String tty = "/dev/ttyUSB0";
 	int baudRate = 115200;
 
 	public static final int SERIAL_CONFIG = 1;
 	public static final int RPC_CONFIG = 2;
-	
+
 	final String TEST_DEVICE_NAME = "hp1326/hp1411";
-	
-	Configuration configuration ;
+
+	Configuration configuration;
 	ConnectorConfig config;
 	DeviceLink theLid = null;
 	private HP1340 testee;
@@ -46,30 +52,32 @@ public class HP1340Test {
 		// We assume usable config at some index
 		config = Configuration.findConfigById(SERIAL_CONFIG);
 		// We like to test a net GPIBSerial
-		assertThat(config.getClass(), IsEqual.equalTo(RPCConnectorConfig.class));
+		assertThat(config.getClass(),
+				IsEqual.equalTo(RPCConnectorConfig.class));
 		System.out.println(config);
-		
+
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
-		
+
 		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
 		assertNotNull(deviceid);
 		theLid = vxiConnector.initialize(config, deviceid);
 		testee = new HP1340(vxiConnector, theLid);
 
-		if (((GPIBSerialConnectorConfig)config).getAdapterType() == ((GPIBSerialConnectorConfig)config).ADAPTER_SERIAL_DIRECT) {
+		if (((GPIBSerialConnectorConfig) config)
+				.getAdapterType() == ((GPIBSerialConnectorConfig) config).ADAPTER_SERIAL_DIRECT) {
 			((GPIBSerialConnector) vxiConnector).selectDevice(theLid, "AFG");
 		} else {
 			((GPIBSerialConnector) vxiConnector).selectDevice(theLid, 9, 10);
 		}
 	}
-	
+
 	@Ignore
 	@Test
 	public void testStandardWaveForms() throws Exception {
 		testee.initialize();
 
 		// testee.setShape(StandardWaveForm.RAMP);
-		//testee.setShape(StandardWaveForm.SINE);
+		// testee.setShape(StandardWaveForm.SINE);
 		testee.setShape(HP1340.StandardWaveForm.SQUARE);
 		// testee.setShape(StandardWaveForm.DC);
 		// testee.setShape(StandardWaveForm.TRIANGLE);
@@ -123,24 +131,27 @@ public class HP1340Test {
 		testee.initialize();
 
 		// set sweep parameters
-		testee.setSweep( 1e3, 1e5, 1000, 25, 5.0, HP1340.StandardWaveForm.SQUARE);
+		testee.setSweep(1e3, 1e5, 1000, 25, 5.0,
+				HP1340.StandardWaveForm.SQUARE);
 
 		testee.start();
 	}
-	
-	//@Ignore
+
+	// @Ignore
 	@Test
 	public void testSweepMarker() throws Exception {
 		testee.initialize();
 
 		// set sweep parameters
-		testee.setSweep( 1e3, 1e5, 1000, 25, 5.0, HP1340.StandardWaveForm.SQUARE);
-		
+		testee.setSweep(1e3, 1e5, 1000, 25, 5.0,
+				HP1340.StandardWaveForm.SQUARE);
+
 		// set marker parameters
 		// See page 167
 		// FeedType OUTP:ZERO, SEGM, SOUR:ROSC, SOUR:SWE
 		// polarityType INV/NORM
-		testee.setMarker(HP1340.MarkerFeedType.SOURCE_SWEEP, HP1340.PolarityType.NORM);
+		testee.setMarker(HP1340.MarkerFeedType.SOURCE_SWEEP,
+				HP1340.PolarityType.NORM);
 
 		testee.start();
 	}
@@ -165,7 +176,6 @@ public class HP1340Test {
 		testee.start();
 	}
 
-
 	/**
 	 * send_command("*RST"); send_command("SOUR:ROSC:SOUR INT;"); send_command(
 	 * "SOUR:FREQ:FIX 1E3;"); send_command("SOUR:FUNC:SHAP USER;");
@@ -173,77 +183,74 @@ public class HP1340Test {
 	 * "SOUR:LIST:SEGM:SEL A"); // no ';' at end! arb_ramp(); send_command(
 	 * "SOUR:FUNC:USER A"); send_command("INIT:IMM");
 	 * //send_command("SOUR:LIST:SEGM:SEL?");
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 * 
 	 * @throws InterruptedException
-	 */	@Ignore
-/*	@Test
-	public void testWriteWithAnswer_XonXoff_and_None() throws IOException, InterruptedException {
-		Communication testee = new Communication();
-		byte[] cmd, answer;
-
-		Protocol protocol = Protocol.XONXOFF;
-		// Protocol protocol = Protocol.NONE;
-		testee.configure("/dev/ttyS0", 38400, 8, 0, 1, protocol);
-		testee.open();
-		assertTrue(testee.isOpen());
-		testee.start();
-		assertTrue(testee.isStarted());
-
-		answer = testee.writeWithAnswer(ConversionUtil.toBytes(".a 9 10"));
-		System.out.println(ConversionUtil.toString(answer));
-		answer = testee.writeWithAnswer(ConversionUtil.toBytes("*IDN?"));
-		System.out.println(ConversionUtil.toString(answer));
-		answer = testee.writeWithAnswer(ConversionUtil.toBytes("*IDN?"));
-		System.out.println(ConversionUtil.toString(answer));
-		// answer = testee.writeWithAnswer(ConversionUtil.toBytes(".x"));
-		// System.out.println(ConversionUtil.toString(answer));
-		answer = testee.writeWithAnswer(ConversionUtil.toBytes("*RST"));
-		System.out.println(ConversionUtil.toString(answer));
-
-		answer = testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:ROSC:SOUR INT;"));
-		System.out.println(ConversionUtil.toString(answer));
-		answer = testee.writeWithAnswer(ConversionUtil.toBytes(":SOUR:FREQ:FIX 1E3;"));
-		System.out.println(ConversionUtil.toString(answer));
-		answer = testee.writeWithAnswer(ConversionUtil.toBytes(":SOUR:FUNC:SHAP USER;"));
-		System.out.println(ConversionUtil.toString(answer));
-		answer = testee.writeWithAnswer(ConversionUtil.toBytes(":SOUR:VOLT:LEV:IMM:AMPL 5.1V"));
-		System.out.println(ConversionUtil.toString(answer));
-
-		Timer timer = new Timer();
-		timer.start();
-		// writeWaveformValues_Ramp(testee);
-		// writeWaveformValues_DampedSine(testee); // 11914ms
-		// writeWaveformValues_ChargeDischarge(testee);
-
-		// writeWaveformValues_SpikedSine(testee);
-		// writeWaveformValues_HalfRectifiedSine(testee);
-
-		// writeWaveformValues_DampedSine_DAC(testee); // 10080ms
-		writeWaveformValues_DampedSine_DAC_ArbBlock(testee); // 3950ms
-
-		timer.stopAndPrintln();
-		// checkErrors(testee);
-
-		answer = testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:FUNC:USER A"));
-		System.out.println(ConversionUtil.toString(answer));
-		answer = testee.writeWithAnswer(ConversionUtil.toBytes("INIT:IMM"));
-		System.out.println(ConversionUtil.toString(answer));
-		answer = testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:LIST:SEGM:SEL?"));
-		System.out.println(ConversionUtil.toString(answer));
-		// answer = testee
-		// .writeWithAnswer(ConversionUtil.toBytes("SOUR:LIST:SEGM:VOLT:POIN?"));
-		// System.out.println(ConversionUtil.toString(answer));
-
-		while (testee.isStarted()) {
-			Thread.sleep(7000);
-			testee.stop();
-		}
-		testee.close();
-
-	}
-*/
-	private void writeWaveformValues_Ramp(VXIConnector testee, DeviceLink link) throws Exception {
+	 */
+	@Ignore
+	/*
+	 * @Test public void testWriteWithAnswer_XonXoff_and_None() throws
+	 * IOException, InterruptedException { Communication testee = new
+	 * Communication(); byte[] cmd, answer;
+	 * 
+	 * Protocol protocol = Protocol.XONXOFF; // Protocol protocol =
+	 * Protocol.NONE; testee.configure("/dev/ttyS0", 38400, 8, 0, 1, protocol);
+	 * testee.open(); assertTrue(testee.isOpen()); testee.start();
+	 * assertTrue(testee.isStarted());
+	 * 
+	 * answer = testee.writeWithAnswer(ConversionUtil.toBytes(".a 9 10"));
+	 * System.out.println(ConversionUtil.toString(answer)); answer =
+	 * testee.writeWithAnswer(ConversionUtil.toBytes("*IDN?"));
+	 * System.out.println(ConversionUtil.toString(answer)); answer =
+	 * testee.writeWithAnswer(ConversionUtil.toBytes("*IDN?"));
+	 * System.out.println(ConversionUtil.toString(answer)); // answer =
+	 * testee.writeWithAnswer(ConversionUtil.toBytes(".x")); //
+	 * System.out.println(ConversionUtil.toString(answer)); answer =
+	 * testee.writeWithAnswer(ConversionUtil.toBytes("*RST"));
+	 * System.out.println(ConversionUtil.toString(answer));
+	 * 
+	 * answer =
+	 * testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:ROSC:SOUR INT;"));
+	 * System.out.println(ConversionUtil.toString(answer)); answer =
+	 * testee.writeWithAnswer(ConversionUtil.toBytes(":SOUR:FREQ:FIX 1E3;"));
+	 * System.out.println(ConversionUtil.toString(answer)); answer =
+	 * testee.writeWithAnswer(ConversionUtil.toBytes(":SOUR:FUNC:SHAP USER;"));
+	 * System.out.println(ConversionUtil.toString(answer)); answer =
+	 * testee.writeWithAnswer(ConversionUtil.
+	 * toBytes(":SOUR:VOLT:LEV:IMM:AMPL 5.1V"));
+	 * System.out.println(ConversionUtil.toString(answer));
+	 * 
+	 * Timer timer = new Timer(); timer.start(); //
+	 * writeWaveformValues_Ramp(testee); //
+	 * writeWaveformValues_DampedSine(testee); // 11914ms //
+	 * writeWaveformValues_ChargeDischarge(testee);
+	 * 
+	 * // writeWaveformValues_SpikedSine(testee); //
+	 * writeWaveformValues_HalfRectifiedSine(testee);
+	 * 
+	 * // writeWaveformValues_DampedSine_DAC(testee); // 10080ms
+	 * writeWaveformValues_DampedSine_DAC_ArbBlock(testee); // 3950ms
+	 * 
+	 * timer.stopAndPrintln(); // checkErrors(testee);
+	 * 
+	 * answer =
+	 * testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:FUNC:USER A"));
+	 * System.out.println(ConversionUtil.toString(answer)); answer =
+	 * testee.writeWithAnswer(ConversionUtil.toBytes("INIT:IMM"));
+	 * System.out.println(ConversionUtil.toString(answer)); answer =
+	 * testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:LIST:SEGM:SEL?"));
+	 * System.out.println(ConversionUtil.toString(answer)); // answer = testee
+	 * // .writeWithAnswer(ConversionUtil.toBytes("SOUR:LIST:SEGM:VOLT:POIN?"));
+	 * // System.out.println(ConversionUtil.toString(answer));
+	 * 
+	 * while (testee.isStarted()) { Thread.sleep(7000); testee.stop(); }
+	 * testee.close();
+	 * 
+	 * }
+	 */
+	private void writeWaveformValues_Ramp(VXIConnector testee, DeviceLink link)
+			throws Exception {
 		double v;
 		NumberFormat formatter = new DecimalFormat("#0.00");
 		String answer = testee.send_and_receive(link, "SOUR:LIST:SEGM:SEL A");
@@ -261,7 +268,8 @@ public class HP1340Test {
 		System.out.println(answer);
 	}
 
-	private void writeWaveformValues_DampedSine(VXIConnector testee, DeviceLink link) throws Exception {
+	private void writeWaveformValues_DampedSine(VXIConnector testee,
+			DeviceLink link) throws Exception {
 		double v;
 		NumberFormat formatter = new DecimalFormat("#0.00");
 		String answer = testee.send_and_receive(link, "SOUR:LIST:SEGM:SEL A");
@@ -281,7 +289,8 @@ public class HP1340Test {
 		System.out.println(answer);
 	}
 
-	private void writeWaveformValues_DampedSine_DAC(VXIConnector testee, DeviceLink link) throws Exception {
+	private void writeWaveformValues_DampedSine_DAC(VXIConnector testee,
+			DeviceLink link) throws Exception {
 		double v;
 		String answer = testee.send_and_receive(link, "SOUR:ARB:DAC:SOUR INT");
 		System.out.println(answer);
@@ -305,11 +314,13 @@ public class HP1340Test {
 		System.out.println(answer);
 	}
 
-	private void writeWaveformValues_DampedSine_DAC_ArbBlock(VXIConnector testee, DeviceLink link) throws IOException {
+	private void writeWaveformValues_DampedSine_DAC_ArbBlock(
+			VXIConnector testee, DeviceLink link) throws IOException {
 		double v;
-		String answer = testee.send_and_receive(link, "SOUR:ARB:DAC:SOUR INT");
+		String answer = "TO BE IMPLEMENTED";// ;testee.send_and_receive(link,
+											// "SOUR:ARB:DAC:SOUR INT");
 		System.out.println(answer);
-		answer = testee.send_and_receive(link, "SOUR:LIST:SEGM:SEL A");
+		// answer = testee.send_and_receive(link, "SOUR:LIST:SEGM:SEL A");
 		System.out.println(answer);
 
 		String valuesPrefix = "SOUR:LIST:SEGM:VOLT:DAC #48192";
@@ -373,7 +384,7 @@ public class HP1340Test {
 
 		// System.out.print(values);
 		values[i] = '\n';
-		answer = testee.send_and_receive(link, values);
+		// answer = testee.send_and_receive(link, values);
 		System.out.println(answer);
 	}
 
@@ -410,7 +421,8 @@ public class HP1340Test {
 		return (short) (dac & 0x0fff);
 	}
 
-	private void writeWaveformValues_ChargeDischarge(VXIConnector testee, DeviceLink link) throws Exception {
+	private void writeWaveformValues_ChargeDischarge(VXIConnector testee,
+			DeviceLink link) throws Exception {
 		double v;
 		NumberFormat formatter = new DecimalFormat("#0.00");
 		String answer = testee.send_and_receive(link, "SOUR:LIST:SEGM:SEL A");
@@ -423,7 +435,8 @@ public class HP1340Test {
 				v = 1 - Math.exp(-i / rc);
 			}
 			if (i >= 2047) {
-				v = (1 - Math.exp(-2048 / rc)) - (1 - Math.exp(-(i - 2047) / rc));
+				v = (1 - Math.exp(-2048 / rc))
+						- (1 - Math.exp(-(i - 2047) / rc));
 			}
 			values += formatter.format(v).replace(",", ".");
 			if (i != 4095) {
@@ -435,7 +448,8 @@ public class HP1340Test {
 		System.out.println(answer);
 	}
 
-	private void writeWaveformValues_SpikedSine(VXIConnector testee, DeviceLink link) throws Exception {
+	private void writeWaveformValues_SpikedSine(VXIConnector testee,
+			DeviceLink link) throws Exception {
 		double waveform[] = new double[4097];
 		NumberFormat formatter = new DecimalFormat("#0.00");
 		String answer = testee.send_and_receive(link, "SOUR:LIST:SEGM:SEL A");
@@ -450,7 +464,8 @@ public class HP1340Test {
 			waveform[j + 1024] = waveform[j + 1024] + (double) j * 0.04;
 		}
 		for (int j = 1; j <= width / 2; j++) {
-			waveform[j + 1024 + width / 2] = waveform[j + 1024 + width / 2] + j + (1.0 - (double) j * 0.04);
+			waveform[j + 1024 + width / 2] = waveform[j + 1024 + width / 2] + j
+					+ (1.0 - (double) j * 0.04);
 		}
 		for (int i = 1; i <= 4096; i++) {
 			values += formatter.format(waveform[i]).replace(",", ".");
@@ -463,7 +478,8 @@ public class HP1340Test {
 		System.out.println(answer);
 	}
 
-	private void writeWaveformValues_HalfRectifiedSine(VXIConnector testee, DeviceLink link) throws Exception {
+	private void writeWaveformValues_HalfRectifiedSine(VXIConnector testee,
+			DeviceLink link) throws Exception {
 		double v;
 		NumberFormat formatter = new DecimalFormat("#0.00");
 		String answer = testee.send_and_receive(link, "SOUR:LIST:SEGM:SEL A");
@@ -489,11 +505,13 @@ public class HP1340Test {
 		System.out.println(answer);
 	}
 
-	private void checkErrors(VXIConnector testee, DeviceLink link) throws IOException {
+	private void checkErrors(VXIConnector testee, DeviceLink link)
+			throws IOException {
 		boolean hasErrors = true;
 		while (hasErrors) {
-			byte[] answer = testee.send_and_receive(link, "SYST:ERR?");
-			String s = CommunicationUtil.asByteArray(answer, 60);
+			byte[] answer = null; // testee.send_and_receive(link, "SYST:ERR?");
+			String s = "TO BE IMPLEMENTED"; // CommunicationUtil.asByteArray(answer,
+											// 60);
 			System.out.println(s);
 			if (s.contains("+0,\"No error\"")) {
 				hasErrors = false;
