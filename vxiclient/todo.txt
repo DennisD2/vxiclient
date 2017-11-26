@@ -2,20 +2,17 @@
 Todos
 -----
 - Define further work; how to continue???
+1) REST service 
 
-1) 1340 revival
- - writeWaveformValues_Ramp looks wrong
- - writeWaveformValues_DampedSine_DAC_ArbBlock does not compile
- - writeWaveformValues_SpikedSine does not work
-2) REST service 
+ - HP1340: writeWaveformValues_DampedSine_DAC_ArbBlock does not compile
 
 - harmonize methods in ConversionUtil (see @deprecated)
 - Check methods in CommunicationUtil where they should go. maybe stay there :-)
-- Correct 1340 test.
 - Hp1330 test fails at least for RPC
 
 Done
 ----
+- HP1340 tests revival
 - Write SerialToGPIBConnector (much work)
 - Extend config to allow multiple devices per connector - OK
   - Add methods to get each device by its name (e.g. 'hp1330') - OK

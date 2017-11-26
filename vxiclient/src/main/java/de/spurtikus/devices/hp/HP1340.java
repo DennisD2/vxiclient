@@ -546,7 +546,7 @@ public class HP1340 extends BaseHPDevice {
 
 		prefix_userDefinedWF();
 
-		String values = ""; //"SOUR:LIST:SEGM:VOLT ";
+		String values = "";
 		for (int i = 0; i < waveform.length; i++) {
 			// ensure that value does not overrun max/min allowed value
 			// if overun occurs, the waveform data will not be loaded by HP1340
@@ -579,7 +579,7 @@ public class HP1340 extends BaseHPDevice {
 			throws Exception {
 		prefix_userDefinedWF();
 
-		String values = ""; //"SOUR:LIST:SEGM:VOLT:DAC ";
+		String values = "";
 		for (int i = 0; i < waveform.length; i++) {
 			values += waveform[i];
 			if (i != waveform.length - 1) {
@@ -614,19 +614,16 @@ public class HP1340 extends BaseHPDevice {
 		timer.start();
 		// System.out.print(values);
 		values = "SOUR:LIST:SEGM:VOLT" + prefix + " " + values + '\n';
-		//values += '\n';
 		vxiConnector.send(deviceLink, values);
 		timer.stopAndPrintln();
 		// checkErrors(testee);
 
 		vxiConnector.send(deviceLink, "SOUR:FUNC:USER A");
 		vxiConnector.send(deviceLink, "INIT:IMM");
-		answer = vxiConnector.send_and_receive(deviceLink,
-				"SOUR:LIST:SEGM:SEL?");
-		System.out.println(answer);
-		answer = vxiConnector.send_and_receive(deviceLink,
-				"SOUR:LIST:SEGM:VOLT:POIN?");
-		System.out.println(answer);
+		answer = vxiConnector.send_and_receive(deviceLink, "SOUR:LIST:SEGM:SEL?");
+		System.out.println(answer); // should be 'A'
+		answer = vxiConnector.send_and_receive(deviceLink, "SOUR:LIST:SEGM:VOLT:POIN?");
+		System.out.println(answer); // should be #values
 	}
 	
 	/**

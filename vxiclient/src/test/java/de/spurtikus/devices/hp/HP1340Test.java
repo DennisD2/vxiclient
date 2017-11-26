@@ -22,6 +22,7 @@ import de.spurtikus.vxi.connectors.serial.GPIBSerialConnector;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
 import de.spurtikus.vxi.service.Configuration;
 import de.spurtikus.vxi.util.CommunicationUtil;
+import de.spurtikus.waveform.Waveforms;
 
 /**
  * TODO: see NOT YET IMPLEMENTED for non working parts.
@@ -244,7 +245,7 @@ public class HP1340Test {
 
 	@Ignore
 	@Test
-	public void userDefinedWaveForm_Ramp() throws Exception {
+	public void userDefinedWaveForm_Simple_Ramp() throws Exception {
 		testee.setFrequency(3E3);
 		testee.setAmplitude(5.0);
 
@@ -259,237 +260,104 @@ public class HP1340Test {
 		testee.start();
 	}
 
+	@Ignore
 	@Test
-	public void userDefinedWaveForms()
-			throws Exception {
-	  String answer;
-	  
-	  double maxValue = 5.0; // maximum allowed y value (to prevent data errors on loading waveforms)
-			  
-	  testee.setFrequency(3E3);
-	  testee.setAmplitude(maxValue);
-	  answer = vxiConnector.send_and_receive(theLid, "*IDN?");
-	  System.out.println(answer); 
-	  vxiConnector.send(theLid, "*RST");
-	  
-	  testee.setUserDefinedWaveform(waveformValues_Ramp(), maxValue);
-	  testee.start();
-	  Thread.sleep(5000);
-	  testee.stop();
-	
-	  testee.setUserDefinedWaveform(waveformValues_DampedSine(), maxValue);
-	  testee.start();
-	  Thread.sleep(5000);
-	  testee.stop();
+	public void userDefinedWaveForms() throws Exception {
+		String answer;
 
-	  testee.setUserDefinedWaveform(waveformValues_ChargeDischarge(), maxValue);
-	  testee.start();
-	  Thread.sleep(5000);
-	  testee.stop();
+		double maxValue = 5.0; // maximum allowed y value (to prevent data
+								// errors on loading waveforms)
 
-	  testee.setUserDefinedWaveform(waveformValues_HalfRectifiedSine(), maxValue);
-	  testee.start();
-	  Thread.sleep(5000);
-	  testee.stop();
-
-	  testee.setUserDefinedWaveform(waveformValues_SpikedSine(), maxValue);
-	  testee.start();
-	  Thread.sleep(5000);
-	  testee.stop();
-
-	  // DAC values tests
-	  testee.setUserDefinedWaveform(waveformValues_DampedSine_DAC());
-	  testee.start();
-	  Thread.sleep(5000);
-	  testee.stop();
-
-	  //writeWaveformValues_DampedSine_DAC_ArbBlock(vxiConnector, theLid); // 3950ms
-
-	}
-
-	/**
-	 * Ramp wave function.
-	 * 
-	 * @return
-	 */
-	private double[] waveformValues_Ramp() {
-		double waveform[] = new double[4096];
-		for (int i = 0; i < waveform.length; i++) {
-			waveform[i] = 0.00122 * (double) i;
-		}
-		return waveform;
-	}
-
-	/**
-	 * Damped sine wave function.
-	 * 
-	 * @return
-	 */
-	private double[] waveformValues_DampedSine() {
-		double waveform[] = new double[4096];
-		double a = 4.0 / 4096.0;
-		double w = 2 * Math.PI / 50.0;
-		for (int i = 0; i < waveform.length; i++) {
-			waveform[i] = Math.exp(-a * i) * Math.sin(w * i);
-		}
-		return waveform;
-	}
-
-	private short[] waveformValues_DampedSine_DAC() throws Exception {
-		double v;
-		short waveform[] = new short[4096];
-		double a = 4.0 / 4096.0;
-		double w = 2 * Math.PI / 50.0;
-		for (int i = 0; i < 4096; i++) {
-			v = Math.exp(-a * i) * Math.sin(w * i);
-			short d = HP1340.voltsToDACCode(v);
-			System.out.println(v + "-> " + d);
-			waveform[i]= d;
-		}
-		return waveform;
-	}
-
-	/**
-	 * Charge/Discharge curve function.
-	 * 
-	 * @return
-	 */
-	private double[] waveformValues_ChargeDischarge() {
-		double v;
-		double waveform[] = new double[4096];
-		double rc = 400.0;
-		for (int i = 0; i < waveform.length; i++) {
-			v = 0;
-			if (i > 0 && i < 2047) {
-				v = 1 - Math.exp(-i / rc);
-			}
-			if (i >= 2047) {
-				v = (1 - Math.exp(-2048 / rc))
-						- (1 - Math.exp(-(i - 2047) / rc));
-			}
-			waveform[i] = v;
-		}
-		return waveform;
-	}
-
-	/**
-	 * Half rectified sine function.
-	 * 
-	 * @return
-	 */
-	private double[] waveformValues_HalfRectifiedSine() {
-		double v;
-		double waveform[] = new double[4096];
-		for (int i = 0; i < 2048; i++) {
-			waveform[i] = Math.sin(2 * Math.PI * ((double) i / 4096.0));
-		}
-		for (int i = 2048; i < waveform.length; i++) {
-			v = 0.0;
-			waveform[i] = 0.0;
-		}
-		return waveform;
-	}
-
-	/**
-	 * Sine waveform with a spike (peak).
-	 * 
-	 * @param maxValue
-	 * @return
-	 */
-	private double[] waveformValues_SpikedSine() {
-		double waveform[] = new double[4096];
-		waveform[0] = 0.0;
-		for (int i = 1; i < waveform.length; i++) {
-			waveform[i] = 0.5 * Math.sin(2 * Math.PI * ((double) i / 4096.0));
-		}
-		int width = 50;
-		for (int j = 1; j <= width / 2; j++) {
-			waveform[j + 1024] = waveform[j + 1024] + (double) j * 0.04;
-		}
-		for (int j = 1; j <= width / 2; j++) {
-			waveform[j + 1024 + width / 2] = waveform[j + 1024 + width / 2] + j
-					+ (1.0 - (double) j * 0.04);
-		}
-		return waveform;
-	}
-
-	/**
-	 * TODO argument creation is wrong
-	 * 
-	 * @param vxiConn
-	 * @param link
-	 * @throws Exception
-	 */
-	private void writeWaveformValues_DampedSine_DAC_ArbBlock(
-			VXIConnector vxiConn, DeviceLink link) throws Exception {
-		double v;
-		String answer = "TO BE IMPLEMENTED";// ;testee.send_and_receive(link,
-											// "SOUR:ARB:DAC:SOUR INT");
+		testee.setFrequency(3E3);
+		testee.setAmplitude(maxValue);
+		answer = vxiConnector.send_and_receive(theLid, "*IDN?");
 		System.out.println(answer);
-		vxiConn.send(link, "SOUR:LIST:SEGM:SEL A");
+		vxiConnector.send(theLid, "*RST");
 
-		String valuesPrefix = "SOUR:LIST:SEGM:VOLT:DAC #48192";
-		int valuesLength = valuesPrefix.length() + 8192 + 1;
-		byte values[] = new byte[valuesLength];
-		int i;
-		for (i = 0; i < valuesPrefix.length(); i++) {
-			values[i] = (byte) valuesPrefix.charAt(i);
-		}
+		testee.setUserDefinedWaveform(Waveforms.waveformValues_Ramp(), maxValue);
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
 
-		double a = 4.0 / 4096.0;
-		double w = 2 * Math.PI / 50.0;
-		short d;
-		for (int j = 0; j < 4096; j++) {
-			v = Math.exp(-a * j) * Math.sin(w * j);
+		testee.setUserDefinedWaveform(Waveforms.waveformValues_DampedSine(), maxValue);
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
 
-			boolean fakeWave = true;
-			if (fakeWave) {
-				v = 0.0;
-				if (j / 3000 > 0) {
-					v = 1.0;
-				}
-			}
-			d = testee.voltsToDACCode(v);
-			if (d > 4095)
-				d = 4095;
-			if (d < 0)
-				d = 0;
-			System.out.println(v + "-> " + d);
-			values[i++] = (byte) (d >> 8); // MSB first
-			values[i++] = (byte) (d & 0xff);
-		}
-		CommunicationUtil.dumpByteArray(values, valuesLength);
+		testee.setUserDefinedWaveform(Waveforms.waveformValues_ChargeDischarge(), maxValue);
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
 
-		for (int j = valuesPrefix.length(); j < valuesPrefix.length()
-				+ 8192; j += 2) {
-			System.out.println(CommunicationUtil.byteToHexString(values[j])
-					+ " " + CommunicationUtil.byteToHexString(values[j + 1]));
+		testee.setUserDefinedWaveform(Waveforms.waveformValues_HalfRectifiedSine(), maxValue);
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
 
-			switch (j / 800) {
-			case 0:
-				d = 0;
-				break;
-			case 1:
-				d = 1248;
-				break;
-			case 2:
-				d = 2048;
-				break;
-			case 3:
-				d = 2448;
-				break;
-			case 4:
-				d = 3248;
-				break;
-			default:
-				d = 4095;
-				break;
-			}
-		}
-		// System.out.print(values);
-		values[i] = '\n';
-		// testee.send(link, values); <------------ fix here
+		testee.setUserDefinedWaveform(Waveforms.waveformValues_SpikedSine(), maxValue);
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+	}
+
+	@Test
+	public void userDefinedWaveForms_DAC() throws Exception {
+		String answer;
+		double maxValue = 5.0; // maximum allowed y value (to prevent data
+								// errors on loading waveforms)
+
+		testee.setFrequency(3E3);
+		testee.setAmplitude(maxValue);
+		answer = vxiConnector.send_and_receive(theLid, "*IDN?");
 		System.out.println(answer);
+		vxiConnector.send(theLid, "*RST");
+
+		// DAC values tests
+		testee.setUserDefinedWaveform(Waveforms.waveformValues_Ramp_DAC());
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+
+		testee.setUserDefinedWaveform(Waveforms.waveformValues_DampedSine_DAC());
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+
+		testee.setUserDefinedWaveform(Waveforms.waveformValues_ChargeDischarge_DAC());
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+
+		testee.setUserDefinedWaveform(Waveforms.waveformValues_HalfRectifiedSine_DAC());
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+
+		testee.setUserDefinedWaveform(Waveforms.waveformValues_SpikedSine_DAC());
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+	}
+
+	@Ignore
+	@Test
+	public void userDefinedWaveForms_ArbBlock() throws Exception {
+		String answer;
+		double maxValue = 5.0; // maximum allowed y value (to prevent data
+								// errors on loading waveforms)
+
+		testee.setFrequency(3E3);
+		testee.setAmplitude(maxValue);
+		answer = vxiConnector.send_and_receive(theLid, "*IDN?");
+		System.out.println(answer);
+		vxiConnector.send(theLid, "*RST");
+
+		// writeWaveformValues_DampedSine_DAC_ArbBlock(vxiConnector, theLid); //
+		// 3950ms
+		testee.setUserDefinedWaveform(Waveforms.waveformValues_Ramp_DAC());
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
 	}
 
 	private void checkErrors(VXIConnector testee, DeviceLink link)
