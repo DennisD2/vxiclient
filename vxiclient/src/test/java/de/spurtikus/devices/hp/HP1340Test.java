@@ -13,17 +13,15 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import de.spurtikus.Timer;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
-import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnector;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
-import de.spurtikus.vxi.connectors.serial.SerialConnectorConfig.Protocol;
 import de.spurtikus.vxi.service.Configuration;
 import de.spurtikus.vxi.util.CommunicationUtil;
-import de.spurtikus.vxi.util.ConversionUtil;
 
 /**
  * TODO: see NOT YET IMPLEMENTED for non working parts.
@@ -42,6 +40,7 @@ public class HP1340Test {
 	DeviceLink theLid = null;
 	private HP1340 testee;
 
+	VXIConnector vxiConnector;
 	@Before
 	public void before() throws Exception {
 		System.out.println("Start...");
@@ -55,7 +54,7 @@ public class HP1340Test {
 				IsEqual.equalTo(GPIBSerialConnectorConfig.class));
 		System.out.println(config);
 
-		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
+		vxiConnector = VXIConnectorFactory.getConnector(config);
 
 		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
 		assertNotNull(deviceid);
@@ -244,81 +243,52 @@ public class HP1340Test {
 	}
 
 	/**
-	 * send_command("*RST"); send_command("SOUR:ROSC:SOUR INT;"); send_command(
-	 * "SOUR:FREQ:FIX 1E3;"); send_command("SOUR:FUNC:SHAP USER;");
-	 * send_command("SOUR:VOLT:LEV:IMM:AMPL 5V"); send_command(
-	 * "SOUR:LIST:SEGM:SEL A"); // no ';' at end! arb_ramp(); send_command(
-	 * "SOUR:FUNC:USER A"); send_command("INIT:IMM");
-	 * //send_command("SOUR:LIST:SEGM:SEL?");
 	 * 
 	 * @throws Exception
-	 * 
-	 * @throws InterruptedException
 	 */
-	@Ignore
+	//@Ignore
 	@Test
 	public void testWriteWithAnswer_XonXoff_and_None()
-			throws IOException, InterruptedException {
-		// @formatter:off
-/*	
-	  Communication testee = new Communication(); 
-	  byte[] cmd, answer;
+			throws Exception {
+	  // @formatter:off
+	
+	  testee.initialize();
+	  String answer;
 	  
-	  Protocol protocol = Protocol.XONXOFF; // Protocol protocol = Protocol.NONE; 
-	  testee.configure("/dev/ttyS0", 38400, 8, 0, 1, protocol);
-	  testee.open(); assertTrue(testee.isOpen()); testee.start();
-	  assertTrue(testee.isStarted());
+	  answer = vxiConnector.send_and_receive(theLid, "*IDN?");
+	  System.out.println(answer); 
+	  vxiConnector.send(theLid, "*RST");
 	  
-	  answer = testee.writeWithAnswer(ConversionUtil.toBytes(".a 9 10"));
-	  System.out.println(ConversionUtil.toString(answer)); answer =
-	  testee.writeWithAnswer(ConversionUtil.toBytes("*IDN?"));
-	  System.out.println(ConversionUtil.toString(answer)); answer =
-	  testee.writeWithAnswer(ConversionUtil.toBytes("*IDN?"));
-	  System.out.println(ConversionUtil.toString(answer)); // answer =
-	  testee.writeWithAnswer(ConversionUtil.toBytes(".x")); //
-	  System.out.println(ConversionUtil.toString(answer)); answer =
-	  testee.writeWithAnswer(ConversionUtil.toBytes("*RST"));
-	  System.out.println(ConversionUtil.toString(answer));
+	  vxiConnector.send(theLid, "SOUR:ROSC:SOUR INT;");
+	  vxiConnector.send(theLid, ":SOUR:FREQ:FIX 1E3;");
+	  vxiConnector.send(theLid, ":SOUR:FUNC:SHAP USER;");
+	  vxiConnector.send(theLid, ":SOUR:VOLT:LEV:IMM:AMPL 5.1V");
 	  
-	  answer =
-	  testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:ROSC:SOUR INT;"));
-	  System.out.println(ConversionUtil.toString(answer)); answer =
-	  testee.writeWithAnswer(ConversionUtil.toBytes(":SOUR:FREQ:FIX 1E3;"));
-	  System.out.println(ConversionUtil.toString(answer)); answer =
-	  testee.writeWithAnswer(ConversionUtil.toBytes(":SOUR:FUNC:SHAP USER;"));
-	  System.out.println(ConversionUtil.toString(answer)); answer =
-	  testee.writeWithAnswer(ConversionUtil.
-	  toBytes(":SOUR:VOLT:LEV:IMM:AMPL 5.1V"));
-	  System.out.println(ConversionUtil.toString(answer));
+	  Timer timer = new Timer(); timer.start(); //
+	  //writeWaveformValues_Ramp(vxiConnector, theLid); // 9172ms
+	  //writeWaveformValues_DampedSine(vxiConnector, theLid); // 10087ms 
+	  //writeWaveformValues_ChargeDischarge(vxiConnector, theLid); // 9481ms
+	  //writeWaveformValues_SpikedSine(vxiConnector, theLid);
+	  //writeWaveformValues_HalfRectifiedSine(vxiConnector, theLid);
+	  writeWaveformValues_DampedSine_DAC(vxiConnector, theLid); // 6342ms
+	  //writeWaveformValues_DampedSine_DAC_ArbBlock(vxiConnector, theLid); // 3950ms
 	  
-	  //Timer timer = new Timer(); timer.start(); //
-	  writeWaveformValues_Ramp(testee); //
-	  writeWaveformValues_DampedSine(testee); // 11914ms //
-	  writeWaveformValues_ChargeDischarge(testee);
+	  timer.stopAndPrintln(); 
+	  // checkErrors(testee);
 	  
-	  // writeWaveformValues_SpikedSine(testee); //
-	  writeWaveformValues_HalfRectifiedSine(testee);
+	  vxiConnector.send(theLid, "SOUR:FUNC:USER A");
+	  vxiConnector.send(theLid, "INIT:IMM");
+	  answer = vxiConnector.send_and_receive(theLid, "SOUR:LIST:SEGM:SEL?");
+	  System.out.println(answer);
+	  answer = vxiConnector.send_and_receive(theLid, "SOUR:LIST:SEGM:VOLT:POIN?");
+	  System.out.println(answer);
 	  
-	  // writeWaveformValues_DampedSine_DAC(testee); // 10080ms
-	  writeWaveformValues_DampedSine_DAC_ArbBlock(testee); // 3950ms
-	  
-	  //timer.stopAndPrintln(); // checkErrors(testee);
-	  
-	  answer = testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:FUNC:USER A"));
-	  System.out.println(ConversionUtil.toString(answer)); answer =
-	  testee.writeWithAnswer(ConversionUtil.toBytes("INIT:IMM"));
-	  System.out.println(ConversionUtil.toString(answer)); answer =
-	  testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:LIST:SEGM:SEL?"));
-	  System.out.println(ConversionUtil.toString(answer)); // answer = testee
-	  // .writeWithAnswer(ConversionUtil.toBytes("SOUR:LIST:SEGM:VOLT:POIN?"));
-	  // System.out.println(ConversionUtil.toString(answer));
-	  
-	  while (testee.isStarted()) { 
-		  Thread.sleep(7000); 
-		  testee.stop(); 
-	  }
-	  testee.close();
-*/
+//	  while (testee.isStarted()) { 
+//		  Thread.sleep(7000); 
+//		  testee.stop(); 
+//	  }
+//	  testee.close();
+
 	  // @formatter:on
 	}
 
@@ -326,8 +296,7 @@ public class HP1340Test {
 			throws Exception {
 		double v;
 		NumberFormat formatter = new DecimalFormat("#0.00");
-		String answer = testee.send_and_receive(link, "SOUR:LIST:SEGM:SEL A");
-		System.out.println(answer);
+		testee.send(link, "SOUR:LIST:SEGM:SEL A");
 		String values = "SOUR:LIST:SEGM:VOLT ";
 		for (int i = 0; i < 4096; i++) {
 			v = 0.00122 * (double) i;
@@ -336,17 +305,14 @@ public class HP1340Test {
 				values += ",";
 			}
 		}
-		// System.out.print(values);
-		answer = testee.send_and_receive(link, values);
-		System.out.println(answer);
+		testee.send(link, values);
 	}
 
 	private void writeWaveformValues_DampedSine(VXIConnector testee,
 			DeviceLink link) throws Exception {
 		double v;
 		NumberFormat formatter = new DecimalFormat("#0.00");
-		String answer = testee.send_and_receive(link, "SOUR:LIST:SEGM:SEL A");
-		System.out.println(answer);
+		testee.send(link, "SOUR:LIST:SEGM:SEL A");
 		String values = "SOUR:LIST:SEGM:VOLT ";
 		double a = 4.0 / 4096.0;
 		double w = 2 * Math.PI / 50.0;
@@ -358,17 +324,14 @@ public class HP1340Test {
 			}
 		}
 		// System.out.print(values);
-		answer = testee.send_and_receive(link, values);
-		System.out.println(answer);
+		testee.send(link, values);
 	}
 
 	private void writeWaveformValues_DampedSine_DAC(VXIConnector testee,
 			DeviceLink link) throws Exception {
 		double v;
-		String answer = testee.send_and_receive(link, "SOUR:ARB:DAC:SOUR INT");
-		System.out.println(answer);
-		answer = testee.send_and_receive(link, "SOUR:LIST:SEGM:SEL A");
-		System.out.println(answer);
+		testee.send(link, "SOUR:ARB:DAC:SOUR INT");
+		testee.send(link, "SOUR:LIST:SEGM:SEL A");
 		String values = "SOUR:LIST:SEGM:VOLT:DAC ";
 		double a = 4.0 / 4096.0;
 		double w = 2 * Math.PI / 50.0;
@@ -383,19 +346,23 @@ public class HP1340Test {
 		}
 		// System.out.print(values);
 		values += '\n';
-		answer = testee.send_and_receive(link, values);
-		System.out.println(answer);
+		testee.send(link, values);
 	}
 
+	/**
+	 * TODO argument creation is wrong
+	 * @param testee
+	 * @param link
+	 * @throws Exception
+	 */
 	private void writeWaveformValues_DampedSine_DAC_ArbBlock(
-			VXIConnector testee, DeviceLink link) throws IOException {
+			VXIConnector testee, DeviceLink link) throws Exception {
 		double v;
 		String answer = "TO BE IMPLEMENTED";// ;testee.send_and_receive(link,
 											// "SOUR:ARB:DAC:SOUR INT");
 		System.out.println(answer);
-		// answer = testee.send_and_receive(link, "SOUR:LIST:SEGM:SEL A");
-		System.out.println(answer);
-
+		testee.send(link, "SOUR:LIST:SEGM:SEL A");
+	
 		String valuesPrefix = "SOUR:LIST:SEGM:VOLT:DAC #48192";
 		int valuesLength = valuesPrefix.length() + 8192 + 1;
 		byte values[] = new byte[valuesLength];
@@ -426,38 +393,37 @@ public class HP1340Test {
 			values[i++] = (byte) (d >> 8); // MSB first
 			values[i++] = (byte) (d & 0xff);
 		}
-		// CommunicationUtil.dumpByteArray(values, valuesLength);
+		CommunicationUtil.dumpByteArray(values, valuesLength);
 
-		// for (int j = valuesPrefix.length() ; j < valuesPrefix.length() +
-		// 8192; j += 2) {
-		// System.out.println(CommunicationUtil.byteToHexString(values[j])
-		// + " " + CommunicationUtil.byteToHexString(values[j + 1]));
-		// }
+		for (int j = valuesPrefix.length(); j < valuesPrefix.length()
+				+ 8192; j += 2) {
+			System.out.println(CommunicationUtil.byteToHexString(values[j])
+					+ " " + CommunicationUtil.byteToHexString(values[j + 1]));
 
-		// switch (j / 800) {
-		// case 0:
-		// d = 0;
-		// break;
-		// case 1:
-		// d = 1248;
-		// break;
-		// case 2:
-		// d = 2048;
-		// break;
-		// case 3:
-		// d = 2448;
-		// break;
-		// case 4:
-		// d = 3248;
-		// break;
-		// default:
-		// d = 4095;
-		// break;
-		// }
-
+			switch (j / 800) {
+			case 0:
+				d = 0;
+				break;
+			case 1:
+				d = 1248;
+				break;
+			case 2:
+				d = 2048;
+				break;
+			case 3:
+				d = 2448;
+				break;
+			case 4:
+				d = 3248;
+				break;
+			default:
+				d = 4095;
+				break;
+			}
+		}
 		// System.out.print(values);
 		values[i] = '\n';
-		// answer = testee.send_and_receive(link, values);
+		//testee.send(link, values); <------------ fix here 
 		System.out.println(answer);
 	}
 
@@ -499,8 +465,7 @@ public class HP1340Test {
 			DeviceLink link) throws Exception {
 		double v;
 		NumberFormat formatter = new DecimalFormat("#0.00");
-		String answer = testee.send_and_receive(link, "SOUR:LIST:SEGM:SEL A");
-		System.out.println(answer);
+		testee.send(link, "SOUR:LIST:SEGM:SEL A");
 		String values = "SOUR:LIST:SEGM:VOLT ";
 		double rc = 400.0;
 		for (int i = 0; i < 4096; i++) {
@@ -518,18 +483,22 @@ public class HP1340Test {
 			}
 		}
 		// System.out.print(values);
-		answer = testee.send_and_receive(link, values);
-		System.out.println(answer);
+		testee.send(link, values);
 	}
 
+	/**
+	 * TODO: this does not work. 0 points are received !?!
+	 * @param testee
+	 * @param link
+	 * @throws Exception
+	 */
 	private void writeWaveformValues_SpikedSine(VXIConnector testee,
 			DeviceLink link) throws Exception {
 		double waveform[] = new double[4097];
 		NumberFormat formatter = new DecimalFormat("#0.00");
-		String answer = testee.send_and_receive(link, "SOUR:LIST:SEGM:SEL A");
-		System.out.println(answer);
+		testee.send(link, "SOUR:LIST:SEGM:SEL A");
 		String values = "SOUR:LIST:SEGM:VOLT ";
-		// waveform[0] = 0.0;
+		waveform[0] = 0.0;
 		for (int i = 1; i <= 4096; i++) {
 			waveform[i] = 0.5 * Math.sin(2 * Math.PI * ((double) i / 4096.0));
 		}
@@ -548,16 +517,14 @@ public class HP1340Test {
 			}
 		}
 		// System.out.print(values);
-		answer = testee.send_and_receive(link, values);
-		System.out.println(answer);
+		testee.send(link, values);
 	}
 
 	private void writeWaveformValues_HalfRectifiedSine(VXIConnector testee,
 			DeviceLink link) throws Exception {
 		double v;
 		NumberFormat formatter = new DecimalFormat("#0.00");
-		String answer = testee.send_and_receive(link, "SOUR:LIST:SEGM:SEL A");
-		System.out.println(answer);
+		testee.send(link, "SOUR:LIST:SEGM:SEL A");
 		String values = "SOUR:LIST:SEGM:VOLT ";
 		for (int i = 0; i < 2048; i++) {
 			v = Math.sin(2 * Math.PI * ((double) i / 4096.0));
@@ -575,8 +542,7 @@ public class HP1340Test {
 			}
 		}
 		// System.out.print(values);
-		answer = testee.send_and_receive(link, values);
-		System.out.println(answer);
+		testee.send(link, values);
 	}
 
 	private void checkErrors(VXIConnector testee, DeviceLink link)
