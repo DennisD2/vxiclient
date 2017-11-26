@@ -43,7 +43,7 @@ public class HP1340Test {
 	private HP1340 testee;
 
 	@Before
-	public void beforeTest() throws Exception {
+	public void before() throws Exception {
 		System.out.println("Start...");
 
 		// Load configuration
@@ -52,7 +52,7 @@ public class HP1340Test {
 		config = Configuration.findConfigById(SERIAL_CONFIG);
 		// We like to test a net GPIBSerial
 		assertThat(config.getClass(),
-				IsEqual.equalTo(RPCConnectorConfig.class));
+				IsEqual.equalTo(GPIBSerialConnectorConfig.class));
 		System.out.println(config);
 
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
@@ -62,6 +62,7 @@ public class HP1340Test {
 		theLid = vxiConnector.initialize(config, deviceid);
 		testee = new HP1340(vxiConnector, theLid);
 
+		// TODO: do we really need next 6 lines?
 		if (((GPIBSerialConnectorConfig) config)
 				.getAdapterType() == ((GPIBSerialConnectorConfig) config).ADAPTER_SERIAL_DIRECT) {
 			((GPIBSerialConnector) vxiConnector).selectDevice(theLid, "AFG");
@@ -75,16 +76,31 @@ public class HP1340Test {
 	public void testStandardWaveForms() throws Exception {
 		testee.initialize();
 
-		// testee.setShape(StandardWaveForm.RAMP);
-		// testee.setShape(StandardWaveForm.SINE);
-		testee.setShape(HP1340.StandardWaveForm.SQUARE);
-		// testee.setShape(StandardWaveForm.DC);
-		// testee.setShape(StandardWaveForm.TRIANGLE);
-
 		testee.setAmplitude(5.0);
 
 		testee.setFrequency(3E6);
 
+		testee.setShape(HP1340.StandardWaveForm.RAMP);
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+
+		testee.setShape(HP1340.StandardWaveForm.SINE);
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+
+		testee.setShape(HP1340.StandardWaveForm.SQUARE);
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+
+		testee.setShape(HP1340.StandardWaveForm.DC);
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+
+		testee.setShape(HP1340.StandardWaveForm.TRIANGLE);
 		testee.start();
 	}
 
@@ -98,30 +114,84 @@ public class HP1340Test {
 		testee.setFrequency(3E3);
 
 		testee.setShape(HP1340.BuiltinWaveForm.Harmonic_Chord_3rd_4th_5th, 'A');
-		// testee.setBuiltinWaveForm( BuiltinWaveForm.Haversine, 'A');
-		// testee.setBuiltinWaveForm( BuiltinWaveForm.Ramp_Falling, 'A');
-		// testee.setBuiltinWaveForm( BuiltinWaveForm.Ramp_Falling_First_20,
-		// 'A');
-		// testee.setBuiltinWaveForm( BuiltinWaveForm.Ramp_Rising, 'A');
-		// testee.setBuiltinWaveForm( BuiltinWaveForm.Ramp_Rising_First_20,
-		// 'A');
-		// testee.setBuiltinWaveForm( BuiltinWaveForm.Sine, 'A');
-		// testee.setBuiltinWaveForm(
-		// BuiltinWaveForm.Sine_Linear_Rising_8_cycles, 'A'); // cutie
-		// testee.setBuiltinWaveForm( BuiltinWaveForm.Sine_Positive_Half_Cycle,
-		// 'A'); // cutie
-		// testee.setBuiltinWaveForm( BuiltinWaveForm.Sinx_per_x, 'A');
-		// testee.setBuiltinWaveForm( BuiltinWaveForm.Square, 'A');
-		// testee.setBuiltinWaveForm( BuiltinWaveForm.Square_First_10, 'A');
-		// testee.setBuiltinWaveForm( BuiltinWaveForm.Square_First_4, 'A'); //
-		// cutie
-		// testee.setBuiltinWaveForm( BuiltinWaveForm.Triangle, 'A');
-		// testee.setBuiltinWaveForm( BuiltinWaveForm.White_Noise, 'A'); //
-		// cutie
-		// testee.setBuiltinWaveForm( BuiltinWaveForm.White_Noise_Modulated,
-		// 'A'); // cutie
-
 		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.Haversine, 'A');
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.Ramp_Falling, 'A');
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.Ramp_Falling_First_20, 'A');
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.Ramp_Rising, 'A');
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.Ramp_Rising_First_20, 'A');
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.Sine, 'A');
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.Sine_Linear_Rising_8_cycles,'A'); // cutie
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.Sine_Positive_Half_Cycle, 'A'); // cutie
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.Sinx_per_x, 'A');
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.Square, 'A');
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.Square_First_10, 'A');
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.Square_First_4, 'A'); // cutie
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.Triangle, 'A');
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.White_Noise, 'A'); // cutie
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
+		
+		testee.setShape(HP1340.BuiltinWaveForm.White_Noise_Modulated, 'A'); // cutie
+		testee.start();
+		Thread.sleep(5000);
+		testee.stop();
 	}
 
 	@Ignore
@@ -130,8 +200,7 @@ public class HP1340Test {
 		testee.initialize();
 
 		// set sweep parameters
-		testee.setSweep(1e3, 1e5, 1000, 25, 5.0,
-				HP1340.StandardWaveForm.SQUARE);
+		testee.setSweep(1e3, 1e5, 1000, 25, 5.0,HP1340.StandardWaveForm.SQUARE);
 
 		testee.start();
 	}
@@ -142,8 +211,7 @@ public class HP1340Test {
 		testee.initialize();
 
 		// set sweep parameters
-		testee.setSweep(1e3, 1e5, 1000, 25, 5.0,
-				HP1340.StandardWaveForm.SQUARE);
+		testee.setSweep(1e3, 1e5, 1000, 25, 5.0, HP1340.StandardWaveForm.SQUARE);
 
 		// set marker parameters
 		// See page 167
@@ -394,6 +462,7 @@ public class HP1340Test {
 	}
 
 	// see manual page 109
+	@Ignore
 	@Test
 	public void testDACCodes() {
 		short dac = voltsToDACCode(-2.0);
