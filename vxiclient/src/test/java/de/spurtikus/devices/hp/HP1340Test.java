@@ -20,8 +20,10 @@ import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnector;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
+import de.spurtikus.vxi.connectors.serial.SerialConnectorConfig.Protocol;
 import de.spurtikus.vxi.service.Configuration;
 import de.spurtikus.vxi.util.CommunicationUtil;
+import de.spurtikus.vxi.util.ConversionUtil;
 
 /**
  * TODO: see NOT YET IMPLEMENTED for non working parts.
@@ -30,13 +32,10 @@ import de.spurtikus.vxi.util.CommunicationUtil;
  *
  */
 public class HP1340Test {
-	String tty = "/dev/ttyUSB0";
-	int baudRate = 115200;
-
 	public static final int SERIAL_CONFIG = 1;
 	public static final int RPC_CONFIG = 2;
 
-	final String TEST_DEVICE_NAME = "hp1326/hp1411";
+	final String TEST_DEVICE_NAME = "hp1340";
 
 	Configuration configuration;
 	ConnectorConfig config;
@@ -137,7 +136,7 @@ public class HP1340Test {
 		testee.start();
 	}
 
-	// @Ignore
+	@Ignore
 	@Test
 	public void testSweepMarker() throws Exception {
 		testee.initialize();
@@ -189,66 +188,72 @@ public class HP1340Test {
 	 * @throws InterruptedException
 	 */
 	@Ignore
-	/*
-	 * @Test public void testWriteWithAnswer_XonXoff_and_None() throws
-	 * IOException, InterruptedException { Communication testee = new
-	 * Communication(); byte[] cmd, answer;
-	 * 
-	 * Protocol protocol = Protocol.XONXOFF; // Protocol protocol =
-	 * Protocol.NONE; testee.configure("/dev/ttyS0", 38400, 8, 0, 1, protocol);
-	 * testee.open(); assertTrue(testee.isOpen()); testee.start();
-	 * assertTrue(testee.isStarted());
-	 * 
-	 * answer = testee.writeWithAnswer(ConversionUtil.toBytes(".a 9 10"));
-	 * System.out.println(ConversionUtil.toString(answer)); answer =
-	 * testee.writeWithAnswer(ConversionUtil.toBytes("*IDN?"));
-	 * System.out.println(ConversionUtil.toString(answer)); answer =
-	 * testee.writeWithAnswer(ConversionUtil.toBytes("*IDN?"));
-	 * System.out.println(ConversionUtil.toString(answer)); // answer =
-	 * testee.writeWithAnswer(ConversionUtil.toBytes(".x")); //
-	 * System.out.println(ConversionUtil.toString(answer)); answer =
-	 * testee.writeWithAnswer(ConversionUtil.toBytes("*RST"));
-	 * System.out.println(ConversionUtil.toString(answer));
-	 * 
-	 * answer =
-	 * testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:ROSC:SOUR INT;"));
-	 * System.out.println(ConversionUtil.toString(answer)); answer =
-	 * testee.writeWithAnswer(ConversionUtil.toBytes(":SOUR:FREQ:FIX 1E3;"));
-	 * System.out.println(ConversionUtil.toString(answer)); answer =
-	 * testee.writeWithAnswer(ConversionUtil.toBytes(":SOUR:FUNC:SHAP USER;"));
-	 * System.out.println(ConversionUtil.toString(answer)); answer =
-	 * testee.writeWithAnswer(ConversionUtil.
-	 * toBytes(":SOUR:VOLT:LEV:IMM:AMPL 5.1V"));
-	 * System.out.println(ConversionUtil.toString(answer));
-	 * 
-	 * Timer timer = new Timer(); timer.start(); //
-	 * writeWaveformValues_Ramp(testee); //
-	 * writeWaveformValues_DampedSine(testee); // 11914ms //
-	 * writeWaveformValues_ChargeDischarge(testee);
-	 * 
-	 * // writeWaveformValues_SpikedSine(testee); //
-	 * writeWaveformValues_HalfRectifiedSine(testee);
-	 * 
-	 * // writeWaveformValues_DampedSine_DAC(testee); // 10080ms
-	 * writeWaveformValues_DampedSine_DAC_ArbBlock(testee); // 3950ms
-	 * 
-	 * timer.stopAndPrintln(); // checkErrors(testee);
-	 * 
-	 * answer =
-	 * testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:FUNC:USER A"));
-	 * System.out.println(ConversionUtil.toString(answer)); answer =
-	 * testee.writeWithAnswer(ConversionUtil.toBytes("INIT:IMM"));
-	 * System.out.println(ConversionUtil.toString(answer)); answer =
-	 * testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:LIST:SEGM:SEL?"));
-	 * System.out.println(ConversionUtil.toString(answer)); // answer = testee
-	 * // .writeWithAnswer(ConversionUtil.toBytes("SOUR:LIST:SEGM:VOLT:POIN?"));
-	 * // System.out.println(ConversionUtil.toString(answer));
-	 * 
-	 * while (testee.isStarted()) { Thread.sleep(7000); testee.stop(); }
-	 * testee.close();
-	 * 
-	 * }
-	 */
+	@Test
+	public void testWriteWithAnswer_XonXoff_and_None()
+			throws IOException, InterruptedException {
+		// @formatter:off
+/*	
+	  Communication testee = new Communication(); 
+	  byte[] cmd, answer;
+	  
+	  Protocol protocol = Protocol.XONXOFF; // Protocol protocol = Protocol.NONE; 
+	  testee.configure("/dev/ttyS0", 38400, 8, 0, 1, protocol);
+	  testee.open(); assertTrue(testee.isOpen()); testee.start();
+	  assertTrue(testee.isStarted());
+	  
+	  answer = testee.writeWithAnswer(ConversionUtil.toBytes(".a 9 10"));
+	  System.out.println(ConversionUtil.toString(answer)); answer =
+	  testee.writeWithAnswer(ConversionUtil.toBytes("*IDN?"));
+	  System.out.println(ConversionUtil.toString(answer)); answer =
+	  testee.writeWithAnswer(ConversionUtil.toBytes("*IDN?"));
+	  System.out.println(ConversionUtil.toString(answer)); // answer =
+	  testee.writeWithAnswer(ConversionUtil.toBytes(".x")); //
+	  System.out.println(ConversionUtil.toString(answer)); answer =
+	  testee.writeWithAnswer(ConversionUtil.toBytes("*RST"));
+	  System.out.println(ConversionUtil.toString(answer));
+	  
+	  answer =
+	  testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:ROSC:SOUR INT;"));
+	  System.out.println(ConversionUtil.toString(answer)); answer =
+	  testee.writeWithAnswer(ConversionUtil.toBytes(":SOUR:FREQ:FIX 1E3;"));
+	  System.out.println(ConversionUtil.toString(answer)); answer =
+	  testee.writeWithAnswer(ConversionUtil.toBytes(":SOUR:FUNC:SHAP USER;"));
+	  System.out.println(ConversionUtil.toString(answer)); answer =
+	  testee.writeWithAnswer(ConversionUtil.
+	  toBytes(":SOUR:VOLT:LEV:IMM:AMPL 5.1V"));
+	  System.out.println(ConversionUtil.toString(answer));
+	  
+	  //Timer timer = new Timer(); timer.start(); //
+	  writeWaveformValues_Ramp(testee); //
+	  writeWaveformValues_DampedSine(testee); // 11914ms //
+	  writeWaveformValues_ChargeDischarge(testee);
+	  
+	  // writeWaveformValues_SpikedSine(testee); //
+	  writeWaveformValues_HalfRectifiedSine(testee);
+	  
+	  // writeWaveformValues_DampedSine_DAC(testee); // 10080ms
+	  writeWaveformValues_DampedSine_DAC_ArbBlock(testee); // 3950ms
+	  
+	  //timer.stopAndPrintln(); // checkErrors(testee);
+	  
+	  answer = testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:FUNC:USER A"));
+	  System.out.println(ConversionUtil.toString(answer)); answer =
+	  testee.writeWithAnswer(ConversionUtil.toBytes("INIT:IMM"));
+	  System.out.println(ConversionUtil.toString(answer)); answer =
+	  testee.writeWithAnswer(ConversionUtil.toBytes("SOUR:LIST:SEGM:SEL?"));
+	  System.out.println(ConversionUtil.toString(answer)); // answer = testee
+	  // .writeWithAnswer(ConversionUtil.toBytes("SOUR:LIST:SEGM:VOLT:POIN?"));
+	  // System.out.println(ConversionUtil.toString(answer));
+	  
+	  while (testee.isStarted()) { 
+		  Thread.sleep(7000); 
+		  testee.stop(); 
+	  }
+	  testee.close();
+*/
+	  // @formatter:on
+	}
+
 	private void writeWaveformValues_Ramp(VXIConnector testee, DeviceLink link)
 			throws Exception {
 		double v;
