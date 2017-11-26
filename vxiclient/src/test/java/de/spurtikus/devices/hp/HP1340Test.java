@@ -263,7 +263,6 @@ public class HP1340Test {
 	public void userDefinedWaveForms()
 			throws Exception {
 	  String answer;
-	  String valueString;
 	  
 	  double maxValue = 5.0; // maximum allowed y value (to prevent data errors on loading waveforms)
 			  
@@ -273,7 +272,7 @@ public class HP1340Test {
 	  System.out.println(answer); 
 	  vxiConnector.send(theLid, "*RST");
 	  
-	  /*testee.setUserDefinedWaveform(waveformValues_Ramp(), maxValue);
+	  testee.setUserDefinedWaveform(waveformValues_Ramp(), maxValue);
 	  testee.start();
 	  Thread.sleep(5000);
 	  testee.stop();
@@ -291,7 +290,7 @@ public class HP1340Test {
 	  testee.setUserDefinedWaveform(waveformValues_HalfRectifiedSine(), maxValue);
 	  testee.start();
 	  Thread.sleep(5000);
-	  testee.stop();*/
+	  testee.stop();
 
 	  testee.setUserDefinedWaveform(waveformValues_SpikedSine(), maxValue);
 	  testee.start();
@@ -299,11 +298,10 @@ public class HP1340Test {
 	  testee.stop();
 
 	  // DAC values tests
-	  /*String valueString_dac = waveformValues_DampedSine_DAC();
-	  testee.setUserDefinedWaveform(valueString_dac, true);
+	  testee.setUserDefinedWaveform(waveformValues_DampedSine_DAC());
 	  testee.start();
 	  Thread.sleep(5000);
-	  testee.stop();*/
+	  testee.stop();
 
 	  //writeWaveformValues_DampedSine_DAC_ArbBlock(vxiConnector, theLid); // 3950ms
 
@@ -337,22 +335,18 @@ public class HP1340Test {
 		return waveform;
 	}
 
-	private String waveformValues_DampedSine_DAC() throws Exception {
+	private short[] waveformValues_DampedSine_DAC() throws Exception {
 		double v;
-		String values = "";
+		short waveform[] = new short[4096];
 		double a = 4.0 / 4096.0;
 		double w = 2 * Math.PI / 50.0;
 		for (int i = 0; i < 4096; i++) {
 			v = Math.exp(-a * i) * Math.sin(w * i);
 			short d = HP1340.voltsToDACCode(v);
 			System.out.println(v + "-> " + d);
-			values += d;
-			if (i != 4095) {
-				values += ",";
-			}
+			waveform[i]= d;
 		}
-		values += '\n';
-		return values;
+		return waveform;
 	}
 
 	/**

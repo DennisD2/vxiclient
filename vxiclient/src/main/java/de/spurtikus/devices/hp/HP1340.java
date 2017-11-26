@@ -481,7 +481,7 @@ public class HP1340 extends BaseHPDevice {
 	 *            volt value to convert.
 	 * @return DAC value in range 0..4096.
 	 */
-	public int voltsToDACCode2(double v) {
+	public static int voltsToDACCode2(double v) {
 		int dac = (int) ((v / 0.0025) + 2048);
 		return dac & 0x0fff;
 	}
@@ -502,13 +502,7 @@ public class HP1340 extends BaseHPDevice {
 		System.out.println(answer);
 		vxiConnector.send(deviceLink, "*RST");
 
-		vxiConnector.send(deviceLink, "SOUR:ROSC:SOUR INT;");
-		vxiConnector.send(deviceLink, ":SOUR:FREQ:FIX 1E3;");
-		vxiConnector.send(deviceLink, ":SOUR:FUNC:SHAP USER;");
-		vxiConnector.send(deviceLink, ":SOUR:VOLT:LEV:IMM:AMPL 5.1V");
-
-		vxiConnector.send(deviceLink, "SOUR:ARB:DAC:SOUR INT");
-		vxiConnector.send(deviceLink, "SOUR:LIST:SEGM:SEL A");
+		prefix_userDefinedWF();
 
 		String prefix;
 		if (dacValues) {
@@ -548,18 +542,11 @@ public class HP1340 extends BaseHPDevice {
 	 */
 	public void setUserDefinedWaveform(double[] waveform, double maxValue)
 			throws Exception {
-		String answer;
 		NumberFormat formatter = new DecimalFormat("#0.00");
 
-		vxiConnector.send(deviceLink, "SOUR:ROSC:SOUR INT;");
-		vxiConnector.send(deviceLink, ":SOUR:FREQ:FIX 1E3;");
-		vxiConnector.send(deviceLink, ":SOUR:FUNC:SHAP USER;");
-		vxiConnector.send(deviceLink, ":SOUR:VOLT:LEV:IMM:AMPL 5.1V");
+		prefix_userDefinedWF();
 
-		vxiConnector.send(deviceLink, "SOUR:ARB:DAC:SOUR INT");
-		vxiConnector.send(deviceLink, "SOUR:LIST:SEGM:SEL A");
-
-		String values = "SOUR:LIST:SEGM:VOLT ";
+		String values = ""; //"SOUR:LIST:SEGM:VOLT ";
 		for (int i = 0; i < waveform.length; i++) {
 			// ensure that value does not overrun max/min allowed value
 			// if overun occurs, the waveform data will not be loaded by HP1340
@@ -575,10 +562,59 @@ public class HP1340 extends BaseHPDevice {
 			}
 		}
 
+		postfix_UserDefinedWF("", values);
+	}
+
+	/**
+	 * Set user defined waveform. Waveform is contained in a 4096 point short
+	 * array as DAC values. 
+	 * 
+	 * @param waveform
+	 *            4096 point DAC array with waveform data.
+	 * @param maxValue
+	 *            maximum allowed data value.
+	 * @throws Exception
+	 */
+	public void setUserDefinedWaveform(short[] waveform)
+			throws Exception {
+		prefix_userDefinedWF();
+
+		String values = ""; //"SOUR:LIST:SEGM:VOLT:DAC ";
+		for (int i = 0; i < waveform.length; i++) {
+			values += waveform[i];
+			if (i != waveform.length - 1) {
+				values += ",";
+			}
+		}
+
+		postfix_UserDefinedWF(":DAC", values);
+	}
+
+	/**
+	 * Helper for setUserDefinedWaveform()
+	 * @throws Exception
+	 */
+	protected void prefix_userDefinedWF() throws Exception {
+		vxiConnector.send(deviceLink, "SOUR:ROSC:SOUR INT;");
+		vxiConnector.send(deviceLink, ":SOUR:FREQ:FIX 1E3;");
+		vxiConnector.send(deviceLink, ":SOUR:FUNC:SHAP USER;");
+		vxiConnector.send(deviceLink, ":SOUR:VOLT:LEV:IMM:AMPL 5.1V");
+
+		vxiConnector.send(deviceLink, "SOUR:ARB:DAC:SOUR INT");
+		vxiConnector.send(deviceLink, "SOUR:LIST:SEGM:SEL A");
+	}
+	
+	/**
+	 * Helper for setUserDefinedWaveform()
+	 * @throws Exception
+	 */
+	protected void postfix_UserDefinedWF(String prefix, String values) throws Exception {
+		String answer;
 		Timer timer = new Timer();
 		timer.start();
 		// System.out.print(values);
-		values += '\n';
+		values = "SOUR:LIST:SEGM:VOLT" + prefix + " " + values + '\n';
+		//values += '\n';
 		vxiConnector.send(deviceLink, values);
 		timer.stopAndPrintln();
 		// checkErrors(testee);
@@ -592,7 +628,7 @@ public class HP1340 extends BaseHPDevice {
 				"SOUR:LIST:SEGM:VOLT:POIN?");
 		System.out.println(answer);
 	}
-
+	
 	/**
 	 * Set sweep parameters. See page 90/91 of user's manual.
 	 * 
