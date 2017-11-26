@@ -1,5 +1,7 @@
 package de.spurtikus.devices.hp;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Locale;
 
 import org.slf4j.Logger;
@@ -479,12 +481,21 @@ public class HP1340 extends BaseHPDevice {
 	 *            volt value to convert.
 	 * @return DAC value in range 0..4096.
 	 */
-	public int voltsToDACCode(double v) {
+	public int voltsToDACCode2(double v) {
 		int dac = (int) ((v / 0.0025) + 2048);
 		return dac & 0x0fff;
 	}
-	
-	public void setUserDefinedWaveform(String valueString, boolean dacValues) throws Exception {
+
+	public static short voltsToDACCode(double v) {
+		short dac = (short) ((v / 0.0025) + 2048);
+		if (dac < 0 || dac > 4095) {
+			System.out.println("dac value out of range: " + dac);
+		}
+		return (short) (dac & 0x0fff);
+	}
+
+	public void setUserDefinedWaveform(String valueString, boolean dacValues)
+			throws Exception {
 		String answer;
 
 		answer = vxiConnector.send_and_receive(deviceLink, "*IDN?");
@@ -495,19 +506,77 @@ public class HP1340 extends BaseHPDevice {
 		vxiConnector.send(deviceLink, ":SOUR:FREQ:FIX 1E3;");
 		vxiConnector.send(deviceLink, ":SOUR:FUNC:SHAP USER;");
 		vxiConnector.send(deviceLink, ":SOUR:VOLT:LEV:IMM:AMPL 5.1V");
-		
+
 		vxiConnector.send(deviceLink, "SOUR:ARB:DAC:SOUR INT");
 		vxiConnector.send(deviceLink, "SOUR:LIST:SEGM:SEL A");
 
 		String prefix;
 		if (dacValues) {
 			prefix = "SOUR:LIST:SEGM:VOLT:DAC ";
-		} else  {
-			prefix=	"SOUR:LIST:SEGM:VOLT ";
+		} else {
+			prefix = "SOUR:LIST:SEGM:VOLT ";
 		}
 		Timer timer = new Timer();
-		timer.start(); 		
+		timer.start();
 		String values = prefix + valueString;
+		// System.out.print(values);
+		values += '\n';
+		vxiConnector.send(deviceLink, values);
+		timer.stopAndPrintln();
+		// checkErrors(testee);
+
+		vxiConnector.send(deviceLink, "SOUR:FUNC:USER A");
+		vxiConnector.send(deviceLink, "INIT:IMM");
+		answer = vxiConnector.send_and_receive(deviceLink,
+				"SOUR:LIST:SEGM:SEL?");
+		System.out.println(answer);
+		answer = vxiConnector.send_and_receive(deviceLink,
+				"SOUR:LIST:SEGM:VOLT:POIN?");
+		System.out.println(answer);
+	}
+
+	/**
+	 * Set user defined waveform. Waveform is contained in a 4096 point double
+	 * array. Array values must be between -maxValue and +maxValue. Otherwise
+	 * the waveform will be ignored by HP1340.
+	 * 
+	 * @param waveform
+	 *            4096 point double array with waveform data.
+	 * @param maxValue
+	 *            maximum allowed data value.
+	 * @throws Exception
+	 */
+	public void setUserDefinedWaveform(double[] waveform, double maxValue)
+			throws Exception {
+		String answer;
+		NumberFormat formatter = new DecimalFormat("#0.00");
+
+		vxiConnector.send(deviceLink, "SOUR:ROSC:SOUR INT;");
+		vxiConnector.send(deviceLink, ":SOUR:FREQ:FIX 1E3;");
+		vxiConnector.send(deviceLink, ":SOUR:FUNC:SHAP USER;");
+		vxiConnector.send(deviceLink, ":SOUR:VOLT:LEV:IMM:AMPL 5.1V");
+
+		vxiConnector.send(deviceLink, "SOUR:ARB:DAC:SOUR INT");
+		vxiConnector.send(deviceLink, "SOUR:LIST:SEGM:SEL A");
+
+		String values = "SOUR:LIST:SEGM:VOLT ";
+		for (int i = 0; i < waveform.length; i++) {
+			// ensure that value does not overrun max/min allowed value
+			// if overun occurs, the waveform data will not be loaded by HP1340
+			if (waveform[i] < -maxValue) {
+				waveform[i] = -maxValue;
+			}
+			if (waveform[i] > maxValue) {
+				waveform[i] = maxValue;
+			}
+			values += formatter.format(waveform[i]).replace(",", ".");
+			if (i != waveform.length - 1) {
+				values += ",";
+			}
+		}
+
+		Timer timer = new Timer();
+		timer.start();
 		// System.out.print(values);
 		values += '\n';
 		vxiConnector.send(deviceLink, values);
@@ -575,57 +644,6 @@ public class HP1340 extends BaseHPDevice {
 		vxiConnector.send(deviceLink, cmd);
 		cmd = "SOUR:MARK:POL " + polarity.getValue();
 		vxiConnector.send(deviceLink, cmd);
-	}
-
-	/**
-	 * TODO: method below untested old code by Samofabs
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	public String UploadWaveForm() throws Exception {
-		// OLD COMMENT: this should eventually work with GPIB
-		// Samofabs mailtext:
-		// "For example I'm pretty sure that you can't upload arbitrary waveform
-		// trough serial port.. you need gpib. There are parts of the code that
-		// you might try to reuse if you connect it via GPIB."
-
-		vxiConnector.send(deviceLink, "SOUR:LIST:SEGM:SEL A");
-
-		byte[] demo = GetDemoWaveForm();
-		uploadBinaryData("SOUR:LIST:SEGM:VOLT:DAC ", demo);
-		return "";
-	}
-
-	/*
-	 * =========================================================================
-	 * = =========== code copied frm samofab NEEDS REWORK
-	 */
-	public void uploadBinaryData(String command, byte[] data) throws Exception {
-		byte[] processedData = GetUploadReadyBytes(data);
-		int size = processedData.length;
-		int sizeDigits = Integer.toString(size).length();
-		String definiteBlockHeader = "#" + Integer.toString(sizeDigits)
-				+ Integer.toString(size);
-
-		vxiConnector.send(deviceLink, command + definiteBlockHeader);
-		// XXX port.writeWithAnswer(Byte.toString(processedData));
-		vxiConnector.send(deviceLink, "\r"); // if using indefinite block, sent
-												// !\r
-	}
-
-	private static byte[] GetUploadReadyBytes(byte[] input) {
-		byte[] result = new byte[input.length * 2];
-		int i = 0;
-		for (byte c : input) {
-			char msb = (char) ((c & 0xF0) >> 4);
-			char lsb = (char) (c & 0x0F);
-			// var checkMsb = _check[msb] << 4;
-			// var checkLsb = _check[lsb] << 4;
-			// result[i++] = (byte)(msb | checkMsb | 0x80); // msbfirst
-			// result[i++] = (byte)(lsb | checkLsb | 0x80);
-		}
-		return result;
 	}
 
 }
