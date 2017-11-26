@@ -79,6 +79,33 @@ public class HP1340 extends BaseHPDevice {
 	private static final double MAX_SWEEP_FREQUENCY_ARBITRARY = 15.0; // Mhz
 	private static final double MAX_SWEEP_FREQUENCY_OTHER = 1.0; // Mhz
 
+	public boolean isArmed;
+
+	/**
+	 * True if AFG is started.
+	 */
+	private boolean started;
+
+	/**
+	 * Waveform frequency
+	 */
+	private Double frequency;
+
+	/**
+	 * Waveform offset
+	 */
+	private Double offset;
+
+	/**
+	 * Waveform amplitude
+	 */
+	private Double amplitude;
+
+	/**
+	 * Waveform shape
+	 */
+	private StandardWaveForm shape;
+
 	/**
 	 * Standard waveforms
 	 * 
@@ -237,33 +264,6 @@ public class HP1340 extends BaseHPDevice {
 			return value;
 		}
 	};
-
-	public boolean isArmed;
-
-	/**
-	 * True if AFG is started.
-	 */
-	private boolean started;
-
-	/**
-	 * Waveform frequency
-	 */
-	private Double frequency;
-
-	/**
-	 * Waveform offset
-	 */
-	private Double offset;
-
-	/**
-	 * Waveform amplitude
-	 */
-	private Double amplitude;
-
-	/**
-	 * Waveform shape
-	 */
-	private StandardWaveForm shape;
 
 	/**
 	 * CTR. Requires mainframe object as parameter.
