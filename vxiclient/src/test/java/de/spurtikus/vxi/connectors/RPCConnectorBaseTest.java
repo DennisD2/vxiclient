@@ -25,6 +25,7 @@ public class RPCConnectorBaseTest {
 		Configuration.load();
 		Stream<ConnectorConfig> ccc = Configuration.getEnabledConfigs().stream().filter(c->c.getId()==2);
 		config  = (RPCConnectorConfig) ccc.findAny().get();
+		assertNotNull(config);
 
 		// Get connector for that configuration
 		vxiConnector = VXIConnectorFactory.getConnector(config);

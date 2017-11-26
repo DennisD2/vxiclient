@@ -30,22 +30,21 @@ public class ServiceTest {
 
 	@Deployment
 	public static WebArchive createDeployment() {
-				File[] lib = Maven.resolver()
-			            .resolve("org.jboss.weld.servlet:weld-servlet:1.1.9.Final", 
-			            		"de.spurtikus:vxiclient:0.0.1-SNAPSHOT")
-			            .withTransitivity().as(File.class);
-				
-				WebArchive jar = ShrinkWrap.create(WebArchive.class, "vxi.war")
-		            .addClass(Greeter.class)
-		            .addAsManifestResource("arquillian.xml")
-		            .addAsLibraries(lib)
-		            //.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-		            .addAsManifestResource("META-INF/beans.xml", "beans.xml")
-		            .setWebXML("web.xml");
-		        
-		        System.out.println(jar.toString(true));
-		        
-		        return jar;	
+		File[] lib = Maven.resolver()
+				.resolve("org.jboss.weld.servlet:weld-servlet:1.1.9.Final",
+						"de.spurtikus:vxiclient:0.0.1-SNAPSHOT")
+				.withTransitivity().as(File.class);
+
+		WebArchive jar = ShrinkWrap.create(WebArchive.class, "vxi.war")
+				.addClass(Greeter.class).addAsManifestResource("arquillian.xml")
+				.addAsLibraries(lib)
+				// .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+				.addAsManifestResource("META-INF/beans.xml", "beans.xml")
+				.setWebXML("web.xml");
+
+		System.out.println(jar.toString(true));
+
+		return jar;
 	}
 
 	@Test

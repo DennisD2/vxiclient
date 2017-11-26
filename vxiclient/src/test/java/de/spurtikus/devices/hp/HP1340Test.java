@@ -49,6 +49,7 @@ public class HP1340Test {
 		Configuration.load();
 		// We assume usable config at some index
 		config = Configuration.findConfigById(SERIAL_CONFIG);
+		assertNotNull(config);
 		// We like to test a net GPIBSerial
 		assertThat(config.getClass(),
 				IsEqual.equalTo(GPIBSerialConnectorConfig.class));

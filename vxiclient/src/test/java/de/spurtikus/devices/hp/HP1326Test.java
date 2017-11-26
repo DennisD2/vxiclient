@@ -35,6 +35,7 @@ public class HP1326Test {
 		Configuration.load();
 		// We assume usable config at some index
 		config = Configuration.findConfigById(RPC_CONFIG);
+		assertNotNull(config);
 		// We like to test a net GPIBSerial
 		assertThat(config.getClass(), IsEqual.equalTo(RPCConnectorConfig.class));
 		System.out.println(config);

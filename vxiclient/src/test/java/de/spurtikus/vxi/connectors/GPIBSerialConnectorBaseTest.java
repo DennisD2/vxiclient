@@ -24,6 +24,7 @@ public class GPIBSerialConnectorBaseTest {
 		Configuration.load();
 		Stream<ConnectorConfig> ccc = Configuration.getEnabledConfigs().stream().filter(c->c.getId()==1);
 		config  = (GPIBSerialConnectorConfig) ccc.findAny().get();
+		assertNotNull(config);
 
 		// Get connector for that configuration
 		vxiConnector = VXIConnectorFactory.getConnector(config);
