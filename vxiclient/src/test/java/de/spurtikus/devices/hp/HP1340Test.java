@@ -69,15 +69,13 @@ public class HP1340Test {
 		} else {
 			((GPIBSerialConnector) vxiConnector).selectDevice(theLid, 9, 10);
 		}
+		testee.initialize();
 	}
 
 	@Ignore
 	@Test
-	public void testStandardWaveForms() throws Exception {
-		testee.initialize();
-
+	public void standardWaveForms() throws Exception {
 		testee.setAmplitude(5.0);
-
 		testee.setFrequency(3E6);
 
 		testee.setShape(HP1340.StandardWaveForm.RAMP);
@@ -106,11 +104,8 @@ public class HP1340Test {
 
 	@Ignore
 	@Test
-	public void testBuiltinWaveForms() throws Exception {
-		testee.initialize();
-
+	public void builtinWaveForms() throws Exception {
 		testee.setAmplitude(5.0);
-
 		testee.setFrequency(3E3);
 
 		testee.setShape(HP1340.BuiltinWaveForm.Harmonic_Chord_3rd_4th_5th, 'A');
@@ -196,9 +191,7 @@ public class HP1340Test {
 
 	@Ignore
 	@Test
-	public void testSweep() throws Exception {
-		testee.initialize();
-
+	public void sweep() throws Exception {
 		// set sweep parameters
 		testee.setSweep(1e3, 1e5, 1000, 25, 5.0,HP1340.StandardWaveForm.SQUARE);
 
@@ -207,9 +200,7 @@ public class HP1340Test {
 
 	@Ignore
 	@Test
-	public void testSweepMarker() throws Exception {
-		testee.initialize();
-
+	public void sweepMarkers() throws Exception {
 		// set sweep parameters
 		testee.setSweep(1e3, 1e5, 1000, 25, 5.0, HP1340.StandardWaveForm.SQUARE);
 
@@ -225,11 +216,8 @@ public class HP1340Test {
 
 	@Ignore
 	@Test
-	public void testUserDefinedWaveForm() throws Exception {
-		testee.initialize();
-
+	public void userDefinedWaveForm_Ramp() throws Exception {
 		testee.setFrequency(3E3);
-
 		testee.setAmplitude(5.0);
 
 		Double[] waveForm = new Double[4096];
@@ -243,62 +231,60 @@ public class HP1340Test {
 		testee.start();
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	//@Ignore
 	@Test
-	public void testWriteWithAnswer_XonXoff_and_None()
+	public void userDefinedWaveForms()
 			throws Exception {
-	  // @formatter:off
-	
-	  testee.initialize();
 	  String answer;
 	  
 	  answer = vxiConnector.send_and_receive(theLid, "*IDN?");
 	  System.out.println(answer); 
 	  vxiConnector.send(theLid, "*RST");
 	  
-	  vxiConnector.send(theLid, "SOUR:ROSC:SOUR INT;");
-	  vxiConnector.send(theLid, ":SOUR:FREQ:FIX 1E3;");
-	  vxiConnector.send(theLid, ":SOUR:FUNC:SHAP USER;");
-	  vxiConnector.send(theLid, ":SOUR:VOLT:LEV:IMM:AMPL 5.1V");
+	  String valueString = waveformValues_Ramp();
+	  testee.setUserDefinedWaveform(valueString, false);
+	  testee.start();
+	  Thread.sleep(5000);
+	  testee.stop();
 	  
-	  Timer timer = new Timer(); timer.start(); //
-	  //writeWaveformValues_Ramp(vxiConnector, theLid); // 9172ms
-	  //writeWaveformValues_DampedSine(vxiConnector, theLid); // 10087ms 
-	  //writeWaveformValues_ChargeDischarge(vxiConnector, theLid); // 9481ms
-	  //writeWaveformValues_SpikedSine(vxiConnector, theLid);
-	  //writeWaveformValues_HalfRectifiedSine(vxiConnector, theLid);
-	  writeWaveformValues_DampedSine_DAC(vxiConnector, theLid); // 6342ms
-	  //writeWaveformValues_DampedSine_DAC_ArbBlock(vxiConnector, theLid); // 3950ms
-	  
-	  timer.stopAndPrintln(); 
-	  // checkErrors(testee);
-	  
-	  vxiConnector.send(theLid, "SOUR:FUNC:USER A");
-	  vxiConnector.send(theLid, "INIT:IMM");
-	  answer = vxiConnector.send_and_receive(theLid, "SOUR:LIST:SEGM:SEL?");
-	  System.out.println(answer);
-	  answer = vxiConnector.send_and_receive(theLid, "SOUR:LIST:SEGM:VOLT:POIN?");
-	  System.out.println(answer);
-	  
-//	  while (testee.isStarted()) { 
-//		  Thread.sleep(7000); 
-//		  testee.stop(); 
-//	  }
-//	  testee.close();
+	  /*valueString = waveformValues_DampedSine();
+	  testee.setUserDefinedWaveform(valueString, false);
+	  testee.start();
+	  Thread.sleep(5000);
+	  testee.stop();
 
-	  // @formatter:on
+	  valueString = waveformValues_ChargeDischarge();
+	  testee.setUserDefinedWaveform(valueString, false);
+	  testee.start();
+	  Thread.sleep(5000);
+	  testee.stop();
+
+	  valueString = waveformValues_HalfRectifiedSine();
+	  testee.setUserDefinedWaveform(valueString, false);
+	  testee.start();
+	  Thread.sleep(5000);
+	  testee.stop();*/
+
+	  valueString = waveformValues_SpikedSine();
+	  testee.setUserDefinedWaveform(valueString, false);
+	  testee.start();
+	  Thread.sleep(5000);
+	  testee.stop();
+
+	  // DAC values tests
+	  String valueString_dac = waveformValues_DampedSine_DAC();
+	  testee.setUserDefinedWaveform(valueString_dac, true);
+	  testee.start();
+	  Thread.sleep(5000);
+	  testee.stop();
+
+	  //writeWaveformValues_DampedSine_DAC_ArbBlock(vxiConnector, theLid); // 3950ms
+
 	}
 
-	private void writeWaveformValues_Ramp(VXIConnector testee, DeviceLink link)
-			throws Exception {
+	private String waveformValues_Ramp() {
 		double v;
+		String values = "";
 		NumberFormat formatter = new DecimalFormat("#0.00");
-		testee.send(link, "SOUR:LIST:SEGM:SEL A");
-		String values = "SOUR:LIST:SEGM:VOLT ";
 		for (int i = 0; i < 4096; i++) {
 			v = 0.00122 * (double) i;
 			values += formatter.format(v).replace(",", ".");
@@ -306,15 +292,13 @@ public class HP1340Test {
 				values += ",";
 			}
 		}
-		testee.send(link, values);
+		return values;
 	}
-
-	private void writeWaveformValues_DampedSine(VXIConnector testee,
-			DeviceLink link) throws Exception {
+	
+	private String waveformValues_DampedSine() {
 		double v;
 		NumberFormat formatter = new DecimalFormat("#0.00");
-		testee.send(link, "SOUR:LIST:SEGM:SEL A");
-		String values = "SOUR:LIST:SEGM:VOLT ";
+		String values="";
 		double a = 4.0 / 4096.0;
 		double w = 2 * Math.PI / 50.0;
 		for (int i = 0; i < 4096; i++) {
@@ -325,15 +309,12 @@ public class HP1340Test {
 			}
 		}
 		// System.out.print(values);
-		testee.send(link, values);
+		return values;
 	}
 
-	private void writeWaveformValues_DampedSine_DAC(VXIConnector testee,
-			DeviceLink link) throws Exception {
+	private String waveformValues_DampedSine_DAC() throws Exception {
 		double v;
-		testee.send(link, "SOUR:ARB:DAC:SOUR INT");
-		testee.send(link, "SOUR:LIST:SEGM:SEL A");
-		String values = "SOUR:LIST:SEGM:VOLT:DAC ";
+		String values = "";
 		double a = 4.0 / 4096.0;
 		double w = 2 * Math.PI / 50.0;
 		for (int i = 0; i < 4096; i++) {
@@ -347,7 +328,52 @@ public class HP1340Test {
 		}
 		// System.out.print(values);
 		values += '\n';
-		testee.send(link, values);
+		return values;
+	}
+
+	private String waveformValues_ChargeDischarge() {
+		double v;
+		NumberFormat formatter = new DecimalFormat("#0.00");
+		String values = "";
+		double rc = 400.0;
+		for (int i = 0; i < 4096; i++) {
+			v = 0;
+			if (i > 0 && i < 2047) {
+				v = 1 - Math.exp(-i / rc);
+			}
+			if (i >= 2047) {
+				v = (1 - Math.exp(-2048 / rc))
+						- (1 - Math.exp(-(i - 2047) / rc));
+			}
+			values += formatter.format(v).replace(",", ".");
+			if (i != 4095) {
+				values += ",";
+			}
+		}
+		// System.out.print(values);
+		return values;
+	}
+	
+	private String waveformValues_HalfRectifiedSine() {
+		double v;
+		NumberFormat formatter = new DecimalFormat("#0.00");
+		String values = "";
+		for (int i = 0; i < 2048; i++) {
+			v = Math.sin(2 * Math.PI * ((double) i / 4096.0));
+			values += formatter.format(v).replace(",", ".");
+			if (i != 4095) {
+				values += ",";
+			}
+		}
+		for (int i = 2048; i < 4096; i++) {
+			v = 0.0;
+			values += formatter.format(v).replace(",", ".");
+			if (i != 4095) {
+				values += ",";
+			}
+		}
+		// System.out.print(values);
+		return values;
 	}
 
 	/**
@@ -462,31 +488,7 @@ public class HP1340Test {
 		return (short) (dac & 0x0fff);
 	}
 
-	private void writeWaveformValues_ChargeDischarge(VXIConnector testee,
-			DeviceLink link) throws Exception {
-		double v;
-		NumberFormat formatter = new DecimalFormat("#0.00");
-		testee.send(link, "SOUR:LIST:SEGM:SEL A");
-		String values = "SOUR:LIST:SEGM:VOLT ";
-		double rc = 400.0;
-		for (int i = 0; i < 4096; i++) {
-			v = 0;
-			if (i > 0 && i < 2047) {
-				v = 1 - Math.exp(-i / rc);
-			}
-			if (i >= 2047) {
-				v = (1 - Math.exp(-2048 / rc))
-						- (1 - Math.exp(-(i - 2047) / rc));
-			}
-			values += formatter.format(v).replace(",", ".");
-			if (i != 4095) {
-				values += ",";
-			}
-		}
-		// System.out.print(values);
-		testee.send(link, values);
-	}
-
+	
 	/**
 	 * TODO: this does not work. 0 points are received !?!
 	 * @param testee
@@ -520,30 +522,30 @@ public class HP1340Test {
 		// System.out.print(values);
 		testee.send(link, values);
 	}
-
-	private void writeWaveformValues_HalfRectifiedSine(VXIConnector testee,
-			DeviceLink link) throws Exception {
-		double v;
+	private String waveformValues_SpikedSine() {
+		double waveform[] = new double[4097];
 		NumberFormat formatter = new DecimalFormat("#0.00");
-		testee.send(link, "SOUR:LIST:SEGM:SEL A");
-		String values = "SOUR:LIST:SEGM:VOLT ";
-		for (int i = 0; i < 2048; i++) {
-			v = Math.sin(2 * Math.PI * ((double) i / 4096.0));
-			values += formatter.format(v).replace(",", ".");
-			if (i != 4095) {
-				values += ",";
-			}
-
+		String values = "";
+		waveform[0] = 0.0;
+		for (int i = 1; i <= 4096; i++) {
+			waveform[i] = 0.5 * Math.sin(2 * Math.PI * ((double) i / 4096.0));
 		}
-		for (int i = 2048; i < 4096; i++) {
-			v = 0.0;
-			values += formatter.format(v).replace(",", ".");
-			if (i != 4095) {
+		int width = 50;
+		for (int j = 1; j <= width / 2; j++) {
+			waveform[j + 1024] = waveform[j + 1024] + (double) j * 0.04;
+		}
+		for (int j = 1; j <= width / 2; j++) {
+			waveform[j + 1024 + width / 2] = waveform[j + 1024 + width / 2] + j
+					+ (1.0 - (double) j * 0.04);
+		}
+		for (int i = 1; i <= 4096; i++) {
+			values += formatter.format(waveform[i]).replace(",", ".");
+			if (i != 4096) {
 				values += ",";
 			}
 		}
 		// System.out.print(values);
-		testee.send(link, values);
+		return values;
 	}
 
 	private void checkErrors(VXIConnector testee, DeviceLink link)

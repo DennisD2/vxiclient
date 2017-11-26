@@ -4,6 +4,9 @@ Todos
 - Define further work; how to continue???
 
 1) 1340 revival
+ - writeWaveformValues_Ramp looks wrong
+ - writeWaveformValues_DampedSine_DAC_ArbBlock does not compile
+ - writeWaveformValues_SpikedSine does not work
 2) REST service 
 
 - harmonize methods in ConversionUtil (see @deprecated)

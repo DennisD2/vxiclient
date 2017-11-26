@@ -5,6 +5,7 @@ import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.spurtikus.Timer;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 
@@ -481,6 +482,46 @@ public class HP1340 extends BaseHPDevice {
 	public int voltsToDACCode(double v) {
 		int dac = (int) ((v / 0.0025) + 2048);
 		return dac & 0x0fff;
+	}
+	
+	public void setUserDefinedWaveform(String valueString, boolean dacValues) throws Exception {
+		String answer;
+
+		answer = vxiConnector.send_and_receive(deviceLink, "*IDN?");
+		System.out.println(answer);
+		vxiConnector.send(deviceLink, "*RST");
+
+		vxiConnector.send(deviceLink, "SOUR:ROSC:SOUR INT;");
+		vxiConnector.send(deviceLink, ":SOUR:FREQ:FIX 1E3;");
+		vxiConnector.send(deviceLink, ":SOUR:FUNC:SHAP USER;");
+		vxiConnector.send(deviceLink, ":SOUR:VOLT:LEV:IMM:AMPL 5.1V");
+		
+		vxiConnector.send(deviceLink, "SOUR:ARB:DAC:SOUR INT");
+		vxiConnector.send(deviceLink, "SOUR:LIST:SEGM:SEL A");
+
+		String prefix;
+		if (dacValues) {
+			prefix = "SOUR:LIST:SEGM:VOLT:DAC ";
+		} else  {
+			prefix=	"SOUR:LIST:SEGM:VOLT ";
+		}
+		Timer timer = new Timer();
+		timer.start(); 		
+		String values = prefix + valueString;
+		// System.out.print(values);
+		values += '\n';
+		vxiConnector.send(deviceLink, values);
+		timer.stopAndPrintln();
+		// checkErrors(testee);
+
+		vxiConnector.send(deviceLink, "SOUR:FUNC:USER A");
+		vxiConnector.send(deviceLink, "INIT:IMM");
+		answer = vxiConnector.send_and_receive(deviceLink,
+				"SOUR:LIST:SEGM:SEL?");
+		System.out.println(answer);
+		answer = vxiConnector.send_and_receive(deviceLink,
+				"SOUR:LIST:SEGM:VOLT:POIN?");
+		System.out.println(answer);
 	}
 
 	/**
