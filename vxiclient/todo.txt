@@ -5,7 +5,6 @@ Todos
 1) REST service 
 
  - HP1340: writeWaveformValues_DampedSine_DAC_ArbBlock does not compile
-
 - harmonize methods in ConversionUtil (see @deprecated)
 - Check methods in CommunicationUtil where they should go. maybe stay there :-)
 - Hp1330 test fails at least for RPC
