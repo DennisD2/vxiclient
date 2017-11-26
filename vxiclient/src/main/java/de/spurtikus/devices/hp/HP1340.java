@@ -73,12 +73,12 @@ public class HP1340 extends BaseHPDevice {
 	 * Max. amplitude [V]
 	 */
 	private static final double MAX_AMPLITUDE = 5.1175;
-	
+
 	private static final double MIN_SWEEP_FREQUENCY = 0.0;
 	private static final double MAX_SWEEP_FREQUENCY_SINE = 15.0; // Mhz
 	private static final double MAX_SWEEP_FREQUENCY_ARBITRARY = 15.0; // Mhz
 	private static final double MAX_SWEEP_FREQUENCY_OTHER = 1.0; // Mhz
-	
+
 	/**
 	 * Standard waveforms
 	 * 
@@ -272,13 +272,13 @@ public class HP1340 extends BaseHPDevice {
 	 *            Mainframe containing this device.
 	 */
 	public HP1340(VXIConnector parent, DeviceLink link) {
-		super(parent,link);
+		super(parent, link);
 	}
-
 
 	/**
 	 * Initializes device. Sets up some useful start configuration for DMM.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	public void initialize() throws Exception {
 		vxiConnector.send(deviceLink, "*RST;*CLS;*OPC?");
@@ -292,7 +292,6 @@ public class HP1340 extends BaseHPDevice {
 	public boolean isRunning() {
 		return started;
 	}
-
 
 	public void start() throws Exception {
 		if (!started) {
@@ -326,7 +325,8 @@ public class HP1340 extends BaseHPDevice {
 
 	public void setAmplitude(Double amplitude) throws Exception {
 		this.amplitude = amplitude;
-		String cmd = "SOUR:VOLT:LEV:IMM:AMPL " + Double.toString(amplitude) + "V;";
+		String cmd = "SOUR:VOLT:LEV:IMM:AMPL " + Double.toString(amplitude)
+				+ "V;";
 		vxiConnector.send(deviceLink, cmd);
 	}
 
@@ -335,7 +335,7 @@ public class HP1340 extends BaseHPDevice {
 	 * 
 	 * @param shape
 	 *            StandardWaveForm type
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void setShape(StandardWaveForm shape) throws Exception {
 		this.shape = shape;
@@ -372,15 +372,18 @@ public class HP1340 extends BaseHPDevice {
 	 * @param waveFormClass
 	 *            class, this is "SHAP" or "USER"
 	 * @param waveFormType
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	private void setShapeInternal(String waveFormClass, String waveFormType) throws Exception {
+	private void setShapeInternal(String waveFormClass, String waveFormType)
+			throws Exception {
 		setShapeInternal(waveFormClass, waveFormType, false);
 	}
 
-	private void setShapeInternal(String waveFormClass, String waveFormType, boolean inGroup) throws Exception {
+	private void setShapeInternal(String waveFormClass, String waveFormType,
+			boolean inGroup) throws Exception {
 		String grouper = inGroup ? ";" : "";
-		String cmd = "SOUR:FUNC:" + waveFormClass + " " + waveFormType + grouper;
+		String cmd = "SOUR:FUNC:" + waveFormClass + " " + waveFormType
+				+ grouper;
 		vxiConnector.send(deviceLink, cmd);
 	}
 
@@ -391,11 +394,12 @@ public class HP1340 extends BaseHPDevice {
 	 *            waveform of type BuiltinWaveForm.
 	 * @param dest
 	 *            user location A,B,C or D.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void setShape(BuiltinWaveForm waveForm, char dest) throws Exception {
 		if (dest != 'A' && dest != 'B' && dest != 'C' && dest != 'D') {
-			logger.error("Invalid destination: " + dest + "(Allowed: A,B,C and D)");
+			logger.error(
+					"Invalid destination: " + dest + "(Allowed: A,B,C and D)");
 			return;
 		}
 		setShapeInternal("SHAP", "USER");
@@ -444,7 +448,8 @@ public class HP1340 extends BaseHPDevice {
 		return result;
 	}
 
-	public void setShape(Double[] waveForm, int length, char dest) throws Exception {
+	public void setShape(Double[] waveForm, int length, char dest)
+			throws Exception {
 		setShapeInternal("SHAP", "USER", true);
 
 		String cmd = "SOUR:LIST:SEGM:SEL " + dest;
@@ -493,9 +498,10 @@ public class HP1340 extends BaseHPDevice {
 	 *            maximum amplitude for sweep.
 	 * @param waveform
 	 *            waveform for sweep.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public void setSweep(double startFrequency, double stopFrequency, int numPoints, int time, double amplitude,
+	public void setSweep(double startFrequency, double stopFrequency,
+			int numPoints, int time, double amplitude,
 			StandardWaveForm waveform) throws Exception {
 		this.amplitude = amplitude;
 		String shape = waveform.getValue();
@@ -511,15 +517,16 @@ public class HP1340 extends BaseHPDevice {
 		vxiConnector.send(deviceLink, cmd);
 		cmd = ":SOUR:FUNC:SHAP " + shape + ";";
 		vxiConnector.send(deviceLink, cmd);
-		
+
 		cmd = "SOUR:VOLT:LEV:IMM:AMPL " + Double.toString(amplitude) + "V";
 		vxiConnector.send(deviceLink, cmd);
-		
+
 		// sleep 100ms - allow interrupts (inside E1340) to be serviced
 		sleep(100);
 	}
 
-	public void setMarker(MarkerFeedType feed, PolarityType polarity) throws Exception {
+	public void setMarker(MarkerFeedType feed, PolarityType polarity)
+			throws Exception {
 		// See page 167
 		// FeedType OUTP:ZERO, SEGM, SOUR:ROSC, SOUR:SWE
 		// polarityType INV/NORM
@@ -533,7 +540,7 @@ public class HP1340 extends BaseHPDevice {
 	 * TODO: method below untested old code by Samofabs
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public String UploadWaveForm() throws Exception {
 		// OLD COMMENT: this should eventually work with GPIB
@@ -542,7 +549,7 @@ public class HP1340 extends BaseHPDevice {
 		// trough serial port.. you need gpib. There are parts of the code that
 		// you might try to reuse if you connect it via GPIB."
 
-		vxiConnector.send(deviceLink,"SOUR:LIST:SEGM:SEL A");
+		vxiConnector.send(deviceLink, "SOUR:LIST:SEGM:SEL A");
 
 		byte[] demo = GetDemoWaveForm();
 		uploadBinaryData("SOUR:LIST:SEGM:VOLT:DAC ", demo);
@@ -557,12 +564,15 @@ public class HP1340 extends BaseHPDevice {
 		byte[] processedData = GetUploadReadyBytes(data);
 		int size = processedData.length;
 		int sizeDigits = Integer.toString(size).length();
-		String definiteBlockHeader = "#" + Integer.toString(sizeDigits) + Integer.toString(size);
+		String definiteBlockHeader = "#" + Integer.toString(sizeDigits)
+				+ Integer.toString(size);
 
 		vxiConnector.send(deviceLink, command + definiteBlockHeader);
 		// XXX port.writeWithAnswer(Byte.toString(processedData));
-		vxiConnector.send(deviceLink, "\r"); // if using indefinite block, sent !\r
+		vxiConnector.send(deviceLink, "\r"); // if using indefinite block, sent
+												// !\r
 	}
+
 	private static byte[] GetUploadReadyBytes(byte[] input) {
 		byte[] result = new byte[input.length * 2];
 		int i = 0;

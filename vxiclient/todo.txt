@@ -3,6 +3,8 @@ Todos
 -----
 - Define further work; how to continue???
 
+1) 1340 revival
+2) REST service 
 
 - harmonize methods in ConversionUtil (see @deprecated)
 - Check methods in CommunicationUtil where they should go. maybe stay there :-)
