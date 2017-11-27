@@ -493,12 +493,6 @@ public class HP1340 extends BaseHPDevice {
 			throws Exception {
 		String answer;
 
-		answer = vxiConnector.send_and_receive(deviceLink, "*IDN?");
-		System.out.println(answer);
-		vxiConnector.send(deviceLink, "*RST");
-
-		prefix_userDefinedWF();
-
 		String prefix;
 		if (dacValues) {
 			prefix = "SOUR:LIST:SEGM:VOLT:DAC ";
@@ -506,13 +500,14 @@ public class HP1340 extends BaseHPDevice {
 			prefix = "SOUR:LIST:SEGM:VOLT ";
 		}
 		Timer timer = new Timer();
+		
+		prefix_userDefinedWF();
+
 		timer.start();
 		String values = prefix + valueString;
-		// System.out.print(values);
 		values += '\n';
 		vxiConnector.send(deviceLink, values);
 		timer.stopAndPrintln();
-		// checkErrors(testee);
 
 		vxiConnector.send(deviceLink, "SOUR:FUNC:USER A");
 		vxiConnector.send(deviceLink, "INIT:IMM");
@@ -537,11 +532,10 @@ public class HP1340 extends BaseHPDevice {
 	 */
 	public void setUserDefinedWaveform(double[] waveform, double maxValue)
 			throws Exception {
-		NumberFormat formatter = new DecimalFormat("#0.00");
-
-		prefix_userDefinedWF();
-
 		String values = "";
+		NumberFormat formatter = new DecimalFormat("#0.00");
+		
+		prefix_userDefinedWF();
 		for (int i = 0; i < waveform.length; i++) {
 			// ensure that value does not overrun max/min allowed value
 			// if overun occurs, the waveform data will not be loaded by HP1340
@@ -556,7 +550,6 @@ public class HP1340 extends BaseHPDevice {
 				values += ",";
 			}
 		}
-
 		postfix_UserDefinedWF("", values);
 	}
 
@@ -571,16 +564,15 @@ public class HP1340 extends BaseHPDevice {
 	 * @throws Exception
 	 */
 	public void setUserDefinedWaveform(short[] waveform) throws Exception {
-		prefix_userDefinedWF();
-
 		String values = "";
+		
+		prefix_userDefinedWF();
 		for (int i = 0; i < waveform.length; i++) {
 			values += waveform[i];
 			if (i != waveform.length - 1) {
 				values += ",";
 			}
 		}
-
 		postfix_UserDefinedWF(":DAC", values);
 	}
 
@@ -720,7 +712,5 @@ public class HP1340 extends BaseHPDevice {
 		}
 		return result;
 	}
-
-
 
 }
