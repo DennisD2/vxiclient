@@ -414,41 +414,18 @@ public class HP1340 extends BaseHPDevice {
 		vxiConnector.send(deviceLink, cmd);
 	}
 
-	public void Arm() throws Exception {
+	public void arm() throws Exception {
 		if (!isArmed) {
 			vxiConnector.send(deviceLink, "INIT:IMM");
 			isArmed = true;
 		}
 	}
 
-	public void DeArm() throws Exception {
+	public void deArm() throws Exception {
 		if (isArmed) {
 			vxiConnector.send(deviceLink, "ABOR");
 			isArmed = false;
 		}
-	}
-
-	public static byte[] GetDemoWaveForm() {
-		int size = 4096;
-		int points[] = new int[size];
-		for (int i = 0; i < size; i++) {
-			points[i] = i;
-		}
-
-		byte result[] = new byte[size * 2];
-		int j = 0;
-		for (int p : points) {
-			if (p >= size)
-				throw new IllegalArgumentException("Out of range");
-
-			byte msb = (byte) ((p & 0x0F00) >> 8);
-			byte lsb = (byte) (p & 0xFF);
-
-			result[j++] = msb; // msbfirst
-			result[j++] = lsb;
-		}
-
-		return result;
 	}
 
 	public void setShape(Double[] waveForm, int length, char dest)
@@ -575,6 +552,29 @@ public class HP1340 extends BaseHPDevice {
 		}
 		postfix_UserDefinedWF(":DAC", values);
 	}
+	
+	/**
+	 * Set user defined waveform. Waveform is contained in a 4096 point short
+	 * array as DAC values.
+	 * 
+	 * @param waveform
+	 *            4096 point DAC array with waveform data.
+	 * @param maxValue
+	 *            maximum allowed data value.
+	 * @throws Exception
+	 */
+	public void setUserDefinedWaveformBlk(short[] waveform) throws Exception {
+		String values = "";
+		
+		prefix_userDefinedWF();
+		for (int i = 0; i < waveform.length; i++) {
+			values += waveform[i];
+			if (i != waveform.length - 1) {
+				values += ",";
+			}
+		}
+		postfix_UserDefinedWF(":DAC", values);
+	}
 
 	/**
 	 * Helper for setUserDefinedWaveform()
@@ -684,6 +684,29 @@ public class HP1340 extends BaseHPDevice {
 	 * =========================================================================
 	 * = =========== code copied frm samofab NEEDS REWORK
 	 */
+	public static byte[] getDemoWaveForm() {
+		int size = 4096;
+		int points[] = new int[size];
+		for (int i = 0; i < size; i++) {
+			points[i] = i;
+		}
+
+		byte result[] = new byte[size * 2];
+		int j = 0;
+		for (int p : points) {
+			if (p >= size)
+				throw new IllegalArgumentException("Out of range");
+
+			byte msb = (byte) ((p & 0x0F00) >> 8);
+			byte lsb = (byte) (p & 0xFF);
+
+			result[j++] = msb; // msbfirst
+			result[j++] = lsb;
+		}
+
+		return result;
+	}
+
 	public void UploadBinaryData(String command, byte[] data) throws Exception {
 		byte[] processedData = GetUploadReadyBytes(data);
 		int size = processedData.length;

@@ -4,16 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
 import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.spurtikus.Timer;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
@@ -21,7 +16,6 @@ import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnector;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
 import de.spurtikus.vxi.service.Configuration;
-import de.spurtikus.vxi.util.CommunicationUtil;
 import de.spurtikus.waveform.Waveforms;
 
 /**
@@ -298,6 +292,7 @@ public class HP1340Test {
 		testee.stop();
 	}
 
+	@Ignore
 	@Test
 	public void userDefinedWaveForms_DAC() throws Exception {
 		double maxValue = 5.0; // maximum allowed y value (to prevent data
@@ -333,7 +328,7 @@ public class HP1340Test {
 		testee.stop();
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	public void userDefinedWaveForms_ArbBlock() throws Exception {
 		double maxValue = 5.0; // maximum allowed y value (to prevent data
@@ -342,14 +337,10 @@ public class HP1340Test {
 		testee.setFrequency(3E3);
 		testee.setAmplitude(maxValue);
 
-		// writeWaveformValues_DampedSine_DAC_ArbBlock(vxiConnector, theLid); //
-		// 3950ms
-		testee.setUserDefinedWaveform(Waveforms.waveformValues_Ramp_DAC());
+		testee.setUserDefinedWaveformBlk(Waveforms.waveformValues_Ramp_DAC());
 		testee.start();
 		Thread.sleep(5000);
 		testee.stop();
 	}
-
-
 
 }
