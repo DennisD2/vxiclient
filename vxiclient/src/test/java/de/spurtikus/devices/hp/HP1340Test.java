@@ -25,7 +25,7 @@ import de.spurtikus.vxi.util.CommunicationUtil;
 import de.spurtikus.waveform.Waveforms;
 
 /**
- * TODO: see NOT YET IMPLEMENTED for non working parts.
+ * HP1340 AFG (Arbitrary frequency Generator) tests.
  * 
  * @author dennis
  *
@@ -72,6 +72,9 @@ public class HP1340Test {
 			((GPIBSerialConnector) vxiConnector).selectDevice(theLid, 9, 10);
 		}
 		testee.initialize();
+		
+		String answer = vxiConnector.send_and_receive(theLid, "*IDN?");
+		System.out.println(answer);
 	}
 
 	// see manual page 109
@@ -263,17 +266,12 @@ public class HP1340Test {
 	@Ignore
 	@Test
 	public void userDefinedWaveForms() throws Exception {
-		String answer;
-
 		double maxValue = 5.0; // maximum allowed y value (to prevent data
 								// errors on loading waveforms)
 
 		testee.setFrequency(3E3);
 		testee.setAmplitude(maxValue);
-		answer = vxiConnector.send_and_receive(theLid, "*IDN?");
-		System.out.println(answer);
-		vxiConnector.send(theLid, "*RST");
-
+	
 		testee.setUserDefinedWaveform(Waveforms.waveformValues_Ramp(), maxValue);
 		testee.start();
 		Thread.sleep(5000);
@@ -302,15 +300,11 @@ public class HP1340Test {
 
 	@Test
 	public void userDefinedWaveForms_DAC() throws Exception {
-		String answer;
 		double maxValue = 5.0; // maximum allowed y value (to prevent data
 								// errors on loading waveforms)
 
 		testee.setFrequency(3E3);
 		testee.setAmplitude(maxValue);
-		answer = vxiConnector.send_and_receive(theLid, "*IDN?");
-		System.out.println(answer);
-		vxiConnector.send(theLid, "*RST");
 
 		// DAC values tests
 		testee.setUserDefinedWaveform(Waveforms.waveformValues_Ramp_DAC());
@@ -342,15 +336,11 @@ public class HP1340Test {
 	@Ignore
 	@Test
 	public void userDefinedWaveForms_ArbBlock() throws Exception {
-		String answer;
 		double maxValue = 5.0; // maximum allowed y value (to prevent data
 								// errors on loading waveforms)
 
 		testee.setFrequency(3E3);
 		testee.setAmplitude(maxValue);
-		answer = vxiConnector.send_and_receive(theLid, "*IDN?");
-		System.out.println(answer);
-		vxiConnector.send(theLid, "*RST");
 
 		// writeWaveformValues_DampedSine_DAC_ArbBlock(vxiConnector, theLid); //
 		// 3950ms
@@ -360,18 +350,6 @@ public class HP1340Test {
 		testee.stop();
 	}
 
-	private void checkErrors(VXIConnector testee, DeviceLink link)
-			throws IOException {
-		boolean hasErrors = true;
-		while (hasErrors) {
-			byte[] answer = null; // testee.send_and_receive(link, "SYST:ERR?");
-			String s = "TO BE IMPLEMENTED"; // CommunicationUtil.asByteArray(answer,
-											// 60);
-			System.out.println(s);
-			if (s.contains("+0,\"No error\"")) {
-				hasErrors = false;
-			}
-		}
-	}
+
 
 }

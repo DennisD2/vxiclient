@@ -66,7 +66,7 @@ import de.spurtikus.vxi.connectors.VXIConnector;
  * 
  */
 public class HP1340 extends BaseHPDevice {
-	static Logger logger = LoggerFactory.getLogger(HP1333.class);
+	static Logger logger = LoggerFactory.getLogger(HP1340.class);
 
 	/**
 	 * Minimum amplitude [V]
@@ -479,17 +479,12 @@ public class HP1340 extends BaseHPDevice {
 	 * 
 	 * @param v
 	 *            volt value to convert.
-	 * @return DAC value in range 0..4096.
+	 * @return DAC value in range 0..4096. Return value is a short value.
 	 */
-	public static int voltsToDACCode2(double v) {
-		int dac = (int) ((v / 0.0025) + 2048);
-		return dac & 0x0fff;
-	}
-
 	public static short voltsToDACCode(double v) {
 		short dac = (short) ((v / 0.0025) + 2048);
 		if (dac < 0 || dac > 4095) {
-			System.out.println("dac value out of range: " + dac);
+			logger.error("dac value out of allowed range: " + dac);
 		}
 		return (short) (dac & 0x0fff);
 	}
@@ -567,7 +562,7 @@ public class HP1340 extends BaseHPDevice {
 
 	/**
 	 * Set user defined waveform. Waveform is contained in a 4096 point short
-	 * array as DAC values. 
+	 * array as DAC values.
 	 * 
 	 * @param waveform
 	 *            4096 point DAC array with waveform data.
@@ -575,8 +570,7 @@ public class HP1340 extends BaseHPDevice {
 	 *            maximum allowed data value.
 	 * @throws Exception
 	 */
-	public void setUserDefinedWaveform(short[] waveform)
-			throws Exception {
+	public void setUserDefinedWaveform(short[] waveform) throws Exception {
 		prefix_userDefinedWF();
 
 		String values = "";
@@ -592,6 +586,7 @@ public class HP1340 extends BaseHPDevice {
 
 	/**
 	 * Helper for setUserDefinedWaveform()
+	 * 
 	 * @throws Exception
 	 */
 	protected void prefix_userDefinedWF() throws Exception {
@@ -603,12 +598,14 @@ public class HP1340 extends BaseHPDevice {
 		vxiConnector.send(deviceLink, "SOUR:ARB:DAC:SOUR INT");
 		vxiConnector.send(deviceLink, "SOUR:LIST:SEGM:SEL A");
 	}
-	
+
 	/**
 	 * Helper for setUserDefinedWaveform()
+	 * 
 	 * @throws Exception
 	 */
-	protected void postfix_UserDefinedWF(String prefix, String values) throws Exception {
+	protected void postfix_UserDefinedWF(String prefix, String values)
+			throws Exception {
 		String answer;
 		Timer timer = new Timer();
 		timer.start();
@@ -616,16 +613,28 @@ public class HP1340 extends BaseHPDevice {
 		values = "SOUR:LIST:SEGM:VOLT" + prefix + " " + values + '\n';
 		vxiConnector.send(deviceLink, values);
 		timer.stopAndPrintln();
-		// checkErrors(testee);
+		checkErrors();
 
 		vxiConnector.send(deviceLink, "SOUR:FUNC:USER A");
 		vxiConnector.send(deviceLink, "INIT:IMM");
-		answer = vxiConnector.send_and_receive(deviceLink, "SOUR:LIST:SEGM:SEL?");
+		
+		// Check that transfer was complete
+		answer = vxiConnector.send_and_receive(deviceLink,
+				"SOUR:LIST:SEGM:VOLT:POIN?");
+		int transfered = Integer.parseInt(answer);
+		int toTransfer = values.length();
+		if (toTransfer != transfered) {
+			logger.error(
+					"Transfered number of points differ. Transfered {} of {} points.",
+					transfered, toTransfer);
+			logger.error("Device answer: " + answer); // should be #values
+		}
+		// Check target segment - just for fun
+		answer = vxiConnector.send_and_receive(deviceLink,
+				"SOUR:LIST:SEGM:SEL?");
 		System.out.println(answer); // should be 'A'
-		answer = vxiConnector.send_and_receive(deviceLink, "SOUR:LIST:SEGM:VOLT:POIN?");
-		System.out.println(answer); // should be #values
 	}
-	
+
 	/**
 	 * Set sweep parameters. See page 90/91 of user's manual.
 	 * 
