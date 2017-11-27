@@ -477,7 +477,7 @@ public class HP1340 extends BaseHPDevice {
 			prefix = "SOUR:LIST:SEGM:VOLT ";
 		}
 		Timer timer = new Timer();
-		
+
 		prefix_userDefinedWF();
 
 		timer.start();
@@ -511,7 +511,7 @@ public class HP1340 extends BaseHPDevice {
 			throws Exception {
 		String values = "";
 		NumberFormat formatter = new DecimalFormat("#0.00");
-		
+
 		prefix_userDefinedWF();
 		for (int i = 0; i < waveform.length; i++) {
 			// ensure that value does not overrun max/min allowed value
@@ -542,7 +542,7 @@ public class HP1340 extends BaseHPDevice {
 	 */
 	public void setUserDefinedWaveform(short[] waveform) throws Exception {
 		String values = "";
-		
+
 		prefix_userDefinedWF();
 		for (int i = 0; i < waveform.length; i++) {
 			values += waveform[i];
@@ -552,10 +552,14 @@ public class HP1340 extends BaseHPDevice {
 		}
 		postfix_UserDefinedWF(":DAC", values);
 	}
-	
+
 	/**
 	 * Set user defined waveform. Waveform is contained in a 4096 point short
 	 * array as DAC values.
+	 * 
+	 * This method uses the compact 'Definite Length Arbitrary Block Data' data
+	 * format to transfer the DAC values. Each DAC value is an IEEE488.2 16 Bit
+	 * Integer. MSB first.
 	 * 
 	 * @param waveform
 	 *            4096 point DAC array with waveform data.
@@ -564,14 +568,14 @@ public class HP1340 extends BaseHPDevice {
 	 * @throws Exception
 	 */
 	public void setUserDefinedWaveformBlk(short[] waveform) throws Exception {
-		String values = "";
-		
+		// Definite Length Arbitrary Block Data
+		String values = "#" + "4" + 2 * waveform.length;
+
 		prefix_userDefinedWF();
 		for (int i = 0; i < waveform.length; i++) {
-			values += waveform[i];
-			if (i != waveform.length - 1) {
-				values += ",";
-			}
+			// max = 0x7f.f = hi.lo = 2047 
+			values += (char)0xf;//((waveform[i]) & 0xf); // lo max=0xf
+			values += (char)0x7f;//((waveform[i] >> 8) & 0x7f); // hi max=0x7f
 		}
 		postfix_UserDefinedWF(":DAC", values);
 	}
@@ -602,6 +606,7 @@ public class HP1340 extends BaseHPDevice {
 		Timer timer = new Timer();
 		timer.start();
 		// System.out.print(values);
+		int toTransfer = values.length();
 		values = "SOUR:LIST:SEGM:VOLT" + prefix + " " + values + '\n';
 		vxiConnector.send(deviceLink, values);
 		timer.stopAndPrintln();
@@ -609,17 +614,16 @@ public class HP1340 extends BaseHPDevice {
 
 		vxiConnector.send(deviceLink, "SOUR:FUNC:USER A");
 		vxiConnector.send(deviceLink, "INIT:IMM");
-		
+
 		// Check that transfer was complete
 		answer = vxiConnector.send_and_receive(deviceLink,
 				"SOUR:LIST:SEGM:VOLT:POIN?");
-		int transfered = Integer.parseInt(answer);
-		int toTransfer = values.length();
+		logger.debug("Device answer: " + answer); // should be #values
+		int transfered = Integer.parseInt(answer.replace("\\+", "").replace("\n", ""));
 		if (toTransfer != transfered) {
 			logger.error(
 					"Transfered number of points differ. Transfered {} of {} points.",
 					transfered, toTransfer);
-			logger.error("Device answer: " + answer); // should be #values
 		}
 		// Check target segment - just for fun
 		answer = vxiConnector.send_and_receive(deviceLink,
@@ -679,7 +683,7 @@ public class HP1340 extends BaseHPDevice {
 		cmd = "SOUR:MARK:POL " + polarity.getValue();
 		vxiConnector.send(deviceLink, cmd);
 	}
-	
+
 	/*
 	 * =========================================================================
 	 * = =========== code copied frm samofab NEEDS REWORK
