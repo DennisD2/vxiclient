@@ -687,5 +687,40 @@ public class HP1340 extends BaseHPDevice {
 		cmd = "SOUR:MARK:POL " + polarity.getValue();
 		vxiConnector.send(deviceLink, cmd);
 	}
+	
+	/*
+	 * =========================================================================
+	 * = =========== code copied frm samofab NEEDS REWORK
+	 */
+	public void UploadBinaryData(String command, byte[] data) throws Exception {
+		byte[] processedData = GetUploadReadyBytes(data);
+		int size = processedData.length;
+		int sizeDigits = Integer.toString(size).length();
+		String definiteBlockHeader = "#" + Integer.toString(sizeDigits)
+				+ Integer.toString(size);
+
+		vxiConnector.send_and_receive(deviceLink,
+				command + definiteBlockHeader);
+		// XXX vxiConnector.send_and_receive(deviceLink,
+		// Byte.toString(processedData));
+		vxiConnector.send_and_receive(deviceLink, "\r"); // if using indefinite
+															// block, sent !\r
+	}
+
+	private static byte[] GetUploadReadyBytes(byte[] input) {
+		byte[] result = new byte[input.length * 2];
+		int i = 0;
+		for (byte c : input) {
+			char msb = (char) ((c & 0xF0) >> 4);
+			char lsb = (char) (c & 0x0F);
+			// var checkMsb = _check[msb] << 4;
+			// var checkLsb = _check[lsb] << 4;
+			// result[i++] = (byte)(msb | checkMsb | 0x80); // msbfirst
+			// result[i++] = (byte)(lsb | checkLsb | 0x80);
+		}
+		return result;
+	}
+
+
 
 }
