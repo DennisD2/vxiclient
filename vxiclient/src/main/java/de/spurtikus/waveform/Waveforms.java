@@ -28,7 +28,7 @@ public class Waveforms {
 	/**
 	 * Ramp wave function.
 	 * 
-	 * @return DAC values.
+	 * @return DAC values as DAC values.
 	 */
 	public static short[] waveformValues_Ramp_DAC() {
 		double v;
@@ -44,7 +44,7 @@ public class Waveforms {
 	/**
 	 * Ramp wave function.
 	 * 
-	 * @return DAC values.
+	 * @return DAC values as 16 bit integers (shorts).
 	 */
 	public static short[] waveformValues_Ramp_Short() {
 		double v;
