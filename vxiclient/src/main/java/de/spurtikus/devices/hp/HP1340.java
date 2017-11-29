@@ -466,6 +466,21 @@ public class HP1340 extends BaseHPDevice {
 		return (short) (dac & 0x0fff);
 	}
 
+	/**
+	 * Converts a double volts value to 16 bit integer.
+	 * 
+	 * @param v
+	 *            volt value to convert.
+	 * @return 16 bit integer
+	 */
+	public static short voltsToShort(double v) {
+		short val = (short) ((v / 0.0025));
+		if (val < -2047 || val > 2047) {
+			logger.error("dac value out of allowed range: " + val);
+		}
+		return (short) val;
+	}
+
 	public void setUserDefinedWaveform(String valueString, boolean dacValues)
 			throws Exception {
 		String answer;
@@ -561,6 +576,13 @@ public class HP1340 extends BaseHPDevice {
 	 * format to transfer the DAC values. Each DAC value is an IEEE488.2 16 Bit
 	 * Integer. MSB first.
 	 * 
+	 * TODO: Integer values are allowed in range -2047 .. +2047 which is -0x7ff
+	 * .. +0x7ff. Currently, all values having the highest bit in the lower byte
+	 * set (1), cannot be transmitted. I am helping me by setting that bit to
+	 * zero. The error may come from the byte-to-String conversion in Java,
+	 * where data type 'byte' is defined as a signed integer with 7 bits, bit 8
+	 * then is the sign bit.
+	 * 
 	 * @param waveform
 	 *            4096 point DAC array with waveform data.
 	 * @param maxValue
@@ -573,9 +595,40 @@ public class HP1340 extends BaseHPDevice {
 
 		prefix_userDefinedWF();
 		for (int i = 0; i < waveform.length; i++) {
-			// max = 0x7f.f = hi.lo = 2047 
-			values += (char)0xf;//((waveform[i]) & 0xf); // lo max=0xf
-			values += (char)0x7f;//((waveform[i] >> 8) & 0x7f); // hi max=0x7f
+			short x = waveform[i];
+			byte b;
+			byte t[] = new byte[1];
+
+			// MSB
+			// max value possible as byte 1 is 0x0f
+			boolean escape = false;
+			b = (byte) ((x >> 8) & 0xf);
+			if (b == 0xa) {	escape = true; } // LF
+			if (b == 0xd) { escape = true; } // CR
+			if (b == 43) { escape = true; } // +
+			if (escape) {
+				t[0] = 27; // ESC
+				values += new String(t);
+			}
+			t[0] = b;
+			values += new String(t);
+
+			// LSB
+			// max value possible as byte 2 is 0x7f: bit 8 cannot be set
+			// Maybe: byte=8 bit signed Int, resulting in a FAIL lateron?!?
+			escape = false;
+			b = (byte) (x & 0xff);
+			if ((b & 0x80) != 0) { b = (byte) (b & 0x7f); } // <-- does not work with escape!!!
+			if ((b & 0x08) != 0) { escape = true; } // also required, but why?
+			if (b == 0xa) { escape = true; } // LF
+			if (b == 0xd) { escape = true; } // CR
+			if (b == 43) { escape = true; } // +
+			if (escape) {
+				t[0] = 27; // ESC
+				values += new String(t);
+			}
+			t[0] = b;
+			values += new String(t);
 		}
 		postfix_UserDefinedWF(":DAC", values);
 	}
@@ -619,7 +672,8 @@ public class HP1340 extends BaseHPDevice {
 		answer = vxiConnector.send_and_receive(deviceLink,
 				"SOUR:LIST:SEGM:VOLT:POIN?");
 		logger.debug("Device answer: " + answer); // should be #values
-		int transfered = Integer.parseInt(answer.replace("\\+", "").replace("\n", ""));
+		int transfered = Integer
+				.parseInt(answer.replace("\\+", "").replace("\n", ""));
 		if (toTransfer != transfered) {
 			logger.error(
 					"Transfered number of points differ. Transfered {} of {} points.",

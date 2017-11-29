@@ -337,10 +337,10 @@ public class HP1340Test {
 		testee.setFrequency(3E3);
 		testee.setAmplitude(maxValue);
 
-		testee.setUserDefinedWaveformBlk(Waveforms.waveformValues_Ramp_DAC());
+		testee.setUserDefinedWaveformBlk(Waveforms.waveformValues_Ramp_Short());
 		testee.start();
 		Thread.sleep(5000);
-		testee.stop();
+		//testee.stop();
 	}
 
 }

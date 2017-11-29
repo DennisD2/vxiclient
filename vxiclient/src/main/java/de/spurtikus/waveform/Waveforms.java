@@ -41,6 +41,22 @@ public class Waveforms {
 		}
 		return waveform;
 	}
+	/**
+	 * Ramp wave function.
+	 * 
+	 * @return DAC values.
+	 */
+	public static short[] waveformValues_Ramp_Short() {
+		double v;
+		short waveform[] = new short[4096];
+		for (int i = 0; i < waveform.length; i++) {
+			v = 0.00122 * (double) i;
+			short d = HP1340.voltsToShort(v);
+			// System.out.println(v + "-> " + d);
+			waveform[i] = d;
+		}
+		return waveform;
+	}
 
 	/**
 	 * Damped sine wave function.
