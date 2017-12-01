@@ -583,6 +583,9 @@ public class HP1340 extends BaseHPDevice {
 	 * where data type 'byte' is defined as a signed integer with 7 bits, bit 8
 	 * then is the sign bit.
 	 * 
+	 * This function does work only with prologix controller, because the Prologix requirement
+	 * for sending 8 bit data is met (by escaping some chars: CR,LF,ESC,VT).
+	 * 
 	 * @param waveform
 	 *            4096 point DAC array with waveform data.
 	 * @param maxValue
@@ -593,21 +596,30 @@ public class HP1340 extends BaseHPDevice {
 		// Definite Length Arbitrary Block Data
 		String values = "#" + "4" + 2 * waveform.length;
 
+		// Chars needed to be escaped (Prologix special)
+		final byte ESC = 0x1b;
+		final byte CR = 0x0a;
+		final byte VT = 0x0b;
+		final byte LF = 0x0d;
+		
 		prefix_userDefinedWF();
-		for (int i = 0; i < waveform.length; i++) {
-			short x = waveform[i];
-			byte b;
-			byte t[] = new byte[1];
+		
+		byte b;
+		byte t[] = new byte[1];
+		boolean escape;
 
+		for (int i = 0; i < waveform.length; i++) {
+			short theValue = waveform[i];
+			
 			// MSB
 			// max value possible as byte 1 is 0x0f
-			boolean escape = false;
-			b = (byte) ((x >> 8) & 0xf);
-			if (b == 0xa) {	escape = true; } // LF
-			if (b == 0xd) { escape = true; } // CR
-			if (b == 43) { escape = true; } // +
+			escape=false;
+			b = (byte) ((theValue >> 8) & 0xf);
+			if (b == CR) {	escape = true; } // LF
+			if (!escape && (b == VT)) { escape = true; } // VT 1011
+			if (!escape && (b == LF)) { escape = true; } // CR 1101
 			if (escape) {
-				t[0] = 27; // ESC
+				t[0] = ESC; // add escape char
 				values += new String(t);
 			}
 			t[0] = b;
@@ -616,15 +628,16 @@ public class HP1340 extends BaseHPDevice {
 			// LSB
 			// max value possible as byte 2 is 0x7f: bit 8 cannot be set
 			// Maybe: byte=8 bit signed Int, resulting in a FAIL lateron?!?
-			escape = false;
-			b = (byte) (x & 0xff);
+			escape = false; 
+			b = (byte) (theValue & 0xff);
 			if ((b & 0x80) != 0) { b = (byte) (b & 0x7f); } // <-- does not work with escape!!!
-			if ((b & 0x08) != 0) { escape = true; } // also required, but why?
-			if (b == 0xa) { escape = true; } // LF
-			if (b == 0xd) { escape = true; } // CR
-			if (b == 43) { escape = true; } // +
+			
+			if (b == CR) { escape = true; } // LF 1010
+			if (!escape && (b == VT)) { escape = true; }  // VT 1011
+			if (!escape && (b == LF)) { escape = true; }  // CR 1101
+			if (!escape && (b == ESC)) { escape = true; } // ESC 1011
 			if (escape) {
-				t[0] = 27; // ESC
+				t[0] = ESC; // add escape char
 				values += new String(t);
 			}
 			t[0] = b;
@@ -737,61 +750,5 @@ public class HP1340 extends BaseHPDevice {
 		cmd = "SOUR:MARK:POL " + polarity.getValue();
 		vxiConnector.send(deviceLink, cmd);
 	}
-
-	/*
-	 * =========================================================================
-	 * = =========== code copied frm samofab NEEDS REWORK
-	 */
-	public static byte[] getDemoWaveForm() {
-		int size = 4096;
-		int points[] = new int[size];
-		for (int i = 0; i < size; i++) {
-			points[i] = i;
-		}
-
-		byte result[] = new byte[size * 2];
-		int j = 0;
-		for (int p : points) {
-			if (p >= size)
-				throw new IllegalArgumentException("Out of range");
-
-			byte msb = (byte) ((p & 0x0F00) >> 8);
-			byte lsb = (byte) (p & 0xFF);
-
-			result[j++] = msb; // msbfirst
-			result[j++] = lsb;
-		}
-
-		return result;
-	}
-
-	public void UploadBinaryData(String command, byte[] data) throws Exception {
-		byte[] processedData = GetUploadReadyBytes(data);
-		int size = processedData.length;
-		int sizeDigits = Integer.toString(size).length();
-		String definiteBlockHeader = "#" + Integer.toString(sizeDigits)
-				+ Integer.toString(size);
-
-		vxiConnector.send_and_receive(deviceLink,
-				command + definiteBlockHeader);
-		// XXX vxiConnector.send_and_receive(deviceLink,
-		// Byte.toString(processedData));
-		vxiConnector.send_and_receive(deviceLink, "\r"); // if using indefinite
-															// block, sent !\r
-	}
-
-	private static byte[] GetUploadReadyBytes(byte[] input) {
-		byte[] result = new byte[input.length * 2];
-		int i = 0;
-		for (byte c : input) {
-			char msb = (char) ((c & 0xF0) >> 4);
-			char lsb = (char) (c & 0x0F);
-			// var checkMsb = _check[msb] << 4;
-			// var checkLsb = _check[lsb] << 4;
-			// result[i++] = (byte)(msb | checkMsb | 0x80); // msbfirst
-			// result[i++] = (byte)(lsb | checkLsb | 0x80);
-		}
-		return result;
-	}
-
+	
 }
