@@ -8,20 +8,22 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import de.spurtikus.vxi.beans.Greeter;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 
-
-@Path( "/api" )
-public class Service {
-	//@Inject
-	Greeter greeter = new Greeter();
+/**
+ * Boundary for device system, a partly virtual device keeping information about the
+ * mainframe.
+ * 
+ * @author dennis
+ *
+ */
+@Path("/api/system")
+public class SystemBoundary {
 
 	private class Entity {
 		private String name = "a";
@@ -47,23 +49,24 @@ public class Service {
 		}
 	}
 
-	@GET 
-	@Produces( MediaType.TEXT_PLAIN )
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/info")
 	public Response hehe() {
-		return Response.ok(greeter.createGreeting("VXI system REST API")).build();
+		return Response.ok("VXI system REST API").build();
 	}
-	
+
 	@POST
 	@Path("/{device}/{op}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response sayJsonHello(@Context UriInfo uriInfo, @PathParam("device") String device,
-			@PathParam("op") String op) throws Exception {
+	public Response sayJsonHello(@Context UriInfo uriInfo,
+			@PathParam("device") String device, @PathParam("op") String op)
+			throws Exception {
 		System.out.println(uriInfo.getPath());
 		System.out.println("Dev: " + device);
 		System.out.println("Op: " + op);
-		
+
 		if (device.equals("sys") && op.equals("info")) {
 			// Load configuration
 			Configuration.load();
@@ -71,7 +74,7 @@ public class Service {
 			List<ConnectorConfig> c = Configuration.getConfigs();
 			return Response.ok(c).build();
 		}
-		
+
 		Entity e = new Entity();
 		e.setName(op);
 		return Response.ok(e).build();
