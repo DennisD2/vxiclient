@@ -21,12 +21,12 @@ import org.junit.runner.RunWith;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
+import de.spurtikus.vxi.service.beans.Greeter;
 
 @RunWith(Arquillian.class)
 public class ServiceTest {
 	@Inject
 	Greeter greeter;
-	@Inject 
 
 	@Deployment
 	public static WebArchive createDeployment() {
@@ -54,20 +54,4 @@ public class ServiceTest {
 	    greeter.greet(System.out, "Earthling");
 	}
 	
-	//@Ignore
-	@Test
-	public void waittest() throws Exception {
-		final int SERIAL_CONFIG = 1;
-		final int RPC_CONFIG = 2;
-		final String TEST_DEVICE_NAME = "hp1301";
-		Configuration.load();
-		ConnectorConfig config = Configuration.findConfigById(SERIAL_CONFIG);
-		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
-
-		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
-		assertNotNull(deviceid);
-		//Object theLid = vxiConnector.initialize(config, deviceid);
-
-	}
-
 }

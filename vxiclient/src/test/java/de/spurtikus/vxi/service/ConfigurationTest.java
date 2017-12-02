@@ -12,6 +12,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import de.spurtikus.vxi.connectors.ConnectorConfig;
+import de.spurtikus.vxi.connectors.VXIConnector;
+import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 
 public class ConfigurationTest {
 	
@@ -57,6 +59,21 @@ public class ConfigurationTest {
 		String deviceId = Configuration.getDeviceIdByName(2,"hp1330");
 		assertNotNull(deviceId);
 		System.out.println(deviceId.toString());
+	}
+
+	@Test
+	public void test_complete() throws Exception {
+		final int SERIAL_CONFIG = 1;
+		final int RPC_CONFIG = 2;
+		final String TEST_DEVICE_NAME = "hp1301";
+		Configuration.load();
+		ConnectorConfig config = Configuration.findConfigById(SERIAL_CONFIG);
+		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
+
+		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
+		assertNotNull(deviceid);
+		//Object theLid = vxiConnector.initialize(config, deviceid);
+
 	}
 
 }

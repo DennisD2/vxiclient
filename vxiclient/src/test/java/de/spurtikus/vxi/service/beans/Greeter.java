@@ -1,4 +1,4 @@
-package de.spurtikus.vxi.service;
+package de.spurtikus.vxi.service.beans;
 
 import java.io.PrintStream;
 
