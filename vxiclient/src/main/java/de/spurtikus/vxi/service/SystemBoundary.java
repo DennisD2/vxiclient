@@ -57,17 +57,16 @@ public class SystemBoundary {
 	}
 
 	@POST
-	@Path("/{device}/{op}")
+	@Path("/{op}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response sayJsonHello(@Context UriInfo uriInfo,
-			@PathParam("device") String device, @PathParam("op") String op)
+			@PathParam("op") String op)
 			throws Exception {
 		System.out.println(uriInfo.getPath());
-		System.out.println("Dev: " + device);
 		System.out.println("Op: " + op);
 
-		if (device.equals("sys") && op.equals("info")) {
+		if (op.equals("info")) {
 			// Load configuration
 			Configuration.load();
 			// We assume usable config at some index

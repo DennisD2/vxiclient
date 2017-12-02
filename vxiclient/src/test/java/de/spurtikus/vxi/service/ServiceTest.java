@@ -1,6 +1,6 @@
 package de.spurtikus.vxi.service;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.net.URL;
@@ -32,8 +32,8 @@ public class ServiceTest {
 
 		WebArchive jar = ShrinkWrap.create(WebArchive.class, "vxi.war")
 				.addClass(SystemBoundary.class)
+				.addClass(HP1340Boundary.class)
 				.addAsManifestResource("arquillian.xml").addAsLibraries(lib)
-				.addAsWebInfResource("beans.xml", "beans.xml")
 				.addAsManifestResource("META-INF/context.xml", "context.xml")
 				.setWebXML("web.xml");
 
@@ -44,7 +44,7 @@ public class ServiceTest {
 
 	@Test
 	@RunAsClient
-	public void testREST(@ArquillianResource URL contextPath) {
+	public void test_systemInfo(@ArquillianResource URL contextPath) {
 		Client client = ClientBuilder.newClient();
 		// final Response response = webTarget.path(contextPath+"/api/hehe")
 		// .request(MediaType.JSON).
@@ -58,6 +58,18 @@ public class ServiceTest {
 			e.printStackTrace();
 		}*/
 		assertEquals("VXI system REST API", response.readEntity(String.class));
+	}
+	
+	@Test
+	@RunAsClient
+	public void test_deviceBase(@ArquillianResource URL contextPath) {
+		Client client = ClientBuilder.newClient();
+		System.out.println(contextPath + "rest/api/hp1340/reset");
+		final Response response = client.target(contextPath + "rest/api/hp1340/reset")
+				.request(MediaType.APPLICATION_JSON).post(null);
+		String res = response.readEntity(String.class);
+		System.out.println("REST call  response: " + res);
+		assertNotNull(res);
 	}
 
 }
