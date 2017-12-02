@@ -52,10 +52,15 @@ public class ServiceTest {
 		// final Response response = webTarget.path(contextPath+"/api/hehe")
 		// .request(MediaType.JSON).
 		// //.post(Entity.json(new UserData("myuser", "mypassword")));
-		System.out.println(contextPath + "rest/api/hehe");
-		final Response response = client.target(contextPath + "rest/api/hehe")
+		System.out.println(contextPath + "rest/api/info");
+		final Response response = client.target(contextPath + "rest/api/info")
 				.request(MediaType.TEXT_PLAIN).get();
-		assertEquals("Hello, hehe!", response.readEntity(String.class));
+		/*try {
+			Thread.sleep(50000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}*/
+		assertEquals("Hello, VXI system REST API!", response.readEntity(String.class));
 	}
 
 }
