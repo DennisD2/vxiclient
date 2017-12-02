@@ -56,38 +56,6 @@
 					<scope>provided</scope>
 				</dependency>
 
-				<!-- REST client testing -->
-				<dependency>
-					<groupId>org.jboss.arquillian.junit</groupId>
-					<artifactId>arquillian-junit-container</artifactId>
-					<scope>test</scope>
-				</dependency>
-
-				<dependency>
-					<groupId>org.jboss.arquillian.extension</groupId>
-					<artifactId>arquillian-rest-client-impl-jersey</artifactId>
-					<version>1.0.0.Alpha4</version>
-				</dependency>
-
-				<dependency>
-					<groupId>org.jboss.shrinkwrap.resolver</groupId>
-					<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-					<version>2.2.5</version>
-					<scope>test</scope>
-				</dependency>
-
-				<!-- REST client support -->
-				<dependency>
-					<groupId>org.glassfish.jersey.core</groupId>
-					<artifactId>jersey-client</artifactId>
-					<version>2.25.1</version>
-				</dependency>
-				<dependency>
-					<groupId>org.glassfish.jersey.media</groupId>
-					<artifactId>jersey-media-json-jackson</artifactId>
-					<version>2.25.1</version>
-				</dependency>
-
 				<!-- Weld for Dependency Injection @Inject -->
 				<dependency>
 					<groupId>org.jboss.weld.servlet</groupId>
@@ -98,7 +66,6 @@
 					<groupId>org.jboss.weld</groupId>
 					<artifactId>weld-core</artifactId>
 					<version>2.1.0.Final</version>
-					<scope>test</scope>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -274,7 +241,30 @@
 			<artifactId>arquillian-protocol-servlet</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		
+		<!-- REST client testing -->
+		<dependency>
+			<groupId>org.jboss.arquillian.junit</groupId>
+			<artifactId>arquillian-junit-container</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.extension</groupId>
+			<artifactId>arquillian-rest-client-impl-jersey</artifactId>
+			<version>1.0.0.Alpha4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.shrinkwrap.resolver</groupId>
+			<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- REST client support -->
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		
 	</dependencies>
 
 	<dependencyManagement>
