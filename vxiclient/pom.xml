@@ -56,17 +56,6 @@
 					<scope>provided</scope>
 				</dependency>
 
-				<!-- Weld for Dependency Injection @Inject -->
-				<!-- <dependency>
-					<groupId>org.jboss.weld.servlet</groupId>
-					<artifactId>weld-servlet</artifactId>
-					<version>2.1.0.Final</version>
-				</dependency> -->
-				<!-- <dependency>
-					<groupId>org.jboss.weld</groupId>
-					<artifactId>weld-core</artifactId>
-					<version>2.4.3.Final</version>
-				</dependency> -->
 			</dependencies>
 		</profile>
 	</profiles>
@@ -209,16 +198,7 @@
 			<version>2.0.1</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-		  <groupId>org.glassfish.jersey.containers.glassfish</groupId>
-		  <artifactId>jersey-gf-cdi</artifactId>
-		  <version>2.14</version>
-		</dependency>
-<dependency>
-    <groupId>javax.transaction</groupId>
-    <artifactId>javax.transaction-api</artifactId>
-    <version>1.2</version>
-</dependency>
+
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

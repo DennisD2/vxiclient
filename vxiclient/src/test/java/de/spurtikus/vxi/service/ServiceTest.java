@@ -28,7 +28,7 @@ public class ServiceTest {
 	@Deployment
 	public static WebArchive createDeployment() {
 		File[] lib = Maven.resolver()
-				.resolve("org.jboss.weld.servlet:weld-servlet-shaded:3.0.0.Final",
+				.resolve(/*"org.jboss.weld.servlet:weld-servlet-shaded:3.0.0.Final",*/
 						"de.spurtikus:vxiclient:0.0.1-SNAPSHOT")
 				.withTransitivity().as(File.class);
 
@@ -36,7 +36,6 @@ public class ServiceTest {
 				.addClass(Greeter.class)
 				.addClass(Service.class)
 				.addAsManifestResource("arquillian.xml").addAsLibraries(lib)
-				// .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addAsWebInfResource("beans.xml", "beans.xml")
 				.addAsManifestResource("META-INF/context.xml", "context.xml")
 				.setWebXML("web.xml");
@@ -56,7 +55,7 @@ public class ServiceTest {
 		System.out.println(contextPath + "rest/api/hehe");
 		final Response response = client.target(contextPath + "rest/api/hehe")
 				.request(MediaType.TEXT_PLAIN).get();
-		assertEquals("hehe", response.readEntity(String.class));
+		assertEquals("Hello, hehe!", response.readEntity(String.class));
 	}
 
 }

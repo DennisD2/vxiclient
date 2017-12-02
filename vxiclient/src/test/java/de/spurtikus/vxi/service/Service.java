@@ -20,6 +20,6 @@ public class Service {
 	// @Produces(MediaType.APPLICATION_JSON)
 	// @Consumes(MediaType.APPLICATION_JSON)
 	public Response hehe() {
-		return Response.ok("hehe " + greeter.createGreeting("blub")).build();
+		return Response.ok(greeter.createGreeting("hehe")).build();
 	}
 }
