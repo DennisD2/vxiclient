@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.net.URL;
 
-import javax.inject.Inject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
@@ -21,17 +20,15 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.spurtikus.vxi.service.beans.Greeter;
+import de.spurtikus.vxi.beans.Greeter;
 
 @RunWith(Arquillian.class)
 public class ServiceTest {
-	@Inject
-	Greeter greeter;
 
 	@Deployment
 	public static WebArchive createDeployment() {
 		File[] lib = Maven.resolver()
-				.resolve("org.jboss.weld.servlet:weld-servlet:1.1.9.Final",
+				.resolve("org.jboss.weld.servlet:weld-servlet-shaded:3.0.0.Final",
 						"de.spurtikus:vxiclient:0.0.1-SNAPSHOT")
 				.withTransitivity().as(File.class);
 
@@ -40,7 +37,8 @@ public class ServiceTest {
 				.addClass(Service.class)
 				.addAsManifestResource("arquillian.xml").addAsLibraries(lib)
 				// .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-				.addAsManifestResource("META-INF/beans.xml", "beans.xml")
+				.addAsWebInfResource("beans.xml", "beans.xml")
+				.addAsManifestResource("META-INF/context.xml", "context.xml")
 				.setWebXML("web.xml");
 
 		System.out.println(jar.toString(true));

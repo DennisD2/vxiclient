@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.spurtikus.vxi.service.beans.Greeter;
+import de.spurtikus.vxi.beans.Greeter;
 
 @RunWith(Arquillian.class)
 public class InjectionTest {

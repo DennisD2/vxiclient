@@ -1,6 +1,8 @@
-package de.spurtikus.vxi.service.beans;
+package de.spurtikus.vxi.beans;
 
 import java.io.PrintStream;
+
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * A component for creating personal greetings.

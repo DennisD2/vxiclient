@@ -6,9 +6,9 @@
       http://java.sun.com/xml/ns/javaee
       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 	
-   <listener>
+   <!-- <listener>
       <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
-   </listener>
+   </listener> -->
    
     <listener>
         <listener-class>de.spurtikus.vxi.service.WebAppStartStopListener</listener-class>
@@ -27,5 +27,5 @@
 		<servlet-name>Jersey REST Service</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
-	
+		
 </web-app>
