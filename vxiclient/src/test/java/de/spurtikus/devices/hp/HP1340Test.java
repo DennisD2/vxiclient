@@ -28,14 +28,12 @@ public class HP1340Test {
 	public static final int SERIAL_CONFIG = 1;
 	public static final int RPC_CONFIG = 2;
 
-	final String TEST_DEVICE_NAME = "hp1340";
+	private final String TEST_DEVICE_NAME = "hp1340";
 
-	Configuration configuration;
-	ConnectorConfig config;
-	DeviceLink theLid = null;
+	private ConnectorConfig config;
+	private DeviceLink theLid = null;
 	private HP1340 testee;
-
-	VXIConnector vxiConnector;
+	private VXIConnector vxiConnector;
 
 	@Before
 	public void before() throws Exception {
