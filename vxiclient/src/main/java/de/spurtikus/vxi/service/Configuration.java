@@ -26,8 +26,8 @@ import de.spurtikus.vxi.connectors.serial.SerialConnectorConfig;
 /**
  * Configuration class.
  * 
- * Pure static class. load() initializes the properties. These are read
- * from {Constants.CONFIGFILE_LOCATION}.
+ * Pure static class. load() initializes the properties. These are read from
+ * {Constants.CONFIGFILE_LOCATION}.
  * 
  * @author dennis
  *
@@ -69,10 +69,10 @@ public class Configuration {
 		try {
 			properties.load(is);
 		} catch (IOException e) {
-			logger.info(
-					"Failed loading properties from " + Constants.CONFIGFILE_LOCATION);
-			throw new Exception(
-					"Failed loading properties from " + Constants.CONFIGFILE_LOCATION);
+			logger.info("Failed loading properties from "
+					+ Constants.CONFIGFILE_LOCATION);
+			throw new Exception("Failed loading properties from "
+					+ Constants.CONFIGFILE_LOCATION);
 		}
 		// set up config list
 		confs = getConfigs();
@@ -293,14 +293,14 @@ public class Configuration {
 	 * @return object found or null.
 	 */
 	public static ConnectorConfig findConfigByName(String name) {
-		for (ConnectorConfig c : confs) {
-			if (c.getName().equals(name)) {
-				return c;
-			}
+		ConnectorConfig conf = confs.stream()
+				.filter(c -> c.getName().equals(name)).findAny().get();
+		if (conf == null) {
+			logger.error("Could not find config with name={}", name);
 		}
-		logger.error("Could not find config with name={}", name);
-		return null;
+		return conf;
 	}
+
 	/**
 	 * Finds a configuration by its id.
 	 * 
@@ -309,13 +309,12 @@ public class Configuration {
 	 * @return object found or null.
 	 */
 	public static ConnectorConfig findConfigById(int id) {
-		for (ConnectorConfig c : confs) {
-			if (c.getId() == id) {
-				return c;
-			}
+		ConnectorConfig conf = confs.stream().filter(c -> c.getId() == id)
+				.findAny().get();
+		if (conf == null) {
+			logger.error("Could not find config with id={}", id);
 		}
-		logger.error("Could not find config with id={}", id);
-		return null;
+		return conf;
 	}
 
 	/**
@@ -333,14 +332,13 @@ public class Configuration {
 	 * "hp1330"). Name to device id mapping is user defined in file
 	 * vxiserver.properties.
 	 * 
-	 * @param connector config name
-	 *            connector config name to use.
+	 * @param connector
+	 *            config name connector config name to use.
 	 * @param name
 	 *            device name.
 	 * @return device id.
 	 */
 	public static String getDeviceIdByName(String configName, String name) {
-		System.out.println("YYY "+configName);
 		ConnectorConfig theConf = confs.stream()
 				.filter(c -> c.getName().equals(configName)).findAny().get();
 		return theConf.getDeviceIdByName(name);

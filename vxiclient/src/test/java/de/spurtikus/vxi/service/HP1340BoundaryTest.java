@@ -28,7 +28,7 @@ public class HP1340BoundaryTest {
 	public final String DEVICE = "hp1340";
 	public final String MAINFRAME = "mfb";
 	public final String URI = BASE_URI + "/" + DEVICE + "/" + MAINFRAME;
-	
+
 	@Deployment
 	public static WebArchive createDeployment() {
 		File[] lib = Maven.resolver()
@@ -73,13 +73,18 @@ public class HP1340BoundaryTest {
 		assertNotNull(res);
 	}
 
-	//@Ignore
+	// @Ignore
 	@Test
 	@RunAsClient
 	public void test_shape(@ArquillianResource URL contextPath) {
-		String uri = URI + "/hp1340/shape/5.0/3E6";
+		String waveform = "sin";
+		String amplitude = "5.0";
+		String frequency = "5e5";
+		String uri = URI + "/hp1340/shape/" + waveform + "/" + amplitude + "/"
+				+ frequency;
+		
 		Client client = ClientBuilder.newClient();
-		System.out.println("Call:" + contextPath + uri);
+		System.out.println("Call: " + contextPath + uri);
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.APPLICATION_JSON).post(null);
 		String res = response.readEntity(String.class);

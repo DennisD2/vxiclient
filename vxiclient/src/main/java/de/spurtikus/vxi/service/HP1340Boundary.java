@@ -1,5 +1,8 @@
 package de.spurtikus.vxi.service;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.spurtikus.devices.hp.HP1340;
+import de.spurtikus.devices.hp.HP1340.StandardWaveForm;
 
 /**
  * Boundary for HP1340.
@@ -60,8 +64,9 @@ public class HP1340Boundary {
 
 		String answer;
 		try {
-			answer = connManager.getConnector(mainframe, devname).send_and_receive(
-					connManager.getLink(mainframe, devname), "*IDN?");
+			answer = connManager.getConnector(mainframe, devname)
+					.send_and_receive(connManager.getLink(mainframe, devname),
+							"*IDN?");
 		} catch (Exception e) {
 			logger.error("Error in send_and_receive().");
 			return Response.status(Status.NOT_FOUND).build();
@@ -84,12 +89,13 @@ public class HP1340Boundary {
 	 * @return
 	 */
 	@POST
-	@Path("{mainframe}/{devname}/shape/{amplitude}/{frequency}")
+	@Path("{mainframe}/{devname}/shape/{waveform}/{amplitude}/{frequency}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response shape(@Context UriInfo uriInfo,
 			@PathParam("mainframe") String mainframe,
 			@PathParam("devname") String devname,
+			@PathParam("waveform") String waveform,
 			@PathParam("amplitude") String amplitude,
 			@PathParam("frequency") String frequency) {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
@@ -108,19 +114,23 @@ public class HP1340Boundary {
 
 		Double a = armedDouble(amplitude);
 		Double f = armedDouble(frequency);
+
+		StandardWaveForm wv = Arrays.stream(StandardWaveForm.values())
+				.filter(v -> v.getValue().toLowerCase().equals(waveform))
+				.findAny().get();
 		try {
 			connManager.getDevice(mainframe, devname).stop();
+			
 			connManager.getDevice(mainframe, devname).setAmplitude(a);
 			connManager.getDevice(mainframe, devname).setFrequency(f);
-			connManager.getDevice(mainframe, devname)
-					.setShape(HP1340.StandardWaveForm.RAMP);
+			connManager.getDevice(mainframe, devname).setShape(wv);
 
 			connManager.getDevice(mainframe, devname).start();
 		} catch (Exception e) {
 			logger.error("Error accessing device.");
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
-		return Response.ok("ok").build();
+		return Response.ok(wv.getValue()).build();
 	}
 
 	private Double armedDouble(String s) {
