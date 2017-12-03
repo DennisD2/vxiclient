@@ -7,7 +7,7 @@ import java.util.TooManyListenersException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.spurtikus.vxi.connectors.Constants;
+import de.spurtikus.vxi.Constants;
 import de.spurtikus.vxi.util.CommunicationUtil;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;

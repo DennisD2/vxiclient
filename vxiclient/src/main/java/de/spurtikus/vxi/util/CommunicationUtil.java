@@ -3,7 +3,7 @@ package de.spurtikus.vxi.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.spurtikus.vxi.connectors.Constants;
+import de.spurtikus.vxi.Constants;
 
 public class CommunicationUtil {
 	static Logger logger = LoggerFactory.getLogger(CommunicationUtil.class);

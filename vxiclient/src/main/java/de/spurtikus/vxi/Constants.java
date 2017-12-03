@@ -1,4 +1,4 @@
-package de.spurtikus.vxi.connectors;
+package de.spurtikus.vxi;
 
 /**
  * Global constants.
