@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class ServiceTest {
+public class SystemBoundaryTest {
 
 	@Deployment
 	public static WebArchive createDeployment() {
@@ -32,7 +32,6 @@ public class ServiceTest {
 
 		WebArchive jar = ShrinkWrap.create(WebArchive.class, "vxi.war")
 				.addClass(SystemBoundary.class)
-				.addClass(HP1340Boundary.class)
 				.addAsManifestResource("arquillian.xml").addAsLibraries(lib)
 				.addAsManifestResource("META-INF/context.xml", "context.xml")
 				.setWebXML("web.xml");
@@ -60,16 +59,4 @@ public class ServiceTest {
 		assertEquals("VXI system REST API", response.readEntity(String.class));
 	}
 	
-	@Test
-	@RunAsClient
-	public void test_deviceBase(@ArquillianResource URL contextPath) {
-		Client client = ClientBuilder.newClient();
-		System.out.println(contextPath + "rest/api/hp1340/reset");
-		final Response response = client.target(contextPath + "rest/api/hp1340/reset")
-				.request(MediaType.APPLICATION_JSON).post(null);
-		String res = response.readEntity(String.class);
-		System.out.println("REST call  response: " + res);
-		assertNotNull(res);
-	}
-
 }
