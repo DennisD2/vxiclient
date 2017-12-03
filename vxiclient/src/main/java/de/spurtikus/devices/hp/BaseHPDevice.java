@@ -76,4 +76,7 @@ public class BaseHPDevice {
 		return errors;
 	}
 
+	public void initialize() throws Exception {
+	}
+
 }

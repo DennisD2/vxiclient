@@ -1,13 +1,13 @@
 
 Todos
 -----
-- Define further work; how to continue???
-1) REST service 
+- Extend REST code
+- Fix issue with device type. See ConnectionManager TODO around line 75.
 
-- harmonize methods in ConversionUtil (see @deprecated)
-- Check methods in CommunicationUtil where they should go. maybe stay there :-)
+
 - Hp1330 test fails at least for RPC
 - Fix Definite Block Length code, See TODO
+- Throw away methods in ConversionUtil (see @deprecated)
 
 Done
 ----

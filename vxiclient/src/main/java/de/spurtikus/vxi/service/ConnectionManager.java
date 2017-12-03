@@ -6,7 +6,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.spurtikus.devices.hp.HP1340;
+import de.spurtikus.devices.hp.BaseHPDevice;
+import de.spurtikus.devices.hp.DeviceFactory;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
@@ -56,7 +57,7 @@ public class ConnectionManager {
 		VXIConnector vxiConnector;
 		String deviceId;
 		DeviceLink linkId;
-		HP1340 device;
+		BaseHPDevice device;
 
 		// Find config for that mainframe
 		config = Configuration.findConfigByName(mfName);
@@ -69,9 +70,12 @@ public class ConnectionManager {
 		}
 		// Create device link
 		linkId = vxiConnector.initialize(config, deviceId);
-		// initialize device class for the target identified by (connector,
-		// link)
-		device = new HP1340(vxiConnector, linkId);
+		// initialize device class for the target identified by (connector,link)
+		// TODO: deviceType must be defined in properties, it cannot be derived
+		// from somewhere else!!! For now I assume that a device type == device
+		// name; so we cannot have two same devices in one mainframe
+		String deviceType = deviceName;
+		device = DeviceFactory.create(deviceType, vxiConnector, linkId);
 
 		// Create new connection info object and add it to list
 		DeviceConnectionInfo mf = new DeviceConnectionInfo(deviceId, config,
@@ -123,7 +127,7 @@ public class ConnectionManager {
 		return connections.get(key(mainframe, devname)).getLinkId();
 	}
 
-	public HP1340 getDevice(String mainframe, String devname) {
+	public BaseHPDevice getDevice(String mainframe, String devname) {
 		return connections.get(key(mainframe, devname)).getDevice();
 	}
 

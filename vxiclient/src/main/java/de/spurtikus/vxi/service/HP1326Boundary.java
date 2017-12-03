@@ -1,6 +1,9 @@
 package de.spurtikus.vxi.service;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -17,23 +20,22 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.spurtikus.devices.hp.HP1340;
-import de.spurtikus.devices.hp.HP1340.StandardWaveForm;
+import de.spurtikus.devices.hp.HP1326;
 
 /**
- * Boundary for HP1340 AFG.
+ * Boundary for HP1326/1411 voltmeter.
  * 
  * @author dennis
  *
  */
-@Path("/api/hp1340")
-public class HP1340Boundary {
-	private Logger logger = LoggerFactory.getLogger(HP1340Boundary.class);
+@Path("/api/hp1326")
+public class HP1326Boundary {
+	private Logger logger = LoggerFactory.getLogger(HP1326Boundary.class);
 
 	private ConnectionManager connManager;
 
-	protected HP1340 getDevice(String mainframe, String devname) {
-		return (HP1340) connManager.getDevice(mainframe, devname);
+	protected HP1326 getDevice(String mainframe, String devname) {
+		return (HP1326) connManager.getDevice(mainframe, devname);
 	}
 
 	@GET
@@ -43,7 +45,7 @@ public class HP1340Boundary {
 			@PathParam("mainframe") String mainframe) {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
-		return Response.ok("HP1340").build();
+		return Response.ok("HP1326").build();
 	}
 
 	@POST
@@ -80,7 +82,7 @@ public class HP1340Boundary {
 	}
 
 	/**
-	 * Set shape of StandardWaveForm type.
+	 * Reads multiple channels. Channel list is assumed to be coming in as POST data.
 	 * 
 	 * @param uriInfo
 	 *            Injected uriInfo (injected by HK2/REST)
@@ -88,30 +90,28 @@ public class HP1340Boundary {
 	 *            Mainframe to use. Comes from vxiserver.properties, e.g. "mfb".
 	 * @param devname
 	 *            Device to use.
-	 * @param waveform
-	 *            Shape of waveform. Example "ramp" or "sin". See {HP1340.StandardWaveForm}.
-	 * @param amplitude
-	 *            Amplitude of waveform. Example '5.0' for 5,0 Volts.
-	 * @param frequency
-	 *            Frequency of waveform. Example '5e6' for 5MHz and '44000' for
-	 *            44KHz.
+	 * @param range
+	 *            Range to use during measurement. E.g. "7.2.7". See {HP1326}.
+	 * @param channels
+	 *            List of channels to measure. E.g. [101,102]. See {HP1326}.
+	 *            
 	 * @return
 	 */
 	@POST
-	@Path("{mainframe}/{devname}/shape/{waveform}/{amplitude}/{frequency}")
+	@Path("{mainframe}/{devname}/read/{range}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response shape(@Context UriInfo uriInfo,
+	public Response readChannels(@Context UriInfo uriInfo,
 			@PathParam("mainframe") String mainframe,
 			@PathParam("devname") String devname,
-			@PathParam("waveform") String waveform,
-			@PathParam("amplitude") Double amplitude,
-			@PathParam("frequency") Double frequency) {
+			@PathParam("range") Double range, List<Integer> channels) {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
 		logger.debug("Device name: {}", devname);
-		logger.debug("Amplitude: {}", amplitude);
-		logger.debug("Frequency: {}", frequency);
+		logger.debug("Range: {}", range);
+		logger.debug("Channels: {}", channels);
+
+		logger.info("Using channels require DVM+Switch configuration!");
 
 		try {
 			connManager = ConnectionManager.getInstance(mainframe, devname);
@@ -121,22 +121,18 @@ public class HP1340Boundary {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		StandardWaveForm wv = Arrays.stream(StandardWaveForm.values())
-				.filter(v -> v.getValue().toLowerCase().equals(waveform))
-				.findAny().get();
+		Map<Integer, Double> m = new HashMap<>();
 		try {
-			getDevice(mainframe, devname).stop();
-			
-			getDevice(mainframe, devname).setAmplitude(amplitude);
-			getDevice(mainframe, devname).setFrequency(frequency);
-			getDevice(mainframe, devname).setShape(wv);
-
-			getDevice(mainframe, devname).start();
+			getDevice(mainframe, devname).initializeVoltageMeasurement(range, channels);
+			m = getDevice(mainframe, devname).measureChannels(channels);
 		} catch (Exception e) {
 			logger.error("Error accessing device.");
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
-		return Response.ok(wv.getValue()).build();
+		for (int channel : m.keySet()) {
+			logger.debug("{} : {}", channel, m.get(channel));
+		}
+		return Response.ok(m).build();
 	}
-	
+
 }
