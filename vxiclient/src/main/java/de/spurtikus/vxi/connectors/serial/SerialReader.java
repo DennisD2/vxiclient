@@ -7,6 +7,7 @@ import java.util.TooManyListenersException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.spurtikus.vxi.connectors.Constants;
 import de.spurtikus.vxi.util.CommunicationUtil;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
@@ -175,20 +176,20 @@ public class SerialReader implements Runnable {
 				}
 				// special chars
 				switch (c) {
-				case SerialConnector.CR:
+				case Constants.CR:
 					logger.debug("CR received");
 					sb.append((char) c);
 					break;
-				case SerialConnector.LF:
+				case Constants.LF:
 					logger.debug("LF received");
 					endOfLineReceived = true;
 					sb.append((char) c);
 					break;
-				case SerialConnector.XON:
+				case Constants.XON:
 					logger.debug("Xon received");
 					Xoff_received = false;
 					break;
-				case SerialConnector.XOFF:
+				case Constants.XOFF:
 					logger.debug("Xoff received");
 					Xoff_received = true;
 					break;

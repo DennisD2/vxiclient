@@ -27,10 +27,7 @@ import de.spurtikus.devices.hp.HP1340;
 public class HP1340Boundary {
 	Logger logger = LoggerFactory.getLogger(HP1340Boundary.class);
 
-	HP1340Wrapper wrapper;
-
-	public static final String DEVICE_NAME = "hp1340"; // TODO: make this an
-														// argument in REST call
+	ConnectionManager connManager;
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -54,7 +51,7 @@ public class HP1340Boundary {
 		logger.debug("Device name: {}", devname);
 
 		try {
-			wrapper = HP1340Wrapper.getInstance(mainframe, devname);
+			connManager = ConnectionManager.getInstance(mainframe, devname);
 		} catch (Exception e) {
 			logger.error(
 					"Cannot get wrapper instance. This is usually an initialization problem.");
@@ -63,8 +60,8 @@ public class HP1340Boundary {
 
 		String answer;
 		try {
-			answer = wrapper.getConnector(mainframe, devname).send_and_receive(
-					wrapper.getLink(mainframe, devname), "*IDN?");
+			answer = connManager.getConnector(mainframe, devname).send_and_receive(
+					connManager.getLink(mainframe, devname), "*IDN?");
 		} catch (Exception e) {
 			logger.error("Error in send_and_receive().");
 			return Response.status(Status.NOT_FOUND).build();
@@ -102,7 +99,7 @@ public class HP1340Boundary {
 		logger.debug("Frequency: {}", frequency);
 
 		try {
-			wrapper = HP1340Wrapper.getInstance(mainframe, devname);
+			connManager = ConnectionManager.getInstance(mainframe, devname);
 		} catch (Exception e) {
 			logger.error(
 					"Cannot get wrapper instance. This is usually an initialization problem.");
@@ -112,13 +109,13 @@ public class HP1340Boundary {
 		Double a = armedDouble(amplitude);
 		Double f = armedDouble(frequency);
 		try {
-			wrapper.getDevice(mainframe, devname).stop();
-			wrapper.getDevice(mainframe, devname).setAmplitude(a);
-			wrapper.getDevice(mainframe, devname).setFrequency(f);
-			wrapper.getDevice(mainframe, devname)
+			connManager.getDevice(mainframe, devname).stop();
+			connManager.getDevice(mainframe, devname).setAmplitude(a);
+			connManager.getDevice(mainframe, devname).setFrequency(f);
+			connManager.getDevice(mainframe, devname)
 					.setShape(HP1340.StandardWaveForm.RAMP);
 
-			wrapper.getDevice(mainframe, devname).start();
+			connManager.getDevice(mainframe, devname).start();
 		} catch (Exception e) {
 			logger.error("Error accessing device.");
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();

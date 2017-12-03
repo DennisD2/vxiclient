@@ -3,6 +3,8 @@ package de.spurtikus.vxi.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.spurtikus.vxi.connectors.Constants;
+
 public class CommunicationUtil {
 	static Logger logger = LoggerFactory.getLogger(CommunicationUtil.class);
 
@@ -71,20 +73,20 @@ public class CommunicationUtil {
 		logger.debug(sbhex.toString() + " | " + sbascii.toString());
 	}
 
-	public static final char LF = 0xa;
-	public static final char CR = 0xd;
-	public static final char BS = 0x8;
-	public static final char ESC = 0x1b;
+	//public static final char LF = 0xa;
+	//public static final char CR = 0xd;
+	//public static final char BS = 0x8;
+	//public static final char ESC = 0x1b;
 
 	public static StringBuilder charToHexString(char c) {
 		switch (c) {
-		case LF:
+		case Constants.LF:
 			return new StringBuilder("LF");
-		case CR:
+		case Constants.CR:
 			return new StringBuilder("CR");
-		case BS:
+		case Constants.BS:
 			return new StringBuilder("BS");
-		case ESC:
+		case Constants.ESC:
 			return new StringBuilder("ES");
 
 		}
@@ -148,14 +150,6 @@ public static String asString(byte[] source, int n) {
 		return sb.toString();
 }
 
-//	public static String asString(byte[] source) {
-//		StringBuilder sb = new StringBuilder();
-//		for (int i = 0; i < source.length; i++) {
-//			sb.append((char) source[i]);
-//		}
-//		return sb.toString();
-//	}
-
 	public static void copyByteArray(byte[] from, byte[] to) {
 		for (int i = 0; i < from.length; i++) {
 			to[i] = from[i];
@@ -167,7 +161,6 @@ public static String asString(byte[] source, int n) {
 			to[i] = from[i];
 		}
 	}
-	
 	
 	public static byte[] asByteArray(String s) {
 		byte b[] = new byte[s.length()];

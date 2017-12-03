@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import de.spurtikus.devices.hp.HP1330.PortDescription;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
+import de.spurtikus.vxi.connectors.Constants;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
@@ -17,9 +18,6 @@ import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
 import de.spurtikus.vxi.service.Configuration;
 
 public class HP1330Test {
-	public static final int SERIAL_CONFIG = 1;
-	public static final int RPC_CONFIG = 2;
-	
 	static final String TEST_DEVICE_NAME = "hp1330";
 	ConnectorConfig config;
 	DeviceLink theLid = null;
@@ -30,7 +28,7 @@ public class HP1330Test {
 		// Load configuration
 		 Configuration.load();
 		// We assume usable config at some index
-		config = Configuration.findConfigById(RPC_CONFIG);
+		config = Configuration.findConfigById(Constants.RPC_CONFIG);
 		assertNotNull(config);
 		// We like to test a net GPIBSerial
 		assertThat(config.getClass(), IsEqual.equalTo(RPCConnectorConfig.class));

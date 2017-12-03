@@ -10,6 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import de.spurtikus.vxi.connectors.ConnectorConfig;
+import de.spurtikus.vxi.connectors.Constants;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
@@ -25,9 +26,6 @@ import de.spurtikus.waveform.Waveforms;
  *
  */
 public class HP1340Test {
-	public static final int SERIAL_CONFIG = 1;
-	public static final int RPC_CONFIG = 2;
-
 	private final String TEST_DEVICE_NAME = "hp1340";
 
 	private ConnectorConfig config;
@@ -42,7 +40,7 @@ public class HP1340Test {
 		// Load configuration
 		Configuration.load();
 		// We assume usable config at some index
-		config = Configuration.findConfigById(SERIAL_CONFIG);
+		config = Configuration.findConfigById(Constants.SERIAL_CONFIG);
 		assertNotNull(config);
 		// We like to test a net GPIBSerial
 		assertThat(config.getClass(),

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.spurtikus.Timer;
+import de.spurtikus.vxi.connectors.Constants;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 
@@ -595,31 +596,25 @@ public class HP1340 extends BaseHPDevice {
 	public void setUserDefinedWaveformBlk(short[] waveform) throws Exception {
 		// Definite Length Arbitrary Block Data
 		String values = "#" + "4" + 2 * waveform.length;
-
-		// Chars needed to be escaped (Prologix special)
-		final byte ESC = 0x1b;
-		final byte CR = 0x0a;
-		final byte VT = 0x0b;
-		final byte LF = 0x0d;
-		
-		prefix_userDefinedWF();
-		
 		byte b;
 		byte t[] = new byte[1];
 		boolean escape;
 
+		prefix_userDefinedWF();
+		
 		for (int i = 0; i < waveform.length; i++) {
 			short theValue = waveform[i];
 			
 			// MSB
 			// max value possible as byte 1 is 0x0f
+			// Some chars needed to be escaped (Prologix special)
 			escape=false;
 			b = (byte) ((theValue >> 8) & 0xf);
-			if (b == CR) {	escape = true; } // LF
-			if (!escape && (b == VT)) { escape = true; } // VT 1011
-			if (!escape && (b == LF)) { escape = true; } // CR 1101
+			if (b == Constants.CR) {	escape = true; } 
+			if (!escape && (b == Constants.VT)) { escape = true; } 
+			if (!escape && (b == Constants.LF)) { escape = true; } 
 			if (escape) {
-				t[0] = ESC; // add escape char
+				t[0] = Constants.ESC; // add escape char
 				values += new String(t);
 			}
 			t[0] = b;
@@ -631,13 +626,12 @@ public class HP1340 extends BaseHPDevice {
 			escape = false; 
 			b = (byte) (theValue & 0xff);
 			if ((b & 0x80) != 0) { b = (byte) (b & 0x7f); } // <-- does not work with escape!!!
-			
-			if (b == CR) { escape = true; } // LF 1010
-			if (!escape && (b == VT)) { escape = true; }  // VT 1011
-			if (!escape && (b == LF)) { escape = true; }  // CR 1101
-			if (!escape && (b == ESC)) { escape = true; } // ESC 1011
+			if (b == Constants.CR) { escape = true; } 
+			if (!escape && (b == Constants.VT)) { escape = true; }  
+			if (!escape && (b == Constants.LF)) { escape = true; }  
+			if (!escape && (b == Constants.ESC)) { escape = true; } 
 			if (escape) {
-				t[0] = ESC; // add escape char
+				t[0] = Constants.ESC; // add escape char
 				values += new String(t);
 			}
 			t[0] = b;

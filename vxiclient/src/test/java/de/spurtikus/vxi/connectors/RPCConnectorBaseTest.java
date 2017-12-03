@@ -23,7 +23,7 @@ public class RPCConnectorBaseTest {
 	public void before() throws Exception {
 		// Get connection config for Adapter with Id==1 (serial connector)
 		Configuration.load();
-		Stream<ConnectorConfig> ccc = Configuration.getEnabledConfigs().stream().filter(c->c.getId()==2);
+		Stream<ConnectorConfig> ccc = Configuration.getEnabledConfigs().stream().filter(c->c.getId()==Constants.RPC_CONFIG);
 		config  = (RPCConnectorConfig) ccc.findAny().get();
 		assertNotNull(config);
 

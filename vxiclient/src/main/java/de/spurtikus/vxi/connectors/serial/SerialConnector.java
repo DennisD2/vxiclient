@@ -53,31 +53,17 @@ public class SerialConnector extends AbstractConnector implements VXIConnector {
 	/** Config to use */
 	protected SerialConnectorConfig theConfig;
 
-	public static final char LF = 0xa;
-	public static final char CR = 0xd;
-	public static final char XON = 0x11;
-	public static final char XOFF = 0x13;
-
 	private SerialPort serialPort;
 	private OutputStream outputStream;
 	private SerialReader serialReader;
 	private Thread serialReaderThread;
 
 	boolean initialized;
-	/** True if port is open */
-	//protected Boolean open = false;
-	/** true if port is started. */
-	//protected volatile Boolean started = false;
 
 	private static final int WAIT_TIME_AFTER_SEND = 1;
 
-	protected SerialConnector() {
-		// Singleton
-
-		// Initialize error array
-		// RPCErrors.initErrorMap();
-	}
-
+	// Singleton
+	protected SerialConnector() {}
 	public static VXIConnector getInstance() {
 		if (INSTANCE == null) {
 			INSTANCE = new SerialConnector();

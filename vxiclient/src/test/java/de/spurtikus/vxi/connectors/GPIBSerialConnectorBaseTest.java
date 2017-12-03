@@ -22,7 +22,7 @@ public class GPIBSerialConnectorBaseTest {
 	public void before() throws Exception {
 		// Get connection config for Adapter with Id==1 (serial connector)
 		Configuration.load();
-		Stream<ConnectorConfig> ccc = Configuration.getEnabledConfigs().stream().filter(c->c.getId()==1);
+		Stream<ConnectorConfig> ccc = Configuration.getEnabledConfigs().stream().filter(c->c.getId()==Constants.SERIAL_CONFIG);
 		config  = (GPIBSerialConnectorConfig) ccc.findAny().get();
 		assertNotNull(config);
 

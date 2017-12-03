@@ -12,6 +12,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import de.spurtikus.vxi.connectors.ConnectorConfig;
+import de.spurtikus.vxi.connectors.Constants;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 
@@ -25,7 +26,7 @@ public class ConfigurationTest {
 	@Ignore
 	@Test
 	public void test_getProperty() throws Exception {
-		String prop = Configuration.getProperty(Configuration.PREFIX);
+		String prop = Configuration.getProperty(Constants.CONFIGVAL_PREFIX);
 		assertNotNull(prop);
 		System.out.println(prop);
 	}
@@ -48,7 +49,7 @@ public class ConfigurationTest {
 	
 	@Test
 	public void test_findConfigById() throws Exception {
-		ConnectorConfig c = Configuration.findConfigById(1);
+		ConnectorConfig c = Configuration.findConfigById(Constants.SERIAL_CONFIG);
 		assertNotNull(c);
 		assertThat(c.isEnabled(), Is.is(true));
 		System.out.println(c.toString());
@@ -56,7 +57,7 @@ public class ConfigurationTest {
 
 	@Test
 	public void test_getDeviceIdByNameAndConnectorId() throws Exception {
-		String deviceId = Configuration.getDeviceIdByName(2,"hp1330");
+		String deviceId = Configuration.getDeviceIdByName(Constants.RPC_CONFIG, "hp1330");
 		assertNotNull(deviceId);
 		System.out.println(deviceId.toString());
 	}
@@ -75,17 +76,14 @@ public class ConfigurationTest {
 
 	@Test
 	public void test_complete() throws Exception {
-		final int SERIAL_CONFIG = 1;
-		final int RPC_CONFIG = 2;
 		final String TEST_DEVICE_NAME = "hp1301";
 		Configuration.load();
-		ConnectorConfig config = Configuration.findConfigById(SERIAL_CONFIG);
+		ConnectorConfig config = Configuration.findConfigById(Constants.SERIAL_CONFIG);
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
 
 		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
 		assertNotNull(deviceid);
 		//Object theLid = vxiConnector.initialize(config, deviceid);
-
 	}
 
 }

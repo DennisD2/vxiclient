@@ -6,19 +6,19 @@ import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 
 /**
- * Info about a mainframe.
+ * Info about a connection.
  * 
  * @author dennis
  *
  */
-public class MainframeInfo {
+public class DeviceConnectionInfo {
 	private String deviceId;
 	private ConnectorConfig config;
 	private DeviceLink linkId;
 	private HP1340 device;
 	private VXIConnector vxiConnector;
 
-	public MainframeInfo(String deviceId, ConnectorConfig config,
+	public DeviceConnectionInfo(String deviceId, ConnectorConfig config,
 			DeviceLink linkId, HP1340 device, VXIConnector vxiConnector) {
 		this.deviceId = deviceId;
 		this.config = config;

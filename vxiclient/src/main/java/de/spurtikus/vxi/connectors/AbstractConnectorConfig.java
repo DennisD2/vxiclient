@@ -11,7 +11,6 @@ public abstract class AbstractConnectorConfig implements ConnectorConfig {
 
 	@Override
 	public String getName() {
-		System.out.println("XXX "+name);
 		return name;
 	}
 

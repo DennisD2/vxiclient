@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import de.spurtikus.vxi.connectors.ConnectorConfig;
+import de.spurtikus.vxi.connectors.Constants;
 import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
 import de.spurtikus.vxi.connectors.serial.SerialConnectorConfig;
@@ -26,26 +27,20 @@ import de.spurtikus.vxi.connectors.serial.SerialConnectorConfig;
  * Configuration class.
  * 
  * Pure static class. load() initializes the properties. These are read
- * from CONFIGFILE_LOCATION.
+ * from {Constants.CONFIGFILE_LOCATION}.
  * 
  * @author dennis
  *
  */
 public class Configuration {
-	private static final String TYPE_PROP__KEY = "type";
-
 	static private Logger logger = LoggerFactory.getLogger(Configuration.class);
 
-	/** Prefix for all vxiclient properties */
-	public static final String PREFIX = "vxi.connector.";
-
-	/** Config file relative path in classpath */
-	private static final String CONFIGFILE_LOCATION = "vxiserver.properties";
+	private static final String TYPE_PROP_KEY = "type";
 
 	/** Properties loaded from CONFIGFILE_LOCATION */
 	private static Properties properties = null;
 
-	/** List of confis */
+	/** List of configs */
 	private static List<ConnectorConfig> confs = null;
 
 	/**
@@ -63,9 +58,9 @@ public class Configuration {
 		InputStream is = null;
 
 		logger.info("Read configuration from classpath resource {}",
-				CONFIGFILE_LOCATION);
+				Constants.CONFIGFILE_LOCATION);
 		is = Configuration.class.getClassLoader()
-				.getResourceAsStream(CONFIGFILE_LOCATION);
+				.getResourceAsStream(Constants.CONFIGFILE_LOCATION);
 		if (is == null) {
 			logger.info("Configuration not found.");
 			throw new Exception("Configuration not found.");
@@ -75,9 +70,9 @@ public class Configuration {
 			properties.load(is);
 		} catch (IOException e) {
 			logger.info(
-					"Failed loading properties from " + CONFIGFILE_LOCATION);
+					"Failed loading properties from " + Constants.CONFIGFILE_LOCATION);
 			throw new Exception(
-					"Failed loading properties from " + CONFIGFILE_LOCATION);
+					"Failed loading properties from " + Constants.CONFIGFILE_LOCATION);
 		}
 		// set up config list
 		confs = getConfigs();
@@ -105,13 +100,13 @@ public class Configuration {
 			// Loop 1: create empty configs with correct type
 			for (Object k : properties.keySet()) {
 				String key = (String) k;
-				if (!key.startsWith(PREFIX)) {
+				if (!key.startsWith(Constants.CONFIGVAL_PREFIX)) {
 					logger.error("Unknown property key '{}'", key);
 					continue;
 				}
 				String value = properties.getProperty(key);
 				// logger.debug("key '{}', value={}", key, value);
-				String keypart = key.replaceAll(PREFIX, "");
+				String keypart = key.replaceAll(Constants.CONFIGVAL_PREFIX, "");
 				// logger.debug(keypart);
 				String[] parts = keypart.split("\\.");
 				int id = 0;
@@ -124,7 +119,7 @@ public class Configuration {
 				if (parts.length != 2) {
 					continue;
 				}
-				if (parts[1].equals(TYPE_PROP__KEY)) {
+				if (parts[1].equals(TYPE_PROP_KEY)) {
 					logger.info("type found, id={}, type={}", id, value);
 					ConnectorConfig c = getConfigFor(confs, id, value);
 					// add to list
@@ -135,13 +130,13 @@ public class Configuration {
 			// Loop 2: fill configs
 			for (Object k : properties.keySet()) {
 				String key = (String) k;
-				if (!key.startsWith(PREFIX)) {
+				if (!key.startsWith(Constants.CONFIGVAL_PREFIX)) {
 					logger.error("Unknown property key '{}'", key);
 					continue;
 				}
 				String value = properties.getProperty(key);
 				// logger.debug("key '{}', value={}", key, value);
-				String keypart = key.replaceAll(PREFIX, "");
+				String keypart = key.replaceAll(Constants.CONFIGVAL_PREFIX, "");
 				// logger.info(keypart);
 				String[] parts = keypart.split("\\.");
 				int id = 0;
@@ -240,7 +235,7 @@ public class Configuration {
 				}
 			}
 		}
-		if (!called && !key.equals(TYPE_PROP__KEY)) {
+		if (!called && !key.equals(TYPE_PROP_KEY)) {
 			logger.error("No setter for key {}", key);
 		}
 	}
