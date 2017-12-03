@@ -10,6 +10,10 @@ import java.util.Map;
  */
 public interface ConnectorConfig {
 
+	String getName();
+
+	void setName(String name);
+
 	int getId();
 
 	void setId(int id);

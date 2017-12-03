@@ -24,8 +24,11 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class HP1340BoundaryTest {
 
-	public final String BASE_URI = "rest/api/hp1340";
-
+	public final String BASE_URI = "rest/api";
+	public final String DEVICE = "hp1340";
+	public final String MAINFRAME = "mfb";
+	public final String URI = BASE_URI + "/" + DEVICE + "/" + MAINFRAME;
+	
 	@Deployment
 	public static WebArchive createDeployment() {
 		File[] lib = Maven.resolver()
@@ -46,7 +49,7 @@ public class HP1340BoundaryTest {
 	@Test
 	@RunAsClient
 	public void test_info(@ArquillianResource URL contextPath) {
-		String uri = BASE_URI + "/info";
+		String uri = URI + "/info";
 		Client client = ClientBuilder.newClient();
 		System.out.println(contextPath + uri);
 		final Response response = client.target(contextPath + uri)
@@ -60,7 +63,7 @@ public class HP1340BoundaryTest {
 	@Test
 	@RunAsClient
 	public void test_idn(@ArquillianResource URL contextPath) {
-		String uri = BASE_URI + "/idn";
+		String uri = URI + "/hp1340/idn";
 		Client client = ClientBuilder.newClient();
 		System.out.println(contextPath + uri);
 		final Response response = client.target(contextPath + uri)
@@ -70,10 +73,11 @@ public class HP1340BoundaryTest {
 		assertNotNull(res);
 	}
 
+	//@Ignore
 	@Test
 	@RunAsClient
 	public void test_shape(@ArquillianResource URL contextPath) {
-		String uri = BASE_URI + "/shape/5.0/3E6";
+		String uri = URI + "/hp1340/shape/5.0/3E6";
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call:" + contextPath + uri);
 		final Response response = client.target(contextPath + uri)
@@ -86,7 +90,6 @@ public class HP1340BoundaryTest {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 }

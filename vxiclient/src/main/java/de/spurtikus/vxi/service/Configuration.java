@@ -291,6 +291,22 @@ public class Configuration {
 	}
 
 	/**
+	 * Finds a configuration by its name.
+	 * 
+	 * @param id
+	 *            id to find object for.
+	 * @return object found or null.
+	 */
+	public static ConnectorConfig findConfigByName(String name) {
+		for (ConnectorConfig c : confs) {
+			if (c.getName().equals(name)) {
+				return c;
+			}
+		}
+		logger.error("Could not find config with name={}", name);
+		return null;
+	}
+	/**
 	 * Finds a configuration by its id.
 	 * 
 	 * @param id
@@ -315,6 +331,24 @@ public class Configuration {
 	public static List<ConnectorConfig> getEnabledConfigs() {
 		return confs.stream().filter(c -> c.isEnabled())
 				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Gets device id (like "iscpi,37" or "9,0") for a device name (like
+	 * "hp1330"). Name to device id mapping is user defined in file
+	 * vxiserver.properties.
+	 * 
+	 * @param connector config name
+	 *            connector config name to use.
+	 * @param name
+	 *            device name.
+	 * @return device id.
+	 */
+	public static String getDeviceIdByName(String configName, String name) {
+		System.out.println("YYY "+configName);
+		ConnectorConfig theConf = confs.stream()
+				.filter(c -> c.getName().equals(configName)).findAny().get();
+		return theConf.getDeviceIdByName(name);
 	}
 
 	/**

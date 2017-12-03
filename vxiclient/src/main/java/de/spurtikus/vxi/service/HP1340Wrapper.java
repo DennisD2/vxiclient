@@ -1,5 +1,8 @@
 package de.spurtikus.vxi.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,56 +15,87 @@ import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 public class HP1340Wrapper {
 	private static Logger logger = LoggerFactory.getLogger(HP1340Wrapper.class);
 
-	public static final int SERIAL_CONFIG = 1; // TODO -> global constants config
+	public static final int SERIAL_CONFIG = 1; // TODO -> global constants
+												// config
 	public static final int RPC_CONFIG = 2; // TODO -> global constants config
-	public static final String TEST_DEVICE_NAME = "hp1340";
-	
-	private static String deviceId;
-	private static ConnectorConfig config;
-	private static DeviceLink linkId;
-	private static HP1340 device;
-	private static VXIConnector vxiConnector;
-	
+
+	private static Map<String, MainframeInfo> mainframes = new HashMap<String, MainframeInfo>();
+
 	// Singleton
 	private static HP1340Wrapper INSTANCE = null;
-	private HP1340Wrapper() {}
 
-	protected static void initialize() throws Exception {
+	private HP1340Wrapper() {
+	}
+
+	protected static void initialize(String name, String deviceName)
+			throws Exception {
+		if (mainframes.containsKey(key(name, deviceName))) {
+			return;
+		}
+
 		// Load configuration
 		Configuration.load();
-		// We assume usable config at some index
-		config = Configuration.findConfigById(SERIAL_CONFIG);
 
+		ConnectorConfig config;
+		VXIConnector vxiConnector;
+		String deviceId;
+		DeviceLink linkId;
+		HP1340 device;
+
+		// Find config for that mainframe
+		config = Configuration.findConfigByName(name);
+		// get connector
 		vxiConnector = VXIConnectorFactory.getConnector(config);
-
-		deviceId = config.getDeviceIdByName(TEST_DEVICE_NAME);
+		// get device in that mainframe
+		deviceId = config.getDeviceIdByName(deviceName);
 		if (deviceId == null) {
-			logger.error("Device not found: " + TEST_DEVICE_NAME);
+			logger.error("Device not found: " + deviceName);
 		}
 		linkId = vxiConnector.initialize(config, deviceId);
+		// initialize device class for the target
 		device = new HP1340(vxiConnector, linkId);
+
+		// Create new mainframe info object and add it to list
+		MainframeInfo mf = new MainframeInfo(deviceId, config, linkId, device,
+				vxiConnector);
+		logger.debug("Created MFI entry with key {}",  key(name, deviceName));
+		mainframes.put(key(name, deviceName), mf);
 
 		device.initialize();
 	}
 
-	public static HP1340Wrapper getInstance() throws Exception {
-		if (INSTANCE==null) {
+	private static String key(String name, String deviceName) {
+		return name + "." + deviceName;
+	}
+
+	/**
+	 * Get wrapper instance for mainframe identified by 'name'.
+	 * 
+	 * @param name
+	 *            mainframe name (as defined in property file
+	 *            vxiserver.properties).
+	 * @return
+	 * @throws Exception
+	 */
+	public static HP1340Wrapper getInstance(String name, String deviceName)
+			throws Exception {
+		if (INSTANCE == null) {
 			INSTANCE = new HP1340Wrapper();
-			initialize();
 		}
+		initialize(name, deviceName);
 		return INSTANCE;
 	}
 
-	public VXIConnector getConnector() {
-		return vxiConnector;
+	public VXIConnector getConnector(String mainframe, String devname) {
+		return mainframes.get(key(mainframe, devname)).getVxiConnector();
 	}
 
-	public DeviceLink getLink() {
-		return linkId;
+	public DeviceLink getLink(String mainframe, String devname) {
+		return mainframes.get(key(mainframe, devname)).getLinkId();
 	}
 
-	public HP1340 getDevice() {
-		return device;
+	public HP1340 getDevice(String mainframe, String devname) {
+		return mainframes.get(key(mainframe, devname)).getDevice();
 	}
 
 }

@@ -55,10 +55,22 @@ public class ConfigurationTest {
 	}
 
 	@Test
-	public void test_getDeviceIdByName() throws Exception {
+	public void test_getDeviceIdByNameAndConnectorId() throws Exception {
 		String deviceId = Configuration.getDeviceIdByName(2,"hp1330");
 		assertNotNull(deviceId);
 		System.out.println(deviceId.toString());
+	}
+	
+	@Test
+	public void test_getDeviceIdByNameAndConnectorName() throws Exception {
+		String deviceId = Configuration.getDeviceIdByName("mfb","hp1330");
+		assertNotNull(deviceId);
+		System.out.println(deviceId.toString());
+	}
+
+	@Test( expected=java.util.NoSuchElementException.class)
+	public void test_getDeviceIdByNameAndConnectorName_mustFail() throws Exception {
+		String deviceId = Configuration.getDeviceIdByName("no","nono");
 	}
 
 	@Test

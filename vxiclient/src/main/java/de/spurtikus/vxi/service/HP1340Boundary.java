@@ -29,22 +29,32 @@ public class HP1340Boundary {
 
 	HP1340Wrapper wrapper;
 
+	public static final String DEVICE_NAME = "hp1340"; // TODO: make this an
+														// argument in REST call
+
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	@Path("/info")
-	public Response info() {
+	@Path("{mainframe}/info")
+	public Response info(@Context UriInfo uriInfo,
+			@PathParam("mainframe") String mainframe) {
+		logger.debug("Incoming URI : {}", uriInfo.getPath());
+		logger.debug("Mainframe: {}", mainframe);
 		return Response.ok("HP1340").build();
 	}
 
 	@POST
-	@Path("/idn")
+	@Path("{mainframe}/{devname}/idn}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response idn(@Context UriInfo uriInfo) {
-		System.out.println(uriInfo.getPath());
+	public Response idn(@Context UriInfo uriInfo,
+			@PathParam("mainframe") String mainframe,
+			@PathParam("devname") String devname) {
+		logger.debug("Incoming URI : {}", uriInfo.getPath());
+		logger.debug("Mainframe: {}", mainframe);
+		logger.debug("Device name: {}", devname);
 
 		try {
-			wrapper = HP1340Wrapper.getInstance();
+			wrapper = HP1340Wrapper.getInstance(mainframe, devname);
 		} catch (Exception e) {
 			logger.error(
 					"Cannot get wrapper instance. This is usually an initialization problem.");
@@ -53,8 +63,8 @@ public class HP1340Boundary {
 
 		String answer;
 		try {
-			answer = wrapper.getConnector().send_and_receive(wrapper.getLink(),
-					"*IDN?");
+			answer = wrapper.getConnector(mainframe, devname).send_and_receive(
+					wrapper.getLink(mainframe, devname), "*IDN?");
 		} catch (Exception e) {
 			logger.error("Error in send_and_receive().");
 			return Response.status(Status.NOT_FOUND).build();
@@ -65,25 +75,34 @@ public class HP1340Boundary {
 	}
 
 	/**
-	 * Set shape of StandardWaveForm type. 
-	 * @param uriInfo injected uriInfo (injected by HK2/REST)
-	 * @param amplitude amplitude of waveform. Example '5.0' for 5,0 Volts.
-	 * @param frequency frequency of waveform. Example '5e6' for 5MHz and '44000' for 44KHz.
+	 * Set shape of StandardWaveForm type.
+	 * 
+	 * @param uriInfo
+	 *            injected uriInfo (injected by HK2/REST)
+	 * @param amplitude
+	 *            amplitude of waveform. Example '5.0' for 5,0 Volts.
+	 * @param frequency
+	 *            frequency of waveform. Example '5e6' for 5MHz and '44000' for
+	 *            44KHz.
 	 * @return
 	 */
 	@POST
-	@Path("/shape/{amplitude}/{frequency}")
+	@Path("{mainframe}/{devname}/shape/{amplitude}/{frequency}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response shape(@Context UriInfo uriInfo,
+			@PathParam("mainframe") String mainframe,
+			@PathParam("devname") String devname,
 			@PathParam("amplitude") String amplitude,
 			@PathParam("frequency") String frequency) {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
+		logger.debug("Mainframe: {}", mainframe);
+		logger.debug("Device name: {}", devname);
 		logger.debug("Amplitude: {}", amplitude);
 		logger.debug("Frequency: {}", frequency);
 
 		try {
-			wrapper = HP1340Wrapper.getInstance();
+			wrapper = HP1340Wrapper.getInstance(mainframe, devname);
 		} catch (Exception e) {
 			logger.error(
 					"Cannot get wrapper instance. This is usually an initialization problem.");
@@ -93,15 +112,16 @@ public class HP1340Boundary {
 		Double a = armedDouble(amplitude);
 		Double f = armedDouble(frequency);
 		try {
-			wrapper.getDevice().stop();
-			wrapper.getDevice().setAmplitude(a);
-			wrapper.getDevice().setFrequency(f);
-			wrapper.getDevice().setShape(HP1340.StandardWaveForm.RAMP);
+			wrapper.getDevice(mainframe, devname).stop();
+			wrapper.getDevice(mainframe, devname).setAmplitude(a);
+			wrapper.getDevice(mainframe, devname).setFrequency(f);
+			wrapper.getDevice(mainframe, devname)
+					.setShape(HP1340.StandardWaveForm.RAMP);
 
-			wrapper.getDevice().start();
+			wrapper.getDevice(mainframe, devname).start();
 		} catch (Exception e) {
 			logger.error("Error accessing device.");
-			return Response.status(Status.NOT_FOUND).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		return Response.ok("ok").build();
 	}
