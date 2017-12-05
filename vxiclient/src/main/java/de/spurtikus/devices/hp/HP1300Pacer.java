@@ -7,9 +7,6 @@ import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 
 /**
- * TODO: XXX: This code needs rework; I assume it will not work . It's just here
- * for future work.
- * 
  * Access to the built in Pacer function in HP130? / HP75000. This pacer
  * generates a TTL level signal with settable period length (up to 2Mhz) and
  * settable number of periods generated.
@@ -98,8 +95,7 @@ public class HP1300Pacer extends BaseHPDevice {
 			periodLength = MAX_PERIOD;
 		}
 		this.periodLength = periodLength;
-		String answer = vxiConnector.send_and_receive(deviceLink,
-				"SOUR:PULS:PER " + periodLength);
+		vxiConnector.send(deviceLink, "SOUR:PULS:PER " + periodLength);
 	}
 
 	/**
@@ -121,8 +117,7 @@ public class HP1300Pacer extends BaseHPDevice {
 		String cyclesString = (cycles == INFINIT_CYCLES) ? "INF"
 				: String.valueOf(cycles);
 
-		String answer = vxiConnector.send_and_receive(deviceLink,
-				"SOUR:PULS:COUN " + cyclesString);
+		vxiConnector.send(deviceLink, "SOUR:PULS:COUN " + cyclesString);
 	}
 
 	/**
@@ -134,9 +129,8 @@ public class HP1300Pacer extends BaseHPDevice {
 	 * @throws InterruptedException
 	 */
 	public void startPacerSelfTriggered() throws Exception {
-		String answer = vxiConnector.send_and_receive(deviceLink,
-				"TRIG:SOUR IMM");
-		answer = vxiConnector.send_and_receive(deviceLink, "INIT:IMM");
+		vxiConnector.send(deviceLink, "TRIG:SOUR IMM");
+		vxiConnector.send(deviceLink, "INIT:IMM");
 	}
 
 	/**
@@ -147,9 +141,8 @@ public class HP1300Pacer extends BaseHPDevice {
 	 * @throws Exception
 	 */
 	public void enablePacerExternalTrigger() throws Exception {
-		String answer = vxiConnector.send_and_receive(deviceLink,
-				"TRIG:SOUR EXT");
-		answer = vxiConnector.send_and_receive(deviceLink, "INIT:IMM");
+		vxiConnector.send(deviceLink, "TRIG:SOUR EXT");
+		vxiConnector.send(deviceLink, "INIT:IMM");
 	}
 
 	/**
@@ -158,7 +151,7 @@ public class HP1300Pacer extends BaseHPDevice {
 	 * @throws Exception
 	 */
 	public void stopPacer() throws Exception {
-		String answer = vxiConnector.send_and_receive(deviceLink, "ABORT");
+		vxiConnector.send(deviceLink, "ABORT");
 	}
 
 }

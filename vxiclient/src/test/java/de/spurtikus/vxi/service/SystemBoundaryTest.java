@@ -45,17 +45,9 @@ public class SystemBoundaryTest {
 	@RunAsClient
 	public void test_systemInfo(@ArquillianResource URL contextPath) {
 		Client client = ClientBuilder.newClient();
-		// final Response response = webTarget.path(contextPath+"/api/hehe")
-		// .request(MediaType.JSON).
-		// //.post(Entity.json(new UserData("myuser", "mypassword")));
 		System.out.println(contextPath + "rest/api/system/info");
 		final Response response = client.target(contextPath + "rest/api/system/info")
 				.request(MediaType.TEXT_PLAIN).get();
-		/*try {
-			Thread.sleep(50000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
 		assertEquals("VXI system REST API", response.readEntity(String.class));
 	}
 	

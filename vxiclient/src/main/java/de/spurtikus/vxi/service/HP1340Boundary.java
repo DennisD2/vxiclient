@@ -21,7 +21,7 @@ import de.spurtikus.devices.hp.HP1340;
 import de.spurtikus.devices.hp.HP1340.StandardWaveForm;
 
 /**
- * Boundary for HP1340 AFG.
+ * Boundary for HP1340 AFG. See class {HP1340}.
  * 
  * @author dennis
  *
@@ -31,8 +31,6 @@ public class HP1340Boundary extends AbstractBoundary {
 	public final static String className = "HP1340Boundary";
 
 	private Logger logger = LoggerFactory.getLogger(HP1340Boundary.class);
-
-	private ConnectionManager connManager;
 
 	protected HP1340 getDevice(String mainframe, String devname) {
 		return (HP1340) connManager.getDevice(this.getClass(), mainframe,

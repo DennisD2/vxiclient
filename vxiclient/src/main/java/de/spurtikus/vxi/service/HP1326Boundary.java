@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import de.spurtikus.devices.hp.HP1326;
 
 /**
- * Boundary for HP1326/1411 voltmeter.
+ * Boundary for HP1326/1411 voltmeter. See class {HP1326}.
  * 
  * @author dennis
  *
@@ -32,8 +32,6 @@ public class HP1326Boundary extends AbstractBoundary {
 	public final static String className = "HP1326Boundary";
 
 	private Logger logger = LoggerFactory.getLogger(HP1326Boundary.class);
-
-	private ConnectionManager connManager;
 
 	protected HP1326 getDevice(String mainframe, String devname) {
 		return (HP1326) connManager.getDevice(this.getClass(), mainframe, devname);

@@ -22,7 +22,7 @@ import de.spurtikus.devices.hp.HP1300b;
 import de.spurtikus.vxi.mainframes.hp1300b.VXIDevice;
 
 /**
- * Boundary for HP1300 mainframe.
+ * Boundary for HP1300 mainframe. See class {HP1300b}.
  * 
  * @author dennis
  *
@@ -33,10 +33,9 @@ public class HP1300Boundary extends AbstractBoundary {
 
 	private Logger logger = LoggerFactory.getLogger(HP1300Boundary.class);
 
-	private ConnectionManager connManager;
-
 	protected HP1300b getDevice(String mainframe, String devname) {
-		return (HP1300b) connManager.getDevice(this.getClass(), mainframe, devname);
+		return (HP1300b) connManager.getDevice(this.getClass(), mainframe,
+				devname);
 	}
 
 	@GET
@@ -61,7 +60,8 @@ public class HP1300Boundary extends AbstractBoundary {
 		logger.debug("Device name: {}", devname);
 
 		try {
-			connManager = ConnectionManager.getInstance(this.getClass(), mainframe, devname);
+			connManager = ConnectionManager.getInstance(this.getClass(),
+					mainframe, devname);
 		} catch (Exception e) {
 			logger.error(
 					"Cannot get wrapper instance. This is usually an initialization problem.");
@@ -70,9 +70,10 @@ public class HP1300Boundary extends AbstractBoundary {
 
 		String answer;
 		try {
-			answer = connManager.getConnector(this.getClass(), mainframe, devname)
-					.send_and_receive(connManager.getLink(this.getClass(), mainframe, devname),
-							"*IDN?");
+			answer = connManager
+					.getConnector(this.getClass(), mainframe, devname)
+					.send_and_receive(connManager.getLink(this.getClass(),
+							mainframe, devname), "*IDN?");
 		} catch (Exception e) {
 			logger.error("Error in send_and_receive().");
 			return Response.status(Status.NOT_FOUND).build();
@@ -94,23 +95,24 @@ public class HP1300Boundary extends AbstractBoundary {
 		logger.debug("Device name: {}", devname);
 
 		try {
-			connManager = ConnectionManager.getInstance(this.getClass(), mainframe, devname);
+			connManager = ConnectionManager.getInstance(this.getClass(),
+					mainframe, devname);
 		} catch (Exception e) {
 			logger.error(
 					"Cannot get wrapper instance. This is usually an initialization problem.");
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		boolean fakeResult=true;
+		boolean fakeResult = true;
 		List<VXIDevice> devices = new ArrayList<>();
 		try {
 			devices = getDevice(mainframe, devname).listDevices(fakeResult);
-		}  catch (Exception e) {
+		} catch (Exception e) {
 			logger.error("Error accessing device.");
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		for (VXIDevice d : devices) {
-			logger.debug("{}",  d.toString());
+			logger.debug("{}", d.toString());
 		}
 		return Response.ok(devices).build();
 	}
