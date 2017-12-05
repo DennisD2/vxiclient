@@ -43,7 +43,7 @@ public class SystemBoundaryTest {
 
 	@Test
 	@RunAsClient
-	public void test_systemInfo(@ArquillianResource URL contextPath) {
+	public void info(@ArquillianResource URL contextPath) {
 		Client client = ClientBuilder.newClient();
 		System.out.println(contextPath + "rest/api/system/info");
 		final Response response = client.target(contextPath + "rest/api/system/info")

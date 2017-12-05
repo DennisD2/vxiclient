@@ -53,7 +53,7 @@ public class HP1300BoundaryTest {
 	//@Ignore
 	@Test
 	@RunAsClient
-	public void test_systemInfo(@ArquillianResource URL contextPath) {
+	public void info(@ArquillianResource URL contextPath) {
 		String uri = URI + "/info";
 		Client client = ClientBuilder.newClient();
 		System.out.println(contextPath + uri);

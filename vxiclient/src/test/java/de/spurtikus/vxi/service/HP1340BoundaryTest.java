@@ -50,7 +50,7 @@ public class HP1340BoundaryTest {
 	//@Ignore
 	@Test
 	@RunAsClient
-	public void test_info(@ArquillianResource URL contextPath) {
+	public void info(@ArquillianResource URL contextPath) {
 		String uri = URI + "/info";
 		Client client = ClientBuilder.newClient();
 		System.out.println(contextPath + uri);
@@ -64,7 +64,7 @@ public class HP1340BoundaryTest {
 	//@Ignore
 	@Test
 	@RunAsClient
-	public void test_idn(@ArquillianResource URL contextPath) {
+	public void idn(@ArquillianResource URL contextPath) {
 		String uri = URI + "/idn";
 		Client client = ClientBuilder.newClient();
 		System.out.println(contextPath + uri);
@@ -78,7 +78,7 @@ public class HP1340BoundaryTest {
 	// @Ignore
 	@Test
 	@RunAsClient
-	public void test_shape(@ArquillianResource URL contextPath) {
+	public void shape(@ArquillianResource URL contextPath) {
 		String waveform = "sin";
 		String amplitude = "5.0";
 		String frequency = "5e5";

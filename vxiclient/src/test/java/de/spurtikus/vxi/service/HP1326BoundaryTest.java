@@ -53,7 +53,7 @@ public class HP1326BoundaryTest {
 	//@Ignore
 	@Test
 	@RunAsClient
-	public void test_info(@ArquillianResource URL contextPath) {
+	public void info(@ArquillianResource URL contextPath) {
 		String uri = URI + "/info";
 		Client client = ClientBuilder.newClient();
 		System.out.println(contextPath + uri);
@@ -67,7 +67,7 @@ public class HP1326BoundaryTest {
 	//@Ignore
 	@Test
 	@RunAsClient
-	public void test_idn(@ArquillianResource URL contextPath) {
+	public void idn(@ArquillianResource URL contextPath) {
 		String uri = URI + "/idn";
 		Client client = ClientBuilder.newClient();
 		System.out.println(contextPath + uri);
@@ -81,7 +81,7 @@ public class HP1326BoundaryTest {
 	// @Ignore
 	@Test
 	@RunAsClient
-	public void test_read(@ArquillianResource URL contextPath) {
+	public void read(@ArquillianResource URL contextPath) {
 		String range = "7.27";
 		String uri = URI + "/read/" + range;
 
