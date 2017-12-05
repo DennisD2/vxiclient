@@ -146,8 +146,4 @@ public class HP1340Boundary extends AbstractBoundary {
 		return Response.ok(wv.getValue()).build();
 	}
 
-	public static String getClassName() {
-		return HP1340Boundary.class.getSimpleName();
-	}
-
 }
