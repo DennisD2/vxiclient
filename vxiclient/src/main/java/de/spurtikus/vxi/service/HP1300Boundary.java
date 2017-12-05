@@ -1,8 +1,7 @@
 package de.spurtikus.vxi.service;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -19,24 +18,25 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.spurtikus.devices.hp.HP1326;
+import de.spurtikus.devices.hp.HP1300b;
+import de.spurtikus.vxi.mainframes.hp1300b.VXIDevice;
 
 /**
- * Boundary for HP1326/1411 voltmeter.
+ * Boundary for HP1300 mainframe.
  * 
  * @author dennis
  *
  */
-@Path("/api/hp1326")
-public class HP1326Boundary extends AbstractBoundary {
-	public final static String className = "HP1326Boundary";
+@Path("/api/hp1300")
+public class HP1300Boundary extends AbstractBoundary {
+	public final static String className = "HP1300Boundary";
 
-	private Logger logger = LoggerFactory.getLogger(HP1326Boundary.class);
+	private Logger logger = LoggerFactory.getLogger(HP1300Boundary.class);
 
 	private ConnectionManager connManager;
 
-	protected HP1326 getDevice(String mainframe, String devname) {
-		return (HP1326) connManager.getDevice(this.getClass(), mainframe, devname);
+	protected HP1300b getDevice(String mainframe, String devname) {
+		return (HP1300b) connManager.getDevice(this.getClass(), mainframe, devname);
 	}
 
 	@GET
@@ -46,7 +46,7 @@ public class HP1326Boundary extends AbstractBoundary {
 			@PathParam("mainframe") String mainframe) {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
-		return Response.ok("HP1326").build();
+		return Response.ok("HP1300").build();
 	}
 
 	@POST
@@ -82,37 +82,16 @@ public class HP1326Boundary extends AbstractBoundary {
 		return Response.ok("{\"*idn?\":\"" + answer + "\"}").build();
 	}
 
-	/**
-	 * Reads multiple channels. Channel list is assumed to be coming in as POST data.
-	 * 
-	 * @param uriInfo
-	 *            Injected uriInfo (injected by HK2/REST)
-	 * @param mainframe
-	 *            Mainframe to use. Comes from vxiserver.properties, e.g. "mfb".
-	 * @param devname
-	 *            Device to use.
-	 * @param range
-	 *            Range to use during measurement. E.g. "7.2.7". See {HP1326}.
-	 * @param channels
-	 *            List of channels to measure. E.g. [101,102]. See {HP1326}.
-	 *            
-	 * @return
-	 */
 	@POST
-	@Path("{mainframe}/{devname}/read/{range}")
+	@Path("{mainframe}/{devname}/devices")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response readChannels(@Context UriInfo uriInfo,
+	public Response listDevices(@Context UriInfo uriInfo,
 			@PathParam("mainframe") String mainframe,
-			@PathParam("devname") String devname,
-			@PathParam("range") Double range, List<Integer> channels) {
+			@PathParam("devname") String devname) {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
 		logger.debug("Device name: {}", devname);
-		logger.debug("Range: {}", range);
-		logger.debug("Channels: {}", channels);
-
-		logger.info("Using channels require DVM+Switch configuration!");
 
 		try {
 			connManager = ConnectionManager.getInstance(this.getClass(), mainframe, devname);
@@ -122,18 +101,18 @@ public class HP1326Boundary extends AbstractBoundary {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		Map<Integer, Double> m = new HashMap<>();
+		boolean fakeResult=true;
+		List<VXIDevice> devices = new ArrayList<>();
 		try {
-			getDevice(mainframe, devname).initializeVoltageMeasurement(range, channels);
-			m = getDevice(mainframe, devname).measureChannels(channels);
-		} catch (Exception e) {
+			devices = getDevice(mainframe, devname).listDevices(fakeResult);
+		}  catch (Exception e) {
 			logger.error("Error accessing device.");
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
-		for (int channel : m.keySet()) {
-			logger.debug("{} : {}", channel, m.get(channel));
+		for (VXIDevice d : devices) {
+			logger.debug("{}",  d.toString());
 		}
-		return Response.ok(m).build();
+		return Response.ok(devices).build();
 	}
 
 }

@@ -5,6 +5,10 @@ import org.slf4j.LoggerFactory;
 
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
+import de.spurtikus.vxi.service.AbstractBoundary;
+import de.spurtikus.vxi.service.HP1300Boundary;
+import de.spurtikus.vxi.service.HP1326Boundary;
+import de.spurtikus.vxi.service.HP1340Boundary;
 
 /**
  * Device factory class. Based on a device type and already existing
@@ -16,18 +20,17 @@ import de.spurtikus.vxi.connectors.VXIConnector;
 public class DeviceFactory {
 	private static Logger logger = LoggerFactory.getLogger(DeviceFactory.class);
 
-	public static BaseHPDevice create(String type, VXIConnector parent,
-			DeviceLink link) {
+	public static BaseHPDevice create(Class<? extends AbstractBoundary> deviceClass, VXIConnector parent,
+			DeviceLink link) throws Exception {
 		BaseHPDevice device = null;
-		switch (type) {
-		case "hp1300b":
+		switch (deviceClass.getSimpleName()) {
+		case HP1300Boundary.className:
 			device = new HP1300b(parent, link);
 			break;
 		case "hp1300Pacer":
 			device = new HP1300Pacer(parent, link);
 			break;
-		case "hp1326":
-		case "hp1411":
+		case HP1326Boundary.className:
 			device = new HP1326(parent, link);
 			break;
 		case "hp1330":
@@ -36,12 +39,13 @@ public class DeviceFactory {
 		case "hp1333":
 			device = new HP1333(parent, link);
 			break;
-		case "hp1340":
+		case HP1340Boundary.className:
 			device = new HP1340(parent, link);
 			break;
 		default:
-			logger.error("Unknown device type {}", type);
-			break;
+			String msg = "Unknown device type: " + deviceClass;
+			logger.error(msg);
+			throw new Exception(msg);
 		}
 		return device;
 	}

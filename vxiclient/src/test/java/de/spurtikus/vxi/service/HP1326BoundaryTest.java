@@ -28,9 +28,10 @@ import org.junit.runner.RunWith;
 public class HP1326BoundaryTest {
 
 	public final String BASE_URI = "rest/api";
-	public final String DEVICE = "hp1326";
+	public final String DEVICECLASS = "hp1326";
 	public final String MAINFRAME = "mfb";
-	public final String URI = BASE_URI + "/" + DEVICE + "/" + MAINFRAME;
+	public final String DEVICENAME = "hp1326";
+	public final String URI = BASE_URI + "/" + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
 
 	@Deployment
 	public static WebArchive createDeployment() {
@@ -66,7 +67,7 @@ public class HP1326BoundaryTest {
 	@Test
 	@RunAsClient
 	public void test_idn(@ArquillianResource URL contextPath) {
-		String uri = URI + "/hp1326/idn";
+		String uri = URI + "/idn";
 		Client client = ClientBuilder.newClient();
 		System.out.println(contextPath + uri);
 		final Response response = client.target(contextPath + uri)
@@ -81,7 +82,7 @@ public class HP1326BoundaryTest {
 	@RunAsClient
 	public void test_read(@ArquillianResource URL contextPath) {
 		String range = "7.27";
-		String uri = URI + "/hp1326/read/" + range;
+		String uri = URI + "/read/" + range;
 
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call: " + contextPath + uri);

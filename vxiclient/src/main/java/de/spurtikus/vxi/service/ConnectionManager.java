@@ -36,6 +36,7 @@ public class ConnectionManager {
 	/**
 	 * Initializes a connection to a mainframe and a device. Connections are
 	 * cached and re-used.
+	 * @param deviceClass 
 	 * 
 	 * @param mfName
 	 *            mainframe name
@@ -43,9 +44,9 @@ public class ConnectionManager {
 	 *            device name
 	 * @throws Exception
 	 */
-	protected static void initialize(String mfName, String deviceName)
+	protected static void initialize(Class<? extends AbstractBoundary> deviceClass, String mfName, String deviceName)
 			throws Exception {
-		if (connections.containsKey(key(mfName, deviceName))) {
+		if (connections.containsKey(key(deviceClass, mfName, deviceName))) {
 			// already in cache.
 			return;
 		}
@@ -71,64 +72,76 @@ public class ConnectionManager {
 		// Create device link
 		linkId = vxiConnector.initialize(config, deviceId);
 		// initialize device class for the target identified by (connector,link)
-		// TODO: deviceType must be defined in properties, it cannot be derived
-		// from somewhere else!!! For now I assume that a device type == device
-		// name; so we cannot have two same devices in one mainframe
-		String deviceType = deviceName;
-		device = DeviceFactory.create(deviceType, vxiConnector, linkId);
+		device = DeviceFactory.create(deviceClass, vxiConnector, linkId);
 
 		// Create new connection info object and add it to list
 		DeviceConnectionInfo mf = new DeviceConnectionInfo(deviceId, config,
 				linkId, device, vxiConnector);
 		logger.debug("Created DeviceConnectionInfo entry for key {}",
-				key(mfName, deviceName));
-		connections.put(key(mfName, deviceName), mf);
+				key(deviceClass, mfName, deviceName));
+		connections.put(key(deviceClass, mfName, deviceName), mf);
 
 		// Initialize device
 		device.initialize();
 	}
 
 	/**
-	 * Creates map key from mainframe name and device name.
+	 * Creates map key from mainframe name and device class and name.
 	 * 
+	 * @param deviceClass
+	 *            device class
 	 * @param mfName
 	 *            mainframe name
 	 * @param deviceName
 	 *            device name
 	 * @return usable key
 	 */
-	private static String key(String mfName, String deviceName) {
-		return mfName + "." + deviceName;
+	private static String key(Class<? extends AbstractBoundary> deviceClass,
+			String mfName, String deviceName) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(mfName);
+		sb.append(".");
+		sb.append(deviceClass.getSimpleName());
+		sb.append(".");
+		sb.append(deviceName);
+		return sb.toString();
 	}
 
 	/**
 	 * Gets wrapper instance for mainframe identified by 'name'.
+	 * @param deviceClass 
 	 * 
-	 * @param name
+	 * @param mfName
 	 *            mainframe name (as defined in property file
 	 *            vxiserver.properties).
 	 * @return
 	 * @throws Exception
 	 */
-	public static ConnectionManager getInstance(String name, String deviceName)
+	public static ConnectionManager getInstance(Class<? extends AbstractBoundary> deviceClass, String mfName, String deviceName)
 			throws Exception {
 		if (INSTANCE == null) {
 			INSTANCE = new ConnectionManager();
 		}
-		initialize(name, deviceName);
+		initialize(deviceClass, mfName, deviceName);
 		return INSTANCE;
 	}
 
-	public VXIConnector getConnector(String mainframe, String devname) {
-		return connections.get(key(mainframe, devname)).getVxiConnector();
+	public VXIConnector getConnector(Class<? extends AbstractBoundary> deviceClass, String mainframe,
+			String devname) {
+		return connections.get(key(deviceClass, mainframe, devname))
+				.getVxiConnector();
 	}
 
-	public DeviceLink getLink(String mainframe, String devname) {
-		return connections.get(key(mainframe, devname)).getLinkId();
+	public DeviceLink getLink(Class<? extends AbstractBoundary> deviceClass,
+			String mainframe, String devname) {
+		return connections.get(key(deviceClass, mainframe, devname))
+				.getLinkId();
 	}
 
-	public BaseHPDevice getDevice(String mainframe, String devname) {
-		return connections.get(key(mainframe, devname)).getDevice();
+	public BaseHPDevice getDevice(Class<? extends AbstractBoundary> deviceClass,
+			String mainframe, String devname) {
+		return connections.get(key(deviceClass, mainframe, devname))
+				.getDevice();
 	}
 
 }

@@ -27,13 +27,16 @@ import de.spurtikus.devices.hp.HP1340.StandardWaveForm;
  *
  */
 @Path("/api/hp1340")
-public class HP1340Boundary {
+public class HP1340Boundary extends AbstractBoundary {
+	public final static String className = "HP1340Boundary";
+
 	private Logger logger = LoggerFactory.getLogger(HP1340Boundary.class);
 
 	private ConnectionManager connManager;
 
 	protected HP1340 getDevice(String mainframe, String devname) {
-		return (HP1340) connManager.getDevice(mainframe, devname);
+		return (HP1340) connManager.getDevice(this.getClass(), mainframe,
+				devname);
 	}
 
 	@GET
@@ -58,7 +61,8 @@ public class HP1340Boundary {
 		logger.debug("Device name: {}", devname);
 
 		try {
-			connManager = ConnectionManager.getInstance(mainframe, devname);
+			connManager = ConnectionManager.getInstance(this.getClass(),
+					mainframe, devname);
 		} catch (Exception e) {
 			logger.error(
 					"Cannot get wrapper instance. This is usually an initialization problem.");
@@ -67,9 +71,10 @@ public class HP1340Boundary {
 
 		String answer;
 		try {
-			answer = connManager.getConnector(mainframe, devname)
-					.send_and_receive(connManager.getLink(mainframe, devname),
-							"*IDN?");
+			answer = connManager
+					.getConnector(this.getClass(), mainframe, devname)
+					.send_and_receive(connManager.getLink(this.getClass(),
+							mainframe, devname), "*IDN?");
 		} catch (Exception e) {
 			logger.error("Error in send_and_receive().");
 			return Response.status(Status.NOT_FOUND).build();
@@ -89,7 +94,8 @@ public class HP1340Boundary {
 	 * @param devname
 	 *            Device to use.
 	 * @param waveform
-	 *            Shape of waveform. Example "ramp" or "sin". See {HP1340.StandardWaveForm}.
+	 *            Shape of waveform. Example "ramp" or "sin". See
+	 *            {HP1340.StandardWaveForm}.
 	 * @param amplitude
 	 *            Amplitude of waveform. Example '5.0' for 5,0 Volts.
 	 * @param frequency
@@ -114,7 +120,8 @@ public class HP1340Boundary {
 		logger.debug("Frequency: {}", frequency);
 
 		try {
-			connManager = ConnectionManager.getInstance(mainframe, devname);
+			connManager = ConnectionManager.getInstance(this.getClass(),
+					mainframe, devname);
 		} catch (Exception e) {
 			logger.error(
 					"Cannot get wrapper instance. This is usually an initialization problem.");
@@ -126,7 +133,7 @@ public class HP1340Boundary {
 				.findAny().get();
 		try {
 			getDevice(mainframe, devname).stop();
-			
+
 			getDevice(mainframe, devname).setAmplitude(amplitude);
 			getDevice(mainframe, devname).setFrequency(frequency);
 			getDevice(mainframe, devname).setShape(wv);
@@ -138,5 +145,9 @@ public class HP1340Boundary {
 		}
 		return Response.ok(wv.getValue()).build();
 	}
-	
+
+	public static String getClassName() {
+		return HP1340Boundary.class.getSimpleName();
+	}
+
 }
