@@ -50,7 +50,7 @@ public class HP1300BoundaryTest {
 		return jar;
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	@RunAsClient
 	public void test_systemInfo(@ArquillianResource URL contextPath) {

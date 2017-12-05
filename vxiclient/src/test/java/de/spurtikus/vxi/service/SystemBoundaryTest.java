@@ -48,6 +48,7 @@ public class SystemBoundaryTest {
 		System.out.println(contextPath + "rest/api/system/info");
 		final Response response = client.target(contextPath + "rest/api/system/info")
 				.request(MediaType.TEXT_PLAIN).get();
+		assertTrue(response.getStatus()<400);
 		assertEquals("VXI system REST API", response.readEntity(String.class));
 	}
 	

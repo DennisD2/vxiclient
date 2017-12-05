@@ -40,11 +40,13 @@ public class HP1300Boundary extends AbstractBoundary {
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	@Path("{mainframe}/info")
+	@Path("{mainframe}/{devname}/info")
 	public Response info(@Context UriInfo uriInfo,
-			@PathParam("mainframe") String mainframe) {
+			@PathParam("mainframe") String mainframe,
+			@PathParam("devname") String devname) {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
+		logger.debug("Device name: {}", devname);
 		return Response.ok("HP1300").build();
 	}
 

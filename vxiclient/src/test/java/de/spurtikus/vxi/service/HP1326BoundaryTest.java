@@ -1,6 +1,7 @@
 package de.spurtikus.vxi.service;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URL;
@@ -49,7 +50,7 @@ public class HP1326BoundaryTest {
 		return jar;
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	@RunAsClient
 	public void test_info(@ArquillianResource URL contextPath) {
@@ -58,12 +59,12 @@ public class HP1326BoundaryTest {
 		System.out.println(contextPath + uri);
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.TEXT_PLAIN).get();
+		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println(uri + " -> " + res);
-		assertNotNull(res);
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	@RunAsClient
 	public void test_idn(@ArquillianResource URL contextPath) {
@@ -72,9 +73,9 @@ public class HP1326BoundaryTest {
 		System.out.println(contextPath + uri);
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.APPLICATION_JSON).post(null);
+		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println(uri + " -> " + res);
-		assertNotNull(res);
 	}
 
 	// @Ignore
@@ -89,9 +90,9 @@ public class HP1326BoundaryTest {
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.APPLICATION_JSON)
 				.post(Entity.json(generateChannels()));
+		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
-		assertNotNull(res);
 		/*try {
 			Thread.sleep(500000);
 		} catch (InterruptedException e) {
