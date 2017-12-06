@@ -64,6 +64,9 @@ public class HP1330 extends BaseHPDevice {
 			this.setLine(line);
 		}
 
+		public PortDescription() {
+		}
+
 		public PortDescription(Port port, Bit bitPos) {
 			init(port, bitPos, Line.DATA);
 		}
@@ -94,6 +97,11 @@ public class HP1330 extends BaseHPDevice {
 
 		public void setLine(Line line) {
 			this.line = line;
+		}
+		
+		@Override
+		public String toString() {
+			return line + "." + port + "." + bitPos;
 		}
 	}
 
@@ -176,11 +184,14 @@ public class HP1330 extends BaseHPDevice {
 	 *            value to set
 	 * @throws Exception 
 	 */
-	public void setBit(PortDescription bit, boolean value) throws Exception {
+	public Boolean setBit(PortDescription bit, boolean value) throws Exception {
 		int v = value ? 1 : 0;
 		String s = vxiConnector.send_and_receive(deviceLink, 
 				"DIG:" + createBitPortString(bit) + " " + v + ";*OPC?");
 		logger.debug("DEV: " + s);
+		if (s.startsWith("1")) return true;
+		if (s.startsWith("0")) return false;
+		return null;
 	}
 
 	/**

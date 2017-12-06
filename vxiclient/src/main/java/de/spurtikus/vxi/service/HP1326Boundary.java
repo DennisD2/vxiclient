@@ -105,7 +105,8 @@ public class HP1326Boundary extends AbstractBoundary {
 	public Response readChannels(@Context UriInfo uriInfo,
 			@PathParam("mainframe") String mainframe,
 			@PathParam("devname") String devname,
-			@PathParam("range") Double range, List<Integer> channels) {
+			@PathParam("range") Double range, 
+			List<Integer> channels) {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
 		logger.debug("Device name: {}", devname);

@@ -2,10 +2,9 @@
 Todos
 -----
 - Extend REST code
-- Fix issue with device type. See ConnectionManager TODO around line 75.
 
-
-- Hp1330 test fails at least for RPC
+- Add all missing methods to Boundaries not yewt implemented (see Device code)
+- Hp1330 test fails (get returns always true for bits)
 - Fix Definite Block Length code, See TODO
 - Throw away methods in ConversionUtil (see @deprecated)
 
@@ -20,3 +19,4 @@ Done
 - Extend Configuration and Connectors to have multiple "device-connections"
 - RPC Connector: cache all created DeviceLinks
 - HP1340: writeWaveformValues_DampedSine_DAC_ArbBlock does not compile
+ Fix issue with device type. See ConnectionManager TODO around line 75.

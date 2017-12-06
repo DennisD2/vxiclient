@@ -9,6 +9,7 @@ import de.spurtikus.vxi.service.AbstractBoundary;
 import de.spurtikus.vxi.service.HP1300Boundary;
 import de.spurtikus.vxi.service.HP1300PacerBoundary;
 import de.spurtikus.vxi.service.HP1326Boundary;
+import de.spurtikus.vxi.service.HP1330Boundary;
 import de.spurtikus.vxi.service.HP1340Boundary;
 
 /**
@@ -34,7 +35,7 @@ public class DeviceFactory {
 		case HP1326Boundary.className:
 			device = new HP1326(parent, link);
 			break;
-		case "hp1330":
+		case HP1330Boundary.className:
 			device = new HP1330(parent, link);
 			break;
 		case "hp1333":
