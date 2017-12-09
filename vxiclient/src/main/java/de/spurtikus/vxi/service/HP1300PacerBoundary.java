@@ -24,14 +24,10 @@ import de.spurtikus.devices.hp.HP1300Pacer;
  *
  */
 @Path("/api/hp1300pacer")
-public class HP1300PacerBoundary extends AbstractBoundary {
+public class HP1300PacerBoundary extends AbstractBoundary<HP1300Pacer> {
 	public final static String className = "HP1300PacerBoundary";
 
 	private Logger logger = LoggerFactory.getLogger(HP1300PacerBoundary.class);
-
-	protected HP1300Pacer getDevice(String mainframe, String devname) {
-		return (HP1300Pacer) connManager.getDevice(this.getClass(), mainframe, devname);
-	}
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)

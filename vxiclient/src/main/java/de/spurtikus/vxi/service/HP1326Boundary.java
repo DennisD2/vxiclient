@@ -28,14 +28,10 @@ import de.spurtikus.devices.hp.HP1326;
  *
  */
 @Path("/api/hp1326")
-public class HP1326Boundary extends AbstractBoundary {
+public class HP1326Boundary extends AbstractBoundary<HP1326> {
 	public final static String className = "HP1326Boundary";
 
 	private Logger logger = LoggerFactory.getLogger(HP1326Boundary.class);
-
-	protected HP1326 getDevice(String mainframe, String devname) {
-		return (HP1326) connManager.getDevice(this.getClass(), mainframe, devname);
-	}
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)

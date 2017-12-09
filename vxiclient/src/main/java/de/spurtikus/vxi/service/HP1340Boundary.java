@@ -27,15 +27,10 @@ import de.spurtikus.devices.hp.HP1340.StandardWaveForm;
  *
  */
 @Path("/api/hp1340")
-public class HP1340Boundary extends AbstractBoundary {
+public class HP1340Boundary extends AbstractBoundary<HP1340> {
 	public final static String className = "HP1340Boundary";
 
 	private Logger logger = LoggerFactory.getLogger(HP1340Boundary.class);
-
-	protected HP1340 getDevice(String mainframe, String devname) {
-		return (HP1340) connManager.getDevice(this.getClass(), mainframe,
-				devname);
-	}
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)

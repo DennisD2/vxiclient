@@ -28,15 +28,10 @@ import de.spurtikus.vxi.mainframes.hp1300b.VXIDevice;
  *
  */
 @Path("/api/hp1300")
-public class HP1300Boundary extends AbstractBoundary {
+public class HP1300Boundary extends AbstractBoundary<HP1300b> {
 	public final static String className = "HP1300Boundary";
 
 	private Logger logger = LoggerFactory.getLogger(HP1300Boundary.class);
-
-	protected HP1300b getDevice(String mainframe, String devname) {
-		return (HP1300b) connManager.getDevice(this.getClass(), mainframe,
-				devname);
-	}
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
