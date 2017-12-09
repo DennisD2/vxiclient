@@ -10,10 +10,11 @@ import de.spurtikus.vxi.service.HP1300Boundary;
 import de.spurtikus.vxi.service.HP1300PacerBoundary;
 import de.spurtikus.vxi.service.HP1326Boundary;
 import de.spurtikus.vxi.service.HP1330Boundary;
+import de.spurtikus.vxi.service.HP1333Boundary;
 import de.spurtikus.vxi.service.HP1340Boundary;
 
 /**
- * Device factory class. Based on a device type and already existing
+ * Device factory class. Based on a device boundary type and already existing
  * {VXIConnector} and {DeviceLink} objects, the device is created.
  * 
  * @author dennis
@@ -22,7 +23,8 @@ import de.spurtikus.vxi.service.HP1340Boundary;
 public class DeviceFactory {
 	private static Logger logger = LoggerFactory.getLogger(DeviceFactory.class);
 
-	public static BaseHPDevice create(Class<? extends AbstractBoundary> deviceClass, VXIConnector parent,
+	public static BaseHPDevice create(
+			Class<? extends AbstractBoundary> deviceClass, VXIConnector parent,
 			DeviceLink link) throws Exception {
 		BaseHPDevice device = null;
 		switch (deviceClass.getSimpleName()) {
@@ -38,7 +40,7 @@ public class DeviceFactory {
 		case HP1330Boundary.className:
 			device = new HP1330(parent, link);
 			break;
-		case "hp1333":
+		case HP1333Boundary.className:
 			device = new HP1333(parent, link);
 			break;
 		case HP1340Boundary.className:
