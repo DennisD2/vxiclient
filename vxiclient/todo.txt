@@ -21,7 +21,7 @@ Done
 - Extend config to allow multiple devices per connector - OK
   - Add methods to get each device by its name (e.g. 'hp1330') - OK
 - Serial... in DeviceLink, the primary/secondary address must be located
-- Serial implement getSec/Prim Adress from String in correct way, see TODO
+- Serial implement getSec/Prime Address from String in correct way, see TODO
 - Extend Configuration and Connectors to have multiple "device-connections"
 - RPC Connector: cache all created DeviceLinks
 - HP1340: writeWaveformValues_DampedSine_DAC_ArbBlock does not compile
