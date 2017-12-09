@@ -1,9 +1,15 @@
 
 Todos
 -----
-- Extend REST code
-
-- Add all missing methods to Boundaries not yewt implemented (see Device code)
+- Add all missing methods to Boundaries not yet implemented (see Device code)
+ This means real testing and real measurements. DO this one by one device:
+  - HP1300 boundary completion
+  - HP1300Pacer boundary completion
+  - HP1326 boundary completion
+  - HP1330 boundary completion
+  - HP1333 boundary completion
+  - HP1340 boundary completion
+ 
 - Hp1330 test fails (get returns always true for bits)
 - Fix Definite Block Length code, See TODO
 - Throw away methods in ConversionUtil (see @deprecated)
@@ -19,4 +25,7 @@ Done
 - Extend Configuration and Connectors to have multiple "device-connections"
 - RPC Connector: cache all created DeviceLinks
 - HP1340: writeWaveformValues_DampedSine_DAC_ArbBlock does not compile
- Fix issue with device type. See ConnectionManager TODO around line 75.
+- Fix issue with device type. See ConnectionManager TODO around line 75.
+- Extend REST code
+
+ 
