@@ -6,7 +6,7 @@ public class AbstractBoundary<DEVICE> {
 	
 	@SuppressWarnings("unchecked")
 	protected DEVICE getDevice(String mainframe, String devname) {
-		return (DEVICE) connManager.getDevice(this.getClass(), mainframe,
+		return (DEVICE) connManager.getDevice((Class<? extends AbstractBoundary<?>>) this.getClass(), mainframe,
 				devname);
 	}
 

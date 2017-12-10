@@ -29,18 +29,19 @@ public class HP1300BoundaryTest {
 	public final String DEVICECLASS = "hp1300";
 	public final String MAINFRAME = "mfb";
 	public final String DEVICENAME = "hp1301";
-	public final String URI = BASE_URI + "/" + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
+	public final String URI = BASE_URI + "/" + DEVICECLASS + "/" + MAINFRAME
+			+ "/" + DEVICENAME;
 
 	@Deployment
 	public static WebArchive createDeployment() {
-		File[] lib = Maven.resolver()
-				.resolve(/*"org.jboss.weld.servlet:weld-servlet-shaded:3.0.0.Final",*/
-						"de.spurtikus:vxiclient:0.0.1-SNAPSHOT")
-				.withTransitivity().as(File.class);
+		File[] lib = Maven.resolver().resolve(/*
+												 * "org.jboss.weld.servlet:weld-servlet-shaded:3.0.0.Final",
+												 */
+				"de.spurtikus:vxiclient:0.0.1-SNAPSHOT").withTransitivity()
+				.as(File.class);
 
 		WebArchive jar = ShrinkWrap.create(WebArchive.class, "vxi.war")
-				.addClass(SystemBoundary.class)
-				.addClass(HP1300Boundary.class)
+				.addClass(SystemBoundary.class).addClass(HP1300Boundary.class)
 				.addAsManifestResource("arquillian.xml").addAsLibraries(lib)
 				.addAsManifestResource("META-INF/context.xml", "context.xml")
 				.setWebXML("web.xml");
@@ -50,7 +51,7 @@ public class HP1300BoundaryTest {
 		return jar;
 	}
 
-	//@Ignore
+	@Ignore
 	@Test
 	@RunAsClient
 	public void info(@ArquillianResource URL contextPath) {
@@ -59,10 +60,30 @@ public class HP1300BoundaryTest {
 		System.out.println(contextPath + uri);
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.TEXT_PLAIN).get();
-		assertTrue(response.getStatus()<400);
+		assertTrue(response.getStatus() < 400);
 		assertEquals("HP1300", response.readEntity(String.class));
 	}
-	
+
+	@Test
+	@RunAsClient
+	public void idn(@ArquillianResource URL contextPath) {
+		String uri = URI + "/idn";
+		Client client = ClientBuilder.newClient();
+		System.out.println(contextPath + uri);
+		final Response response = client.target(contextPath + uri)
+				.request(MediaType.APPLICATION_JSON).post(Entity.json(""));
+		String result = response.readEntity(String.class);
+		System.out.println(result);
+		assertTrue(response.getStatus() < 400);
+		assertEquals("{\"name\":\"HEWLETT-PACKARD,E1301A,0,A.07.00\"}", result);
+		try {
+			Thread.sleep(5000000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Ignore
 	@Test
 	@RunAsClient
 	public void devices(@ArquillianResource URL contextPath) {
@@ -71,9 +92,9 @@ public class HP1300BoundaryTest {
 		System.out.println(contextPath + uri);
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.APPLICATION_JSON).post(Entity.json(""));
-		assertTrue(response.getStatus()<400);
+		assertTrue(response.getStatus() < 400);
 		String d = response.readEntity(String.class);
 		System.out.println(d);
 	}
-	
+
 }

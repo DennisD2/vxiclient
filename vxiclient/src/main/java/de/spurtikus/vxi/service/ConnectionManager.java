@@ -44,7 +44,7 @@ public class ConnectionManager {
 	 *            device name
 	 * @throws Exception
 	 */
-	protected static void initialize(Class<? extends AbstractBoundary> deviceClass, String mfName, String deviceName)
+	protected static void initialize(Class<? extends AbstractBoundary<?>> deviceClass, String mfName, String deviceName)
 			throws Exception {
 		if (connections.containsKey(key(deviceClass, mfName, deviceName))) {
 			// already in cache.
@@ -96,7 +96,7 @@ public class ConnectionManager {
 	 *            device name
 	 * @return usable key
 	 */
-	private static String key(Class<? extends AbstractBoundary> deviceClass,
+	private static String key(Class<? extends AbstractBoundary<?>> deviceClass,
 			String mfName, String deviceName) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(mfName);
@@ -117,7 +117,7 @@ public class ConnectionManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public static ConnectionManager getInstance(Class<? extends AbstractBoundary> deviceClass, String mfName, String deviceName)
+	public static ConnectionManager getInstance(Class<? extends AbstractBoundary<?>> deviceClass, String mfName, String deviceName)
 			throws Exception {
 		if (INSTANCE == null) {
 			INSTANCE = new ConnectionManager();
@@ -126,19 +126,19 @@ public class ConnectionManager {
 		return INSTANCE;
 	}
 
-	public VXIConnector getConnector(Class<? extends AbstractBoundary> deviceClass, String mainframe,
+	public VXIConnector getConnector(Class<? extends AbstractBoundary<?>> deviceClass, String mainframe,
 			String devname) {
 		return connections.get(key(deviceClass, mainframe, devname))
 				.getVxiConnector();
 	}
 
-	public DeviceLink getLink(Class<? extends AbstractBoundary> deviceClass,
+	public DeviceLink getLink(Class<? extends AbstractBoundary<?>> deviceClass,
 			String mainframe, String devname) {
 		return connections.get(key(deviceClass, mainframe, devname))
 				.getLinkId();
 	}
 
-	public BaseHPDevice getDevice(Class<? extends AbstractBoundary> deviceClass,
+	public BaseHPDevice getDevice(Class<? extends AbstractBoundary<?>> deviceClass,
 			String mainframe, String devname) {
 		return connections.get(key(deviceClass, mainframe, devname))
 				.getDevice();

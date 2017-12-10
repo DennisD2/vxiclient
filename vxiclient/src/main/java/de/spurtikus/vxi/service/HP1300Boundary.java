@@ -75,9 +75,8 @@ public class HP1300Boundary extends AbstractBoundary<HP1300b> {
 			logger.error("Error in send_and_receive().");
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		System.out.println(answer);
-
-		return Response.ok("{\"*idn?\":\"" + answer + "\"}").build();
+		answer = answer.replace("\n", "");
+		return Response.ok("{\"name\":\"" + answer + "\"}").build();
 	}
 
 	@POST
