@@ -1,6 +1,5 @@
 package de.spurtikus.vxi.service;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -41,7 +40,7 @@ public class HP1326BoundaryTest {
 				.withTransitivity().as(File.class);
 
 		WebArchive jar = ShrinkWrap.create(WebArchive.class, "vxi.war")
-				.addClass(SystemBoundary.class).addClass(HP1326Boundary.class)
+				.addClass(RSApplication.class).addClass(SystemBoundary.class).addClass(HP1326Boundary.class)
 				.addAsManifestResource("arquillian.xml").addAsLibraries(lib)
 				.addAsManifestResource("META-INF/context.xml", "context.xml")
 				.setWebXML("web.xml");
@@ -64,7 +63,7 @@ public class HP1326BoundaryTest {
 		System.out.println(uri + " -> " + res);
 	}
 
-	//@Ignore
+	@Ignore
 	@Test
 	@RunAsClient
 	public void idn(@ArquillianResource URL contextPath) {
@@ -83,7 +82,7 @@ public class HP1326BoundaryTest {
 	@RunAsClient
 	public void read(@ArquillianResource URL contextPath) {
 		String range = "7.27";
-		String uri = URI + "/read/" + range;
+		String uri = URI + "/readFake/" + range;
 
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call: " + contextPath + uri);
@@ -93,11 +92,11 @@ public class HP1326BoundaryTest {
 		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
-		/*try {
-			Thread.sleep(500000);
+		try {
+			Thread.sleep(5000000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 
 	protected List<Integer> generateChannels() {
