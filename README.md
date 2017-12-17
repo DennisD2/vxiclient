@@ -20,6 +20,7 @@ NOTE: this is work in progress; Basic level and Device level are usable. Boundar
 
 A file vxiserver.properties contains information about devices. The following lines describe two mainframes, one accessible via GPIB over Serial connector, the other one accessible via LAN.
 
+```
 # serial connector
 vxi.connector.1.name=mfb
 vxi.connector.1.enabled=true
@@ -36,3 +37,4 @@ vxi.connector.2.type=net
 vxi.connector.2.clientid=12345
 vxi.connector.2.host=vxi1
 vxi.connector.2.devices={"hp1411":"iscpi,8", "hp1330":"iscpi,37"}
+```
