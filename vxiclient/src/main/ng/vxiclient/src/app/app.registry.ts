@@ -98,12 +98,10 @@ export class AppRegistry {
   roll() {
     this.devices.map((d) => {
       console.log("measure device: " + d.getName())
-      let data : Channel[] = d.doMeasurementCallback();
+      let data = d.doMeasurementCallback();
       if (data != undefined) {
         console.log("measured: " + JSON.stringify(data))
-        //let c : Channel[] = JSON.parse(data);
-        //console.log("size: " + c.length)
-        this.publish(data);
+       this.publish(data);
       }
     })
   }

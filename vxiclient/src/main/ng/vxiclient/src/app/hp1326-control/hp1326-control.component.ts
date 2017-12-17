@@ -68,14 +68,12 @@ export class HP1326ControlComponent implements OnInit, Device {
       .subscribe(c => {
         self.channelResult = c as Channel[];
         //console.log(JSON.stringify(self.channels))
-        //console.log("Size: " + self.channels.length);
        release();
       }, c => {
         console.log("An error occured, releasing mutex");
         release();
       })
     })
-    //console.log(JSON.stringify(this.channels))
     return this.channelResult;
   }
 
