@@ -12,7 +12,7 @@ import { AppRegistry } from './app.registry';
 })
 export class AppComponent implements OnInit {
   title = 'VXI Client';
-  // intervall length in [ms]
+  // interval length in [ms]
   stepTime = 2000;
 
   constructor(private appRegistry: AppRegistry) {

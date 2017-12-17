@@ -1,5 +1,5 @@
 /**
- * VXI device information as obtaines from a HP75000 mainframe.
+ * VXI device information as obtained from a HP75000 mainframe.
  *
  * [{"address":1,"commanderAdress":-1,"manufacturer":4095,"model":1300,"slot":-1,"slot0Adress":0,"devClass":"HYB","memSpace":"NONE","memOffset":"#H00000000","memSize":"#H00000000","state":"READY","s1":"","s2":"","s3":"","comment":"SYSTEM INSTALLED AT SECONDARY ADDR 0","id":"E1300","name":"E1300 Mainframe","gpibsecondary":0}]
  *
