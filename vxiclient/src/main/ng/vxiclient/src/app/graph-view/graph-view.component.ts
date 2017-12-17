@@ -17,13 +17,15 @@ declare var Plotly: any;
 })
 export class GraphViewComponent implements OnInit, View {
   type: string = "Sample";
-  active: boolean;
-
-  private graph; any;
-
+  private active: boolean = true;
+  private initialized: boolean = false;
+ 
   channels: Channel[];
 
-  private initialized: boolean = false;
+  // Plotly graph
+  private graph; any;
+  // Indices of traces (plotly)
+  indices: number[];
 
   constructor(private appRegistry: AppRegistry) { 
     this.start();
@@ -59,30 +61,29 @@ export class GraphViewComponent implements OnInit, View {
   }
 
   addData() {    
-    console.log("Size: " + this.channels.length);
     if (!this.initialized) {
-      this.initialized=true;
-      //var roots = [1, 4, 9].map(Math.sqrt); 
-      //console.log("roots is : " + roots );
       console.log("channels: " + JSON.stringify(this.channels));
-      //let x : any = this.channels.map(name);
- 
-      let data : any = [
-        { y: [],
-          mode: 'lines',
-          line: {color: '#80CAF6'} },
-        { y: [],
-          mode: 'lines',
-          line: {color: '#DF56F1'} },
-      ];
+      // Create layout data for graph
+      let data : any[] = new Array();
+      this.indices = new Array();
+      let i=0;
+      Object.keys(this.channels).map(c => {
+        //console.log(c);
+        let cl = { y: [], mode: 'lines', /*line: {color: '#80CAF6'},*/ name: c };
+        data.push(cl);
+        this.indices.push(i);
+        i++;
+      });
+      // Create graph
       Plotly.plot('plotlyGraph', data);
+      this.initialized=true;
     }
- 
-    //Plotly.extendTraces('plotlyGraph', {
-    //  y: [[this.channels['100']],[this.channels['101']]]
-    //}, [0,1])
-    let names : number[] = [0,1];
-    let yvalues : any[] = [ [this.channels['100']], [this.channels['101']] ];
-    Plotly.extendTraces('plotlyGraph', { y: yvalues }, names)
+    // Create y value array
+    let yvalues : any[]  = new Array();
+    Object.keys(this.channels).map(c => {
+      //console.log(this.channels[c]);
+      yvalues.push([this.channels[c]]);
+    });
+    Plotly.extendTraces('plotlyGraph', { y: yvalues }, this.indices)
   }
 }

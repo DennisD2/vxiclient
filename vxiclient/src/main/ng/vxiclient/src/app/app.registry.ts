@@ -99,7 +99,7 @@ export class AppRegistry {
     this.devices.map((d) => {
       console.log("measure device: " + d.getName())
       let data : Channel[] = d.doMeasurementCallback();
-      if (data!=undefined) {
+      if (data != undefined) {
         console.log("measured: " + JSON.stringify(data))
         //let c : Channel[] = JSON.parse(data);
         //console.log("size: " + c.length)

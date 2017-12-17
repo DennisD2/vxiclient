@@ -72,7 +72,7 @@ export class HP1326ControlComponent implements OnInit, Device {
        release();
       }, c => {
         console.log("An error occured, releasing mutex");
-         release();
+        release();
       })
     })
     //console.log(JSON.stringify(this.channels))
