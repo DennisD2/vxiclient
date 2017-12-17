@@ -13,7 +13,7 @@ The idea of this project is to offer control of VXI devices via GPIB or LAN. The
 
 All code together is compiled into a simple WAR file that can be deployed and run on e.g. Tomcat.
 
-NOTE: this is work in progress; Basic level and Device level are usable. Boundaries are work in progress and the frontend layer has not been developed. 
+NOTE: this is work in progress; Basic level and Device level are usable. Boundaries are work in progress and the frontend layer is like a PoC. 
 
 
 # Basic access layer
