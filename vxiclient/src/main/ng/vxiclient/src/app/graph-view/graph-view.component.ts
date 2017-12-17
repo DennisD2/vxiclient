@@ -13,7 +13,7 @@ declare var Plotly: any;
   styleUrls: ['./graph-view.component.css']
 })
 export class GraphViewComponent implements OnInit, View {
-  type: String = "Sample";
+  type: string = "Sample";
   active: boolean;
 
   private graph; any;

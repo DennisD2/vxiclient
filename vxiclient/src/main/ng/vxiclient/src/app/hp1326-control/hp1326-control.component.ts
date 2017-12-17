@@ -16,14 +16,17 @@ import { Channel } from '../types/Channel';
   styleUrls: ['./hp1326-control.component.css']
 })
 export class HP1326ControlComponent implements OnInit, Device {
-  type: String = "Sample";
+  type: string = "Sample";
   active: boolean;
 
-  device: String = "unknown";
+  device: string = "unknown";
   devIdn: DeviceIdn = { name: "unknown"};
   devices: VXIDevice[] = [];
 
-  channels: Channel[];
+  // Channels to scan
+  channels: Channel[] = [ {name:"100", value:0}, {name:"101", value:0} ];
+  // Scan result
+  channelResult: Channel[];
 
   private mutex : Mutex = new Mutex();
   
@@ -58,10 +61,12 @@ export class HP1326ControlComponent implements OnInit, Device {
     console.log("doMeasurement");
     const is = this.imageService;
     const self = this;
+
+    let cs : string[] = this.channels.map(c => c.name);
     this.mutex.acquire().then( function(release) {
       is.getMeasurement()
       .subscribe(c => {
-        self.channels = c;
+        self.channelResult = c;
         //console.log(JSON.stringify(self.channels))
         release();
       }, c => {
@@ -70,7 +75,7 @@ export class HP1326ControlComponent implements OnInit, Device {
       })
     })
     //console.log(JSON.stringify(this.channels))
-    return this.channels;
+    return this.channelResult;
   }
 
   record(onoff: String) {

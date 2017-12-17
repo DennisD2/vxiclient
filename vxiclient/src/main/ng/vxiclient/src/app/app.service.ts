@@ -24,7 +24,7 @@ export class VXIService {
   
   constructor(private http: Http) { }
 
-  getInfo(): Observable<String> {
+  getInfo(): Observable<string> {
     let dataUrl = this.baseUrl + '/info';
     return this.http
       .get(dataUrl)
@@ -74,7 +74,7 @@ export class VXIService {
       .catch(this.handleError);
   }
 
-  getEnvLog(): Observable<String> {
+  getEnvLog(): Observable<string> {
     let envLoggerBaseUrl = 'http://envlogger';    
     let dataUrl = envLoggerBaseUrl + '';
 
@@ -82,7 +82,7 @@ export class VXIService {
     let options = new RequestOptions({ headers: headers });
  
     return this.http.post(dataUrl,/*, body,*/ options)
-      .map((response) => response.text() as String)
+      .map((response) => response.text() as string)
       .catch(this.handleError);
 }
 
