@@ -1,30 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
+import { AppRegistry } from '../app.registry';
 
-import { VXIService } from '../app.service';
-
-import { Channel } from '../Channel';
+import { View } from '../types/View';
+import { Channel } from '../types/Channel';
 
 declare var Plotly: any;
-
-import {Mutex, MutexInterface} from 'async-mutex';
 
 @Component({
   selector: 'app-graph-view',
   templateUrl: './graph-view.component.html',
   styleUrls: ['./graph-view.component.css']
 })
-export class GraphViewComponent implements OnInit {
+export class GraphViewComponent implements OnInit, View {
+  type: String = "Sample";
+  active: boolean;
+
   private graph; any;
 
-  error: any;
   channels: Channel[];
   
-  mutex : Mutex = new Mutex();
-  
-  constructor(private imageService: VXIService) { }
-
+  constructor(private appRegistry: AppRegistry) { 
+    this.start();
+  }
+ 
   ngOnInit() {
     let data : any = [
       { y: [],
@@ -35,26 +34,35 @@ export class GraphViewComponent implements OnInit {
         line: {color: '#DF56F1'} },
     ];
     Plotly.plot('plotlyGraph', data);
-
-    IntervalObservable.create(2000).subscribe(() => { this.checkData() });
   }
 
-  checkData() {
-    console.log("checkData");
-    const is = this.imageService;
-    const self = this;
-    this.mutex.acquire().then( function(release) {
-      is.getMeasurement()
-      .subscribe(c => {
-        self.channels = c;
-        console.log(JSON.stringify(self.channels))
-        self.addData();
-        release();
-      }, c => {
-        console.log("An error occured, releasing mutex");
-         release();
-      })
-    })
+  getName() {
+    return "GraphView";
+  }
+
+  getType() {
+    return this.type;
+  }
+
+  start() {
+    console.log("start")
+    this.appRegistry.subscribeView(this);
+    this.active = true;
+  }
+
+  stop() {
+    console.log("stop")
+    this.appRegistry.unsubscribeView(this);
+    this.active = false;
+  }
+
+  newSampleCallback(data: any) {
+    if (data===undefined) {
+      return;
+    }
+    console.log("new sample: " + JSON.stringify(data));
+    this.channels = data;
+    this.addData();
   }
 
   addData() {

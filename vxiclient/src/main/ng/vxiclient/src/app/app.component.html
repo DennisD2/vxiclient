@@ -29,6 +29,9 @@
   <span>Stop</span>
 </button>
 
+
+<app-hp1326-control></app-hp1326-control>
+
 <app-graph-view></app-graph-view>
 
 <md-tab-group>
@@ -41,7 +44,7 @@
       </md-card-content>
     </md-card>-->
 
-      <button md-menu-item (click)="reload()" >
+      <!--<button md-menu-item (click)="reload()" >
         <md-icon>cached</md-icon>
         <span>Reload</span>
       </button>   <md-grid-list cols="8">
@@ -64,7 +67,7 @@
       <md-card-content>
         <p>{{ device.name }}</p>
       </md-card-content>
-    </md-card>
+    </md-card>-->
 
     <p style="color:red"><b>{{error}}</b></p>
   </md-tab>

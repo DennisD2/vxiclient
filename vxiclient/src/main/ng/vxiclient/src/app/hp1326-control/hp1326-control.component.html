@@ -1,0 +1,99 @@
+<div id="e1326">
+  <h3>HP E1326 Multimeter</h3>
+  <p>
+    <!-- action buttons -->
+    <button (click)="start()">
+      <md-icon>settings_power</md-icon>
+      <span>Start</span>
+    </button>
+    <button (click)="stop()">
+      <md-icon>settings_power</md-icon>
+      <span>Stop</span>
+    </button>
+
+    <button (click)="record('on')">
+      <md-icon>videocam</md-icon>
+      <span>Record On</span>
+    </button>
+    <button (click)="record('off')">
+      <md-icon>videocam_off</md-icon>
+      <span>Record Off</span>
+    </button>
+
+    <button (click)="vxiclient.setWaitTime('root', 1000);timelineGraph.setWaitTime(1000)">
+      <md-icon>settings_ethernet</md-icon>
+      <span>1s</span>
+    </button>
+    <button (click)="vxiclient.setWaitTime('root', 10000);timelineGraph.setWaitTime(10000)">
+      <md-icon>settings_ethernet</md-icon>
+      <span>10s</span>
+    </button>
+    <button (click)="vxiclient.setWaitTime('root', 60000);timelineGraph.setWaitTime(60000)">
+      <md-icon>settings_ethernet</md-icon>
+      <span>60s</span>
+    </button>
+
+    <label for="strategy">Strategy:</label>
+    <select id="strategy">
+      <option value="continuous" selected>Continuous (CPU intensive)
+      </option>
+      <option value="discrete">Discrete</option>
+      <option value="static">Static</option>
+    </select>
+  </p>
+
+  <!-- config inputs -->
+  <div id="mconfig">
+    Mode:
+    <select id="m_mode" onchange="m_modeOnChangeEvent();">
+      <option value="u" selected>U</option>
+      <option value="i">I</option>
+      <option value="r">Ohms</option>
+    </select>
+    <div id="m_u" style="display: inline;">
+      <div id="m_u_acdc_div" style="display: inline;">
+        AC/DC:
+        <select id="m_u_acdc" onchange="m_u_acdcOnChangeEvent();">
+          <option value="ac">AC</option>
+          <option value="dc" selected>DC</option>
+        </select>
+      </div>
+      <div id="m_u_range_dc_div" style="display: inline;">
+        Volts Range:
+        <select id="m_u_range_dc" onchange="m_u_rangeOnChangeEvent();">
+          <option value="0.113">113 mV</option>
+          <option value="0.91">0.91 V</option>
+          <option value="7.27" selected>7.27 V</option>
+          <option value="58.1">58.1 V</option>
+          <option value="300.0">300.0 V</option>
+        </select>
+      </div>
+      <div id="m_u_range_ac_div" style="display: inline;">
+        Volts Range:
+        <select id="m_u_range_ac">
+          <option value="0.0795">79.5mV</option>
+          <option value="0.63">0.63 V</option>
+          <option value="5.09">5.09 V</option>
+          <option value="40.7">40.7 V</option>
+          <option value="300.0">300.0 V</option>
+        </select>
+      </div>
+      <div id="m_u_mode_auto_div" style="display: inline;">
+        Auto:
+        <select id="m_u_mode_auto">
+          <option value="on" selected>on</option>
+          <option value="ff">off</option>
+        </select>
+      </div>
+    </div>
+    <div id="m_r" style="display: inline;">
+      <div id="m_r_mode_div" style="display: inline;">
+        Ohms mode:
+        <select id="m_r_mode">
+          <option value="2wire" selected>2 wire</option>
+          <option value="4wire">4 wire</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

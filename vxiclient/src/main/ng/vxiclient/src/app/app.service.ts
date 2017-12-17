@@ -7,9 +7,9 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import { DeviceIdn } from './DeviceIdn';
-import { VXIDevice } from './VXIDevice';
-import { Channel } from './Channel';
+import { DeviceIdn } from './types/DeviceIdn';
+import { VXIDevice } from './types/VXIDevice';
+import { Channel } from './types/Channel';
 
 //import {Mutex, MutexInterface} from 'async-mutex';
 
