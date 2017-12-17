@@ -137,8 +137,9 @@ public class HP1326Boundary extends AbstractBoundary<HP1326> {
 		return Response.ok(m).build();
 	}
 
-	double old101 = 3;
-	double old100 = -2;
+	private static final int MAXCHANNELS = 50;
+	double oldy[] = new double[2*MAXCHANNELS];
+	
 	@POST
 	@Path("{mainframe}/{devname}/readFake/{range}")
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -159,30 +160,35 @@ public class HP1326Boundary extends AbstractBoundary<HP1326> {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		double delta100 = Math.random();
-		double delta101 = Math.random();
 		
-		double n100 = old100;
-		double n101 = old101;
-		if (delta100<=0.5) {
-			n100 = old100 - delta100/5;
-		} else {
-			n100 = old100 + delta100/5;	
-		}
-		if (delta101<=0.5) {
-			n101 = old101 - delta101/5;
-		} else {
-			n101 = old101 + delta101/5;	
-		}
-		old100 = n100;
-		old101 = n101;
-		NumberFormat formatter = new DecimalFormat("#0.0000000", DecimalFormatSymbols.getInstance(Locale.US) );  
-		String n = formatter.format(n100);
-		String m = formatter.format(n101);
 		// {"100":0.2712517,"101":-0.2288322}
-		String answer = "{\"100\":"+n+",\"101\":"+m+"}";
-		logger.debug(answer);
-		return Response.ok(answer).build();
+		// String answer = "{\"100\":"+n+",\"101\":"+m+"}";
+		double delta;
+		double newy;
+		String resy;
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		NumberFormat formatter = new DecimalFormat("#0.0000000", DecimalFormatSymbols.getInstance(Locale.US) );  
+		for (int i=0; i<channels.size(); i++) {
+			delta = Math.random();
+			newy = oldy[i];
+			if (delta<=0.5) {
+				newy = oldy[i] - delta/5;
+			} else {
+				newy = oldy[i] + delta/5;
+			}
+			oldy[i] = newy;
+			resy = formatter.format(newy);
+			String chName =  "" + channels.get(i);
+			sb.append("\""+chName+"\":"+resy);
+			if (i<channels.size()-1) {
+				sb.append(",");
+			}
+		}
+		sb.append("}");
+		
+		logger.debug(sb.toString());
+		return Response.ok(sb.toString()).build();
 	}
 
 }

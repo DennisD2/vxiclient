@@ -24,7 +24,7 @@ export class HP1326ControlComponent implements OnInit, Device {
   devices: VXIDevice[] = [];
 
   // Channels to scan
-  channels: Channel[] = [ {name:"100", value:0}, {name:"101", value:0} ];
+  channels: Channel[] = [ {name:"100", value:0}, {name:"101", value:0}, {name:"110", value:0} ];
   // Scan result
   channelResult: Channel[];
 
@@ -58,17 +58,18 @@ export class HP1326ControlComponent implements OnInit, Device {
   }
 
   doMeasurementCallback() : any {
-    console.log("doMeasurement");
+    //console.log("doMeasurement");
     const is = this.imageService;
     const self = this;
 
-    let cs : string[] = this.channels.map(c => c.name);
+    let channelsToScan : string[] = this.channels.map(c => c.name);
     this.mutex.acquire().then( function(release) {
-      is.getMeasurement()
+      is.getMeasurement(channelsToScan)
       .subscribe(c => {
-        self.channelResult = c;
+        self.channelResult = c as Channel[];
         //console.log(JSON.stringify(self.channels))
-        release();
+        //console.log("Size: " + self.channels.length);
+       release();
       }, c => {
         console.log("An error occured, releasing mutex");
          release();

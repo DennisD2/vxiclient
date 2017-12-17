@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { View } from './types/View';
 import { Device } from './types/Device';
 
+import { Channel } from './types/Channel';
+
 @Injectable()
 export class AppRegistry {
   views : View[] = new Array();
@@ -96,9 +98,13 @@ export class AppRegistry {
   roll() {
     this.devices.map((d) => {
       console.log("measure device: " + d.getName())
-      let data : any = d.doMeasurementCallback();
-      console.log("Data: " + JSON.stringify(data))
-      this.publish(data);
+      let data : Channel[] = d.doMeasurementCallback();
+      if (data!=undefined) {
+        console.log("measured: " + JSON.stringify(data))
+        //let c : Channel[] = JSON.parse(data);
+        //console.log("size: " + c.length)
+        this.publish(data);
+      }
     })
   }
 

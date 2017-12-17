@@ -62,12 +62,13 @@ export class VXIService {
       .catch(this.handleError);
   }
 
-  getMeasurement(): Observable<Channel[]> {
+  getMeasurement(channelsToScan : string[]): Observable<Channel[]> {
+    //console.log("to scan: " + JSON.stringify(channelsToScan))
     let dataUrl = this.vmBaseUrl + '/readFake/7.27';
 
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
-    let body = JSON.stringify([100,101]);
+    let body = JSON.stringify(channelsToScan);
 
     return this.http.post(dataUrl, body, options)
       .map((response) => response.json() as Channel[])
