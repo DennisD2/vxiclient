@@ -24,13 +24,13 @@ export class HP1326ControlComponent implements OnInit, Device {
   devices: VXIDevice[] = [];
 
   // Channels to scan
-  channels: Channel[] = [ {name: '100', value: 0}, {name: '101', value: 0}, {name:'110', value: 0} ];
+  channels: Channel[] = [ {name: '100', value: 0}, {name: '101', value: 0}, {name: '110', value: 0} ];
   // Scan result
   channelResult: Channel[];
 
   private mutex: Mutex = new Mutex();
 
-  constructor(private appRegistry: AppRegistry,  private imageService: VXIService) { 
+  constructor(private appRegistry: AppRegistry,  private imageService: VXIService) {
     this.start();
   }
 
