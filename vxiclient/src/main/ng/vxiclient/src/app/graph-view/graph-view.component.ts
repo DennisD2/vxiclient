@@ -16,10 +16,10 @@ declare var Plotly: any;
   styleUrls: ['./graph-view.component.css']
 })
 export class GraphViewComponent implements OnInit, View {
-  type: string = "Sample";
-  private active: boolean = true;
-  private initialized: boolean = false;
- 
+  type = 'Sample';
+  private active = true;
+  private initialized = false;
+
   channels: Channel[];
 
   // Plotly graph
@@ -27,15 +27,15 @@ export class GraphViewComponent implements OnInit, View {
   // Indices of traces (plotly)
   indices: number[];
 
-  constructor(private appRegistry: AppRegistry) { 
+  constructor(private appRegistry: AppRegistry) {
     this.start();
   }
- 
+
   ngOnInit() {
   }
 
   getName() {
-    return "GraphView";
+    return 'GraphView';
   }
 
   getType() {
@@ -43,45 +43,45 @@ export class GraphViewComponent implements OnInit, View {
   }
 
   start() {
-    console.log("start")
+    console.log('start');
     this.appRegistry.subscribeView(this);
     this.active = true;
   }
 
   stop() {
-    console.log("stop")
+    console.log('stop');
     this.appRegistry.unsubscribeView(this);
     this.active = false;
   }
 
   newSampleCallback(data: any) {
-    console.log("new sample: " + JSON.stringify(data));
+    console.log('new sample: ' + JSON.stringify(data));
     this.channels = data;
     this.addData();
   }
 
-  addData() {    
+  addData() {
     if (!this.initialized) {
-      console.log("channels: " + JSON.stringify(this.channels));
+      console.log('channels: ' + JSON.stringify(this.channels));
       // Create layout data for graph
-      let data : any[] = new Array();
+      const data: any[] = new Array();
       this.indices = new Array();
-      let i=0;
+      let i = 0;
       Object.keys(this.channels).map(c => {
-        //console.log(c);
-        let cl = { y: [], mode: 'lines', /*line: {color: '#80CAF6'},*/ name: c };
+        // console.log(c);
+        const cl = { y: [], mode: 'lines', /*line: {color: '#80CAF6'},*/ name: c };
         data.push(cl);
         this.indices.push(i);
         i++;
       });
       // Create graph
       Plotly.plot('plotlyGraph', data);
-      this.initialized=true;
+      this.initialized = true;
     }
     // Create y value array
-    let yvalues : any[]  = new Array();
+    const yvalues: any[]  = new Array();
     Object.keys(this.channels).map(c => {
-      //console.log(this.channels[c]);
+      // console.log(this.channels[c]);
       yvalues.push([this.channels[c]]);
     });
     Plotly.extendTraces('plotlyGraph', { y: yvalues }, this.indices)
