@@ -16,20 +16,20 @@ import { Channel } from '../types/Channel';
   styleUrls: ['./hp1326-control.component.css']
 })
 export class HP1326ControlComponent implements OnInit, Device {
-  type: string = "Sample";
+  type = 'Sample';
   active: boolean;
 
-  device: string = "unknown";
-  devIdn: DeviceIdn = { name: "unknown"};
+  device = 'unknown';
+  devIdn: DeviceIdn = { name: 'unknown'};
   devices: VXIDevice[] = [];
 
   // Channels to scan
-  channels: Channel[] = [ {name:"100", value:0}, {name:"101", value:0}, {name:"110", value:0} ];
+  channels: Channel[] = [ {name: '100', value: 0}, {name: '101', value: 0}, {name:'110', value: 0} ];
   // Scan result
   channelResult: Channel[];
 
-  private mutex : Mutex = new Mutex();
-  
+  private mutex: Mutex = new Mutex();
+
   constructor(private appRegistry: AppRegistry,  private imageService: VXIService) { 
     this.start();
   }
@@ -38,7 +38,7 @@ export class HP1326ControlComponent implements OnInit, Device {
   }
 
   getName() {
-    return "HP1326ControlComponent";
+    return 'HP1326ControlComponent';
   }
 
   getType() {
@@ -46,64 +46,64 @@ export class HP1326ControlComponent implements OnInit, Device {
   }
 
   start() {
-    console.log("start")
+    console.log('start');
     this.appRegistry.subscribeDevice(this);
     this.active = true;
   }
 
   stop() {
-    console.log("stop")
+    console.log('stop');
     this.appRegistry.unsubscribeDevice(this);
     this.active = false;
   }
 
-  doMeasurementCallback() : any {
-    //console.log("doMeasurement");
+  doMeasurementCallback(): any {
+    // console.log('doMeasurement');
     const is = this.imageService;
     const self = this;
 
-    let channelsToScan : string[] = this.channels.map(c => c.name);
+    const channelsToScan: string[] = this.channels.map(c => c.name);
     this.mutex.acquire().then( function(release) {
       is.getMeasurement(channelsToScan)
       .subscribe(c => {
         self.channelResult = c as Channel[];
-        //console.log(JSON.stringify(self.channels))
+        // console.log(JSON.stringify(self.channels))
        release();
       }, c => {
-        console.log("An error occured, releasing mutex");
+        console.log('An error occured, releasing mutex');
         release();
-      })
-    })
+      });
+    });
     return this.channelResult;
   }
 
   record(onoff: String) {
-    console.log("record"+ onoff);
-    if (onoff=='on') {
-      this.appRegistry.publish("hehe");
+    console.log('record' + onoff);
+    if (onoff === 'on') {
+      this.appRegistry.publish('hehe');
     }
-    if (onoff=='off') {
+    if (onoff === 'off') {
       this.appRegistry.roll();
     }
   }
 
   getInfo() {
-    console.log("getInfo");
+    console.log('getInfo');
     const is = this.imageService;
     const self = this;
 
     this.mutex.acquire().then(function(release) {
-      self.device = "?";
-  
+      self.device = '?';
+
       is.getInfo().subscribe(value => self.device = value);
-      console.log("After getInfo with " + self.device)
-  
+      console.log('After getInfo with ' + self.device);
+
       is.getIdn().subscribe(value => self.devIdn = value);
-      console.log("After getIdn with " + self.devIdn.name )
-  
+      console.log('After getIdn with ' + self.devIdn.name );
+
       is.getDevices().subscribe(value => self.devices = value);
-  
+
       release();
-    })
+    });
   }
 }
