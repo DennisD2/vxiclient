@@ -1,34 +1,51 @@
 <md-toolbar color="primary">
-    <span>{{title}}</span>
-    <span class="spacer"></span>
-    <button md-icon-button [mdMenuTriggerFor]="menu">
-      <md-icon>more_vert</md-icon>
+  <span>{{title}}</span>
+  <span class="spacer"></span>
+
+  <button (click)="onSubmit()">
+    <md-icon>start</md-icon>
+    <span>Start</span>
+  </button>
+  <button (click)="onSubmit()">
+    <md-icon>stop</md-icon>
+    <span>Stop</span>
+  </button>
+
+  <span class="spacer"></span>
+
+  <button (click)="record('on')">
+    <md-icon>videocam</md-icon>
+    <span>Record On</span>
+  </button>
+  <button (click)="record('off')">
+    <md-icon>videocam_off</md-icon>
+    <span>Record Off</span>
+  </button>
+
+  <span class="spacer"></span>
+  <label for="setStepTime">Step time:</label>
+  <md-select id="setStepTime" >
+    <md-option *ngFor="let t of allowedStepTimes" [value]="t" (click)="setStepTime(t.value)">{{t.value}}</md-option>
+  </md-select>
+
+  <button md-icon-button [mdMenuTriggerFor]="menu">
+    <md-icon>more_vert</md-icon>
+  </button>
+  <md-menu #menu="mdMenu">
+    <button md-menu-item>
+      <md-icon>fingerprint</md-icon>
+      <span>Login</span>
     </button>
-    <md-menu #menu="mdMenu">
-      <button md-menu-item>
-        <md-icon>fingerprint</md-icon>
-        <span>Login</span>
-      </button>
-      <button md-menu-item disabled>
-        <md-icon>announcement</md-icon>
-        <span>Issues</span>
-      </button>
-      <button md-menu-item>
-        <md-icon>notifications_off</md-icon>
-        <span>Disable alerts</span>
-      </button>
-    </md-menu>
+    <button md-menu-item disabled>
+      <md-icon>announcement</md-icon>
+      <span>Issues</span>
+    </button>
+    <button md-menu-item>
+      <md-icon>notifications_off</md-icon>
+      <span>Disable alerts</span>
+    </button>
+  </md-menu>
 </md-toolbar>
-
-<button (click)="onSubmit()">
-  <md-icon>start</md-icon>
-  <span>Start</span>
-</button>
-<button (click)="onSubmit()">
-  <md-icon>stop</md-icon>
-  <span>Stop</span>
-</button>
-
 
 <app-hp1326-control></app-hp1326-control>
 

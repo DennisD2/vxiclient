@@ -10,37 +10,7 @@
       <md-icon>settings_power</md-icon>
       <span>Stop</span>
     </button>
-
-    <button (click)="record('on')">
-      <md-icon>videocam</md-icon>
-      <span>Record On</span>
-    </button>
-    <button (click)="record('off')">
-      <md-icon>videocam_off</md-icon>
-      <span>Record Off</span>
-    </button>
-
-    <button (click)="vxiclient.setWaitTime('root', 1000);timelineGraph.setWaitTime(1000)">
-      <md-icon>settings_ethernet</md-icon>
-      <span>1s</span>
-    </button>
-    <button (click)="vxiclient.setWaitTime('root', 10000);timelineGraph.setWaitTime(10000)">
-      <md-icon>settings_ethernet</md-icon>
-      <span>10s</span>
-    </button>
-    <button (click)="vxiclient.setWaitTime('root', 60000);timelineGraph.setWaitTime(60000)">
-      <md-icon>settings_ethernet</md-icon>
-      <span>60s</span>
-    </button>
-
-    <label for="strategy">Strategy:</label>
-    <select id="strategy">
-      <option value="continuous" selected>Continuous (CPU intensive)
-      </option>
-      <option value="discrete">Discrete</option>
-      <option value="static">Static</option>
-    </select>
-  </p>
+</p>
 
   <!-- config inputs -->
   <div id="mconfig">
