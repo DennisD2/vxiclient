@@ -24,8 +24,8 @@ export class HP1326ControlComponent implements OnInit, Device {
   devIdn: DeviceIdn = { name: 'unknown'};
   devices: VXIDevice[] = [];
 
-   // Channels to scan
-   channels: Channel[] = [ {name: '100', value: 0}, {name: '101', value: 0}, {name: '200', value: 0} ];
+  // Channels to scan
+  channels: Channel[] = [ {name: '100', value: 0}, {name: '101', value: 0}, {name: '200', value: 0} ];
   // Scan result
   channelResult: Channel[];
 
