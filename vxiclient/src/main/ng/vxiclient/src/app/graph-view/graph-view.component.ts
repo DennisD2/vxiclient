@@ -61,33 +61,30 @@ export class GraphViewComponent implements OnInit, View {
   }
 
   addData() {
-    let initRequired = !this.initialized;
+    const initRequired = !this.initialized;
     const reInitRequired = !initRequired && this.indices.length !== Object.keys(this.channels).length;
-    console.log('Number of channels changed, reinitializing indices...' + reInitRequired);
-    if (!initRequired && this.indices.length !== Object.keys(this.channels).length) {
-      initRequired = true;
-    }
-    if (initRequired) {
-      console.log('channels: ' + JSON.stringify(this.channels));
+    // console.log('Number of channels changed, reinitializing indices...' + reInitRequired);
+    if (initRequired || reInitRequired) {
+      console.log('(Re)initializing graph, channels: ' + JSON.stringify(this.channels));
       // Create layout data for graph
       const data: any[] = new Array();
       this.indices = new Array();
       let i = 0;
       Object.keys(this.channels).map(c => {
-        // console.log(c);
+        console.log('key: ' + c);
         const cl = { y: [], mode: 'lines', /*line: {color: '#80CAF6'},*/ name: c };
         data.push(cl);
         this.indices.push(i);
         i++;
       });
       // Create graph
-      Plotly.plot('plotlyGraph', data);
+      Plotly.newPlot('plotlyGraph', data);
       this.initialized = true;
     }
     // Create y value array
     const yvalues: any[]  = new Array();
     Object.keys(this.channels).map(c => {
-      // console.log(this.channels[c]);
+      console.log('Channel ' + this.channels[c]);
       yvalues.push([this.channels[c]]);
     });
     Plotly.extendTraces('plotlyGraph', { y: yvalues }, this.indices);

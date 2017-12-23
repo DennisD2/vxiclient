@@ -51,7 +51,7 @@ export class HP1326ControlComponent implements OnInit, Device {
   // Ohms mode
   allowedOhmsMode = [ {id: 0, value: '2 Wire'}, {id: 1, value: '4 Wire'}];
   selectedOhmsMode = this.allowedOhmsMode[0];
-
+  
   switch0: boolean[] = new Array();
   switch1: boolean[] = new Array();
 
