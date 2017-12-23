@@ -10,8 +10,6 @@ import { AppRegistry } from './app.registry';
 
 import { VXIService } from './app.service';
 
-import 'hammerjs';
-
 import { GraphViewComponent } from './graph-view/graph-view.component';
 import { HP1326ControlComponent } from './hp1326-control/hp1326-control.component';
 
