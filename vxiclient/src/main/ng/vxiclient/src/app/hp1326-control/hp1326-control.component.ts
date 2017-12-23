@@ -4,6 +4,7 @@ import { Mutex, MutexInterface } from 'async-mutex';
 
 import { AppRegistry } from '../app.registry';
 import { VXIService } from '../app.service';
+import { HP1345ControlComponent } from '../hp1345-control/hp1345-control.component';
 
 import { VXIDevice } from '../types/VXIDevice';
 import { DeviceIdn } from '../types/DeviceIdn';
@@ -23,8 +24,8 @@ export class HP1326ControlComponent implements OnInit, Device {
   devIdn: DeviceIdn = { name: 'unknown'};
   devices: VXIDevice[] = [];
 
-  // Channels to scan
-  channels: Channel[] = [ {name: '100', value: 0}, {name: '101', value: 0}, {name: '200', value: 0} ];
+   // Channels to scan
+   channels: Channel[] = [ {name: '100', value: 0}, {name: '101', value: 0}, {name: '200', value: 0} ];
   // Scan result
   channelResult: Channel[];
 
@@ -51,21 +52,16 @@ export class HP1326ControlComponent implements OnInit, Device {
   // Ohms mode
   allowedOhmsMode = [ {id: 0, value: '2 Wire'}, {id: 1, value: '4 Wire'}];
   selectedOhmsMode = this.allowedOhmsMode[0];
-  
+
+  // Switch array
   switch0: boolean[] = new Array();
   switch1: boolean[] = new Array();
 
   private mutex: Mutex = new Mutex();
 
-  constructor(private appRegistry: AppRegistry,  private imageService: VXIService) {
+  constructor(private appRegistry: AppRegistry,
+    private imageService: VXIService) {
     this.start();
-    for (let i = 0; i < 16; i++) {
-      this.switch0.push(false);
-      this.switch1.push(false);
-    }
-    this.switch0[0] = true;
-    this.switch0[1] = true;
-    this.switch1[0] = true;
   }
 
   ngOnInit() {
@@ -162,17 +158,12 @@ export class HP1326ControlComponent implements OnInit, Device {
     console.log('onrangeChangeEventAC: ' + event.value);
   }
 
-  onSwitchChange(channel: number) {
-    console.log('onSwitchChange: ' + channel);
-    if (channel >= 100 && channel <= 115) {
-      this.handleSwitchChange( this.switch0, channel, 100);
-    }
-    if (channel >= 200 && channel <= 215) {
-      this.handleSwitchChange( this.switch1, channel, 200);
-    }
-  }
-
-  handleSwitchChange(xswitch: boolean[], channel: number, offset: number) {
+  handleSwitchChange(ch: string) {
+    const channel = +ch;
+    let offset: number;
+    let xswitch: boolean[];
+    if (channel >= 100 && channel <= 115) { offset = 100; xswitch = this.switch0; }
+    if (channel >= 200 && channel <= 215) { offset = 200; xswitch = this.switch1;  }
     if (channel >= offset && channel <= offset + 15) {
       const val = xswitch[channel - offset];
       console.log('switch value: ' + val);
