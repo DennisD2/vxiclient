@@ -48,14 +48,24 @@ export class HP1326ControlComponent implements OnInit, Device {
   allowedAuto = [ {id: 0, value: 'on'}, {id: 1, value: 'off'}];
   selectedAuto = this.allowedAuto[0];
 
-    // Ohms mode
-    allowedOhmsMode = [ {id: 0, value: '2 Wire'}, {id: 1, value: '4 Wire'}];
-    selectedOhmsMode = this.allowedOhmsMode[0];
+  // Ohms mode
+  allowedOhmsMode = [ {id: 0, value: '2 Wire'}, {id: 1, value: '4 Wire'}];
+  selectedOhmsMode = this.allowedOhmsMode[0];
+
+  switch0: boolean[] = new Array();
+  switch1: boolean[] = new Array();
 
   private mutex: Mutex = new Mutex();
 
   constructor(private appRegistry: AppRegistry,  private imageService: VXIService) {
     this.start();
+    for (let i = 0; i < 16; i++) {
+      this.switch0.push(false);
+      this.switch1.push(false);
+    }
+    this.switch0[0] = true;
+    this.switch0[1] = true;
+    this.switch1[0] = true;
   }
 
   ngOnInit() {
@@ -151,4 +161,30 @@ export class HP1326ControlComponent implements OnInit, Device {
   onAutoChange(event: any) {
     console.log('onrangeChangeEventAC: ' + event.value);
   }
+
+  onSwitchChange(channel: number) {
+    console.log('onSwitchChange: ' + channel);
+    if (channel >= 100 && channel <= 115) {
+      const val = this.switch0[channel - 100];
+      console.log('switch value: ' + val);
+      if (val) {
+        // Channel added
+        const newChannel: Channel = { name: '' + channel, value: 0 };
+        console.log('Adding: ' + JSON.stringify(newChannel));
+        this.channels.push(newChannel);
+      } else {
+        // Channel removed
+        const newChannel: Channel = { name: '' + channel, value: 0 };
+        console.log('Removing: ' + JSON.stringify(newChannel));
+        const index = this.channels.indexOf(newChannel, 0);
+        if (index > -1) {
+          this.channels.splice(index, 1);
+        }
+      }
+    }
+    if (channel >= 200 && channel <= 215) {
+      console.log('switch value: ' + this.switch0[channel - 200]);
+    }
+  }
+
 }
