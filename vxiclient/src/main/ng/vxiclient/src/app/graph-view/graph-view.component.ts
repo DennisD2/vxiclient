@@ -61,7 +61,13 @@ export class GraphViewComponent implements OnInit, View {
   }
 
   addData() {
-    if (!this.initialized) {
+    let initRequired = !this.initialized;
+    const reInitRequired = !initRequired && this.indices.length !== Object.keys(this.channels).length;
+    console.log('Number of channels changed, reinitializing indices...' + reInitRequired);
+    if (!initRequired && this.indices.length !== Object.keys(this.channels).length) {
+      initRequired = true;
+    }
+    if (initRequired) {
       console.log('channels: ' + JSON.stringify(this.channels));
       // Create layout data for graph
       const data: any[] = new Array();
@@ -84,6 +90,6 @@ export class GraphViewComponent implements OnInit, View {
       // console.log(this.channels[c]);
       yvalues.push([this.channels[c]]);
     });
-    Plotly.extendTraces('plotlyGraph', { y: yvalues }, this.indices)
+    Plotly.extendTraces('plotlyGraph', { y: yvalues }, this.indices);
   }
 }

@@ -24,7 +24,7 @@ export class HP1326ControlComponent implements OnInit, Device {
   devices: VXIDevice[] = [];
 
   // Channels to scan
-  channels: Channel[] = [ {name: '100', value: 0}, {name: '101', value: 0}, {name: '110', value: 0} ];
+  channels: Channel[] = [ {name: '100', value: 0}, {name: '101', value: 0}, {name: '200', value: 0} ];
   // Scan result
   channelResult: Channel[];
 
@@ -165,7 +165,16 @@ export class HP1326ControlComponent implements OnInit, Device {
   onSwitchChange(channel: number) {
     console.log('onSwitchChange: ' + channel);
     if (channel >= 100 && channel <= 115) {
-      const val = this.switch0[channel - 100];
+      this.handleSwitchChange( this.switch0, channel, 100);
+    }
+    if (channel >= 200 && channel <= 215) {
+      this.handleSwitchChange( this.switch1, channel, 200);
+    }
+  }
+
+  handleSwitchChange(xswitch: boolean[], channel: number, offset: number) {
+    if (channel >= offset && channel <= offset + 15) {
+      const val = xswitch[channel - offset];
       console.log('switch value: ' + val);
       if (val) {
         // Channel added
@@ -176,14 +185,12 @@ export class HP1326ControlComponent implements OnInit, Device {
         // Channel removed
         const newChannel: Channel = { name: '' + channel, value: 0 };
         console.log('Removing: ' + JSON.stringify(newChannel));
-        const index = this.channels.indexOf(newChannel, 0);
+        const index =  this.channels.findIndex(c => c.name === '' + channel);
         if (index > -1) {
+          // console.log('Removal found');
           this.channels.splice(index, 1);
         }
       }
-    }
-    if (channel >= 200 && channel <= 215) {
-      console.log('switch value: ' + this.switch0[channel - 200]);
     }
   }
 
