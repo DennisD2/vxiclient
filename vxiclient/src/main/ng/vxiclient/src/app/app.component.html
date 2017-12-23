@@ -27,15 +27,12 @@
   <!--<md-select id="setPaceTime">
     <md-option *ngFor="let t of allowedPaceTimes" [value]="t" (click)="setPaceTime(t.value)">{{t.value}}</md-option>
   </md-select> -->
-
-
   <select name="setPaceTime" [(ngModel)]="selectedPaceItem" (ngModelChange)="onChangePaceTime($event)">
     <option *ngFor="let t of allowedPaceTimes" [ngValue]="t" (click)="setPaceTime(t.value)">
         {{ t.value }}
     </option>
   </select> 
-  <p>You selected: {{selectedPaceItem.id}}</p>
-
+ 
   <button md-icon-button [mdMenuTriggerFor]="menu">
     <md-icon>more_vert</md-icon>
   </button>
