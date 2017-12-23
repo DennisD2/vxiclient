@@ -24,13 +24,8 @@
 
   <span class="spacer"></span>
   <label for="setPaceTime">Pacer:</label>
-  <!--<md-select id="setPaceTime">
-    <md-option *ngFor="let t of allowedPaceTimes" [value]="t" (click)="setPaceTime(t.value)">{{t.value}}</md-option>
-  </md-select> -->
   <select name="setPaceTime" [(ngModel)]="selectedPaceItem" (ngModelChange)="onChangePaceTime($event)">
-    <option *ngFor="let t of allowedPaceTimes" [ngValue]="t" (click)="setPaceTime(t.value)">
-        {{ t.value }}
-    </option>
+    <option *ngFor="let t of allowedPaceTimes" [ngValue]="t">{{t.value}}</option>
   </select> 
  
   <button md-icon-button [mdMenuTriggerFor]="menu">

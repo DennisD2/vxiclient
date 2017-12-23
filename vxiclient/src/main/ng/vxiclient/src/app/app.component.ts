@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
   // pacer state
   pacing = true;
   // interval length in [ms]
-  paceTime = 2000;
+  // paceTime = 2000;
   allowedPaceTimes = [ {id: 1, value: 1000}, {id: 2, value: 2000}, {id: 3, value: 10000}, {id: 4, value: 60000}, {id: 5, value: 600000 } ];
   selectedPaceItem = this.allowedPaceTimes[1];
   subscription: any;
@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setPaceTime(2000);
+    this.setPaceTime(this.selectedPaceItem);
   }
 
   /**
@@ -64,7 +64,7 @@ export class AppComponent implements OnInit {
       console.log('Pacer already running');
       return;
     }
-    this.subscription = IntervalObservable.create(this.paceTime).subscribe(() => { this.roll(); });
+    this.subscription = IntervalObservable.create(this.selectedPaceItem.value).subscribe(() => { this.roll(); });
     this.pacing = true;
   }
 
@@ -73,9 +73,9 @@ export class AppComponent implements OnInit {
    *
    * @param time intervall length in milliseconds.
    */
-  setPaceTime(time: number) {
-    console.log('Set steptime to: ' + time);
-    this.paceTime = time;
+  setPaceTime(paceItem: any) {
+    console.log('Set steptime to: ' + paceItem.value);
+    this.selectedPaceItem = paceItem;
     if (!this.pacing) {
       return;
     }
@@ -84,13 +84,13 @@ export class AppComponent implements OnInit {
   }
 
   getPaceTime() {
-    return this.paceTime;
+    return this.selectedPaceItem.value;
   }
 
   onChangePaceTime(event: any) {
     // Is called with the Item as event
     console.log('onChangePaceTime: ' + event.value );
-    this.setPaceTime(event.value);
+    this.setPaceTime(event);
   }
 
   /**
