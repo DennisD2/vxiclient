@@ -3,11 +3,11 @@
   <span class="spacer"></span>
 
   <button (click)="onPacerStart()">
-    <md-icon>start</md-icon>
+    <md-icon>settings_power</md-icon>
     <span>Start</span>
   </button>
   <button (click)="onPacerStop()">
-    <md-icon>stop</md-icon>
+    <md-icon>settings_power</md-icon>
     <span>Stop</span>
   </button>
 
@@ -24,9 +24,17 @@
 
   <span class="spacer"></span>
   <label for="setPaceTime">Pacer:</label>
-  <md-select id="setPaceTime" >
+  <!--<md-select id="setPaceTime">
     <md-option *ngFor="let t of allowedPaceTimes" [value]="t" (click)="setPaceTime(t.value)">{{t.value}}</md-option>
-  </md-select>
+  </md-select> -->
+
+
+  <select name="setPaceTime" [(ngModel)]="selectedPaceItem" (ngModelChange)="onChangePaceTime($event)">
+    <option *ngFor="let t of allowedPaceTimes" [ngValue]="t" (click)="setPaceTime(t.value)">
+        {{ t.value }}
+    </option>
+  </select> 
+  <p>You selected: {{selectedPaceItem.id}}</p>
 
   <button md-icon-button [mdMenuTriggerFor]="menu">
     <md-icon>more_vert</md-icon>

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
 import { OnInit } from '@angular/core';
 
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
@@ -24,8 +25,8 @@ export class AppComponent implements OnInit {
   pacing = true;
   // interval length in [ms]
   paceTime = 2000;
-  selectedPaceId = 1;
   allowedPaceTimes = [ {id: 1, value: 1000}, {id: 2, value: 2000}, {id: 3, value: 10000}, {id: 4, value: 60000}, {id: 5, value: 600000 } ];
+  selectedPaceItem = this.allowedPaceTimes[1];
   subscription: any;
 
   constructor(private appRegistry: AppRegistry) {
@@ -84,6 +85,12 @@ export class AppComponent implements OnInit {
 
   getPaceTime() {
     return this.paceTime;
+  }
+
+  onChangePaceTime(event: any) {
+    // Is called with the Item as event
+    console.log('onChangePaceTime: ' + event.value );
+    this.setPaceTime(event.value);
   }
 
   /**
