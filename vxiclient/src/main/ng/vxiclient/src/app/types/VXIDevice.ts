@@ -5,22 +5,22 @@
  *
  */
 export interface VXIDevice {
-    address: string,
-    commanderAdress: string,
-    manufacturer: string,
-    model: string,
-    slot: string,
-    slot0Adress: string,
-    devClass: string,
-    memSpace: string,
-    memOffset: string,
-    memSize: string,
-    state: string,
-    s1: string,
-    s2: string,
-    s3: string,
-    comment: string,
-    id: string,
-    name: string,
-    gpibsecondary: string
+    address: string;
+    commanderAdress: string;
+    manufacturer: string;
+    model: string;
+    slot: string;
+    slot0Adress: string;
+    devClass: string;
+    memSpace: string;
+    memOffset: string;
+    memSize: string;
+    state: string;
+    s1: string;
+    s2: string;
+    s3: string;
+    comment: string;
+    id: string;
+    name: string;
+    gpibsecondary: string;
 }

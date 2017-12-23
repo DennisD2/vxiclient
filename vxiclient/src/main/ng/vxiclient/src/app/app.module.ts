@@ -26,7 +26,7 @@ import { HP1326ControlComponent } from './hp1326-control/hp1326-control.componen
     BrowserAnimationsModule,
     HttpModule,
     MaterialModule
-    
+
   ],
   providers: [
     VXIService,
