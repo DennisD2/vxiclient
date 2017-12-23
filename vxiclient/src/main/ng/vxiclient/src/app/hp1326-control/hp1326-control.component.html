@@ -12,8 +12,8 @@
     </button>
 </p>
 
-  <!-- config inputs -->
-  <div id="mconfig">
+<!-- config inputs -->
+<div id="mconfig">
     <label for="m_mode">Mode:</label>
     <select name="m_mode" [(ngModel)]="selectedModeItem" (ngModelChange)="onChangeMode($event)">
       <option *ngFor="let m of allowedModes" [ngValue]="m">{{m.value}}</option>
@@ -43,6 +43,43 @@
     <select name="m_r_mode" [(ngModel)]="selectedOhmsMode" (ngModelChange)="onAutoChange($event)">
       <option *ngFor="let m of allowedOhmsMode" [ngValue]="m">{{m.value}}</option>
     </select> 
-
   </div>
+
+  <div id="m_mux">
+    <h3>Switch configuration (HP1345 Relay MUX - 32 Channels)</h3>
+    100 <input type="checkbox" id="c100" onchange="cOnChange('c100');" checked="true"	> 
+    101 <input type="checkbox" id="c101" onchange="cOnChange('c101');" checked="true" > 
+    102 <input type="checkbox" id="c102" onchange="cOnChange('c102');">
+    103 <input type="checkbox" id="c103" onchange="cOnChange('c103');">
+    104 <input type="checkbox" id="c104" onchange="cOnChange('c104');">
+    105 <input type="checkbox" id="c105" onchange="cOnChange('c105');">
+    106 <input type="checkbox" id="c106" onchange="cOnChange('c106');">
+    107 <input type="checkbox" id="c107" onchange="cOnChange('c107');">
+    108 <input type="checkbox" id="c108" onchange="cOnChange('c108');">
+    109 <input type="checkbox" id="c109" onchange="cOnChange('c109');">
+    110 <input type="checkbox" id="c110" onchange="cOnChange('c110');">
+    111 <input type="checkbox" id="c111" onchange="cOnChange('c111');">
+    112 <input type="checkbox" id="c112" onchange="cOnChange('c112');">
+    113 <input type="checkbox" id="c113" onchange="cOnChange('c113');">
+    114 <input type="checkbox" id="c114" onchange="cOnChange('c114');">
+    115 <input type="checkbox" id="c115" onchange="cOnChange('c115');">
+    <br> 
+    200 <input type="checkbox" id="c200" onchange="cOnChange('c200');"> 
+    201 <input type="checkbox" id="c201" onchange="cOnChange('c201');">
+    202 <input type="checkbox" id="c202" onchange="cOnChange('c202');">
+    203 <input type="checkbox" id="c203" onchange="cOnChange('c203');">
+    204 <input type="checkbox" id="c204" onchange="cOnChange('c204');">
+    205 <input type="checkbox" id="c205" onchange="cOnChange('c205');">
+    206 <input type="checkbox" id="c206" onchange="cOnChange('c206');">
+    207 <input type="checkbox" id="c207" onchange="cOnChange('c207');">
+    208 <input type="checkbox" id="c208" onchange="cOnChange('c208');">
+    209 <input type="checkbox" id="c209" onchange="cOnChange('c209');">
+    210 <input type="checkbox" id="c210" onchange="cOnChange('c210');">
+    211 <input type="checkbox" id="c211" onchange="cOnChange('c211');">
+    212 <input type="checkbox" id="c212" onchange="cOnChange('c212');">
+    213 <input type="checkbox" id="c213" onchange="cOnChange('c213');">
+    214 <input type="checkbox" id="c214" onchange="cOnChange('c214');">
+    215 <input type="checkbox" id="c215" onchange="cOnChange('c215');">
+  </div>
+
 </div>
