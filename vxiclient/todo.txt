@@ -13,6 +13,7 @@ Todos
 - Hp1330 test fails (get returns always true for bits)
 - Fix Definite Block Length code, See TODO
 - Throw away methods in ConversionUtil (see @deprecated)
+- Frontend: Fix Pacer menu label and default selection
 
 Done
 ----
