@@ -2,30 +2,30 @@
   <span>{{title}}</span>
   <span class="spacer"></span>
 
-  <button (click)="onSubmit()">
+  <button (click)="onPacerStart()">
     <md-icon>start</md-icon>
     <span>Start</span>
   </button>
-  <button (click)="onSubmit()">
+  <button (click)="onPacerStop()">
     <md-icon>stop</md-icon>
     <span>Stop</span>
   </button>
 
   <span class="spacer"></span>
 
-  <button (click)="record('on')">
+  <button (click)="onRecordOn()">
     <md-icon>videocam</md-icon>
     <span>Record On</span>
   </button>
-  <button (click)="record('off')">
+  <button (click)="onRecordOff()">
     <md-icon>videocam_off</md-icon>
     <span>Record Off</span>
   </button>
 
   <span class="spacer"></span>
-  <label for="setStepTime">Step time:</label>
-  <md-select id="setStepTime" >
-    <md-option *ngFor="let t of allowedStepTimes" [value]="t" (click)="setStepTime(t.value)">{{t.value}}</md-option>
+  <label for="setPaceTime">Pacer:</label>
+  <md-select id="setPaceTime" >
+    <md-option *ngFor="let t of allowedPaceTimes" [value]="t" (click)="setPaceTime(t.value)">{{t.value}}</md-option>
   </md-select>
 
   <button md-icon-button [mdMenuTriggerFor]="menu">

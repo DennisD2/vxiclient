@@ -5,6 +5,13 @@ import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 
 import { AppRegistry } from './app.registry';
 
+/**
+ * Overall AppComponent.
+ *
+ * Starts AppRegistry which keeps everything rolling. The AppComponent keeps a "Pacer" functionality that works like a 
+ * heartbeat.
+ *
+ */
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,9 +20,12 @@ import { AppRegistry } from './app.registry';
 export class AppComponent implements OnInit {
   title = 'VXI Client';
 
+  // pacer state
+  pacing = true;
   // interval length in [ms]
-  selectedStepTime = 2000;
-  allowedStepTimes = [ {id: 1, value: 1000}, {id: 2, value: 2000}, {id: 3, value: 10000}, {id: 4, value: 60000}, {id: 5, value: 600000 } ];
+  paceTime = 2000;
+  selectedPaceId = 1;
+  allowedPaceTimes = [ {id: 1, value: 1000}, {id: 2, value: 2000}, {id: 3, value: 10000}, {id: 4, value: 60000}, {id: 5, value: 600000 } ];
   subscription: any;
 
   constructor(private appRegistry: AppRegistry) {
@@ -23,7 +33,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setStepTime(2000);
+    this.setPaceTime(2000);
   }
 
   /**
@@ -36,27 +46,75 @@ export class AppComponent implements OnInit {
   }
 
   /**
+   * Stop pacer.
+   */
+  stopPacer() {
+    if (this.subscription !== undefined) {
+      this.subscription.unsubscribe();
+    }
+    this.pacing = false;
+  }
+
+  /**
+   * Start pacer.
+   */
+  startPacer() {
+    if (this.pacing) {
+      console.log('Pacer already running');
+      return;
+    }
+    this.subscription = IntervalObservable.create(this.paceTime).subscribe(() => { this.roll(); });
+    this.pacing = true;
+  }
+
+  /**
    * Set measurement intervall length.
    *
    * @param time intervall length in milliseconds.
    */
-  setStepTime(time: number) {
+  setPaceTime(time: number) {
     console.log('Set steptime to: ' + time);
-    if (this.subscription !== undefined) {
-      this.subscription.unsubscribe();
+    this.paceTime = time;
+    if (!this.pacing) {
+      return;
     }
-    this.selectedStepTime = time;
-    this.subscription = IntervalObservable.create(this.selectedStepTime).subscribe(() => { this.roll(); });
+    this.stopPacer();
+    this.startPacer();
   }
 
-  getStepTime() {
-    return this.selectedStepTime;
+  getPaceTime() {
+    return this.paceTime;
   }
 
-  reload() {
+  /**
+   * Pacer Start callback
+   */
+  onPacerStart() {
+    console.log('Pacer start');
+    this.startPacer();
   }
 
-  onSubmit() {
+  /**
+   * Pacer Stop callback
+   */
+  onPacerStop() {
+    console.log('Pacer stop');
+    this.stopPacer();
   }
+
+ /**
+   * Record Start callback
+   */
+  onRecordOn() {
+    console.log('Recording start');
+  }
+
+  /**
+   * Record Stop callback
+   */
+  onRecordOff() {
+    console.log('Recording stop');
+  }
+
 
 }

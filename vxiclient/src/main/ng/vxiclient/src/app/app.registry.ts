@@ -54,7 +54,7 @@ export class AppRegistry {
     if (index > -1) {
       this.views.splice(index, 1);
     }
-    console.log('view unsubscribed: ' +  view.getName())
+    console.log('view unsubscribed: ' +  view.getName());
   }
 
   /**
