@@ -23,10 +23,11 @@ export class AppComponent implements OnInit {
 
   // pacer state
   pacing = true;
-  // interval length in [ms]
-  // paceTime = 2000;
+  // pacer interval length in [ms]
   allowedPaceTimes = [ {id: 1, value: 1000}, {id: 2, value: 2000}, {id: 3, value: 10000}, {id: 4, value: 60000}, {id: 5, value: 600000 } ];
   selectedPaceItem = this.allowedPaceTimes[1];
+
+  // pacer IntervalObservable's subscription
   subscription: any;
 
   constructor(private appRegistry: AppRegistry) {

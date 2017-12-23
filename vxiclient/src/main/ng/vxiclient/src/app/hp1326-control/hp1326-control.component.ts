@@ -28,6 +28,30 @@ export class HP1326ControlComponent implements OnInit, Device {
   // Scan result
   channelResult: Channel[];
 
+  // Meter modes
+  allowedModes = [ {id: 0, value: 'U'}, {id: 1, value: 'I'}, {id: 2, value: 'R'}];
+  selectedModeItem = this.allowedModes[0];
+
+  // Volt modes
+  allowedACDC = [ {id: 0, value: 'DC'}, {id: 1, value: 'AC'}];
+  selectedACDCItem = this.allowedACDC[0];
+
+  // DC ranges
+  allowedDCRanges = [ {id: 0, value: 0.113}, {id: 1, value: 0.91}, {id: 2, value: 7.27}, {id: 3, value: 58.1}, {id: 4, value: 300}];
+  selectedDCRange = this.allowedDCRanges[2];
+
+  // AC ranges
+  allowedACRanges = [ {id: 0, value: 0.0795}, {id: 1, value: 0.63}, {id: 2, value: 5.09}, {id: 3, value: 40.7}, {id: 4, value: 300}];
+  selectedACRange = this.allowedACRanges[2];
+
+  // Auto values
+  allowedAuto = [ {id: 0, value: 'on'}, {id: 1, value: 'off'}];
+  selectedAuto = this.allowedAuto[0];
+
+    // Ohms mode
+    allowedOhmsMode = [ {id: 0, value: '2 Wire'}, {id: 1, value: '4 Wire'}];
+    selectedOhmsMode = this.allowedOhmsMode[0];
+
   private mutex: Mutex = new Mutex();
 
   constructor(private appRegistry: AppRegistry,  private imageService: VXIService) {
@@ -105,5 +129,26 @@ export class HP1326ControlComponent implements OnInit, Device {
 
       release();
     });
+  }
+
+  onChangeMode(event: any) {
+    // Is called with the Item as event
+    console.log('modeOnChangeEvent: ' + event.value);
+  }
+
+  onChangeACDC(event: any) {
+    console.log('onChangeACDC: ' + event.value);
+  }
+
+  onRangeChangeDC(event: any) {
+    console.log('onrangeChangeEventDC: ' + event.value);
+  }
+
+  onRangeChangeAC(event: any) {
+    console.log('onrangeChangeEventAC: ' + event.value);
+  }
+
+  onAutoChange(event: any) {
+    console.log('onrangeChangeEventAC: ' + event.value);
   }
 }

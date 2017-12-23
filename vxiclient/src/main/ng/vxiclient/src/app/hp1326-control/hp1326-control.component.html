@@ -14,56 +14,35 @@
 
   <!-- config inputs -->
   <div id="mconfig">
-    Mode:
-    <select id="m_mode" onchange="m_modeOnChangeEvent();">
-      <option value="u" selected>U</option>
-      <option value="i">I</option>
-      <option value="r">Ohms</option>
-    </select>
-    <div id="m_u" style="display: inline;">
-      <div id="m_u_acdc_div" style="display: inline;">
-        AC/DC:
-        <select id="m_u_acdc" onchange="m_u_acdcOnChangeEvent();">
-          <option value="ac">AC</option>
-          <option value="dc" selected>DC</option>
-        </select>
-      </div>
-      <div id="m_u_range_dc_div" style="display: inline;">
-        Volts Range:
-        <select id="m_u_range_dc" onchange="m_u_rangeOnChangeEvent();">
-          <option value="0.113">113 mV</option>
-          <option value="0.91">0.91 V</option>
-          <option value="7.27" selected>7.27 V</option>
-          <option value="58.1">58.1 V</option>
-          <option value="300.0">300.0 V</option>
-        </select>
-      </div>
-      <div id="m_u_range_ac_div" style="display: inline;">
-        Volts Range:
-        <select id="m_u_range_ac">
-          <option value="0.0795">79.5mV</option>
-          <option value="0.63">0.63 V</option>
-          <option value="5.09">5.09 V</option>
-          <option value="40.7">40.7 V</option>
-          <option value="300.0">300.0 V</option>
-        </select>
-      </div>
-      <div id="m_u_mode_auto_div" style="display: inline;">
-        Auto:
-        <select id="m_u_mode_auto">
-          <option value="on" selected>on</option>
-          <option value="ff">off</option>
-        </select>
-      </div>
-    </div>
-    <div id="m_r" style="display: inline;">
-      <div id="m_r_mode_div" style="display: inline;">
-        Ohms mode:
-        <select id="m_r_mode">
-          <option value="2wire" selected>2 wire</option>
-          <option value="4wire">4 wire</option>
-        </select>
-      </div>
-    </div>
+    <label for="m_mode">Mode:</label>
+    <select name="m_mode" [(ngModel)]="selectedModeItem" (ngModelChange)="onChangeMode($event)">
+      <option *ngFor="let m of allowedModes" [ngValue]="m">{{m.value}}</option>
+    </select> 
+   
+    <label for="m_u_acdc">AC/DC:</label>
+    <select name="m_u_acdc" [(ngModel)]="selectedACDCItem" (ngModelChange)="onChangeACDC($event)">
+      <option *ngFor="let m of allowedACDC" [ngValue]="m">{{m.value}}</option>
+    </select> 
+    
+    <label for="m_u_range_dc">DC Volts Range:</label>
+    <select name="m_u_range_dc" [(ngModel)]="selectedDCRange" (ngModelChange)="onRangeChangeDC($event)">
+      <option *ngFor="let m of allowedDCRanges" [ngValue]="m">{{m.value}}</option>
+    </select> 
+  
+    <label for="m_u_range_ac">DC Volts Range:</label>
+    <select name="m_u_range_ac" [(ngModel)]="selectedACRange" (ngModelChange)="onRangeChangeAC($event)">
+      <option *ngFor="let m of allowedACRanges" [ngValue]="m">{{m.value}}</option>
+    </select> 
+ 
+    <label for="m_u_mode_auto"> Auto:</label>
+    <select name="m_u_mode_auto" [(ngModel)]="selectedAuto" (ngModelChange)="onAutoChange($event)">
+      <option *ngFor="let m of allowedAuto" [ngValue]="m">{{m.value}}</option>
+    </select> 
+
+    <label for="m_r_mode">Ohms mode:</label>
+    <select name="m_r_mode" [(ngModel)]="selectedOhmsMode" (ngModelChange)="onAutoChange($event)">
+      <option *ngFor="let m of allowedOhmsMode" [ngValue]="m">{{m.value}}</option>
+    </select> 
+
   </div>
 </div>
