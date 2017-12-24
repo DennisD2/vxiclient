@@ -11,12 +11,16 @@ import { DeviceIdn } from '../types/DeviceIdn';
 import { Device } from '../types/Device';
 import { Channel } from '../types/Channel';
 
+/**
+ * Multimeter class. Supports HP E1326 and E1411.
+ *
+ */
 @Component({
-  selector: 'app-hp1326-control',
-  templateUrl: './hp1326-control.component.html',
-  styleUrls: ['./hp1326-control.component.css']
+  selector: 'app-multimeter-control',
+  templateUrl: './multimeter-control.component.html',
+  styleUrls: ['./multimeter-control.component.css']
 })
-export class HP1326ControlComponent implements OnInit, Device {
+export class MultimeterControlComponent implements OnInit, Device {
   type = 'Sample';
   active: boolean;
 
@@ -68,7 +72,7 @@ export class HP1326ControlComponent implements OnInit, Device {
   }
 
   getName() {
-    return 'HP1326ControlComponent';
+    return 'MultimeterControlComponent';
   }
 
   getType() {

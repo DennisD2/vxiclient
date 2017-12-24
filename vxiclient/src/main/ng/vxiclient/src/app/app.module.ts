@@ -12,14 +12,14 @@ import { AppRegistry } from './app.registry';
 import { VXIService } from './app.service';
 
 import { GraphViewComponent } from './graph-view/graph-view.component';
-import { HP1326ControlComponent } from './hp1326-control/hp1326-control.component';
+import { MultimeterControlComponent } from './multimeter-control/multimeter-control.component';
 import { HP1345ControlComponent } from './hp1345-control/hp1345-control.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GraphViewComponent,
-    HP1326ControlComponent,
+    MultimeterControlComponent,
     HP1345ControlComponent
   ],
   imports: [
