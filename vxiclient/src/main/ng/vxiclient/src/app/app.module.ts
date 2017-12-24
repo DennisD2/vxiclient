@@ -13,14 +13,14 @@ import { VXIService } from './app.service';
 
 import { GraphViewComponent } from './graph-view/graph-view.component';
 import { MultimeterControlComponent } from './multimeter-control/multimeter-control.component';
-import { HP1345ControlComponent } from './hp1345-control/hp1345-control.component';
+import { SwitchControlComponent } from './switch-control/switch-control.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GraphViewComponent,
     MultimeterControlComponent,
-    HP1345ControlComponent
+    SwitchControlComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +28,6 @@ import { HP1345ControlComponent } from './hp1345-control/hp1345-control.componen
     BrowserAnimationsModule,
     HttpModule,
     MaterialModule
-
   ],
   providers: [
     VXIService,

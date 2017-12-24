@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HP1345ControlComponent } from './hp1345-control.component';
+import { SwitchControlComponent } from './switch-control.component';
 
 describe('HP1345ControlComponent', () => {
-  let component: HP1345ControlComponent;
-  let fixture: ComponentFixture<HP1345ControlComponent>;
+  let component: SwitchControlComponent;
+  let fixture: ComponentFixture<SwitchControlComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HP1345ControlComponent ]
+      declarations: [ SwitchControlComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HP1345ControlComponent);
+    fixture = TestBed.createComponent(SwitchControlComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

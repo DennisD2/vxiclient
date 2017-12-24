@@ -4,7 +4,7 @@ import { Mutex, MutexInterface } from 'async-mutex';
 
 import { AppRegistry } from '../app.registry';
 import { VXIService } from '../app.service';
-import { HP1345ControlComponent } from '../hp1345-control/hp1345-control.component';
+import { SwitchControlComponent } from '../switch-control/switch-control.component';
 
 import { VXIDevice } from '../types/VXIDevice';
 import { DeviceIdn } from '../types/DeviceIdn';
@@ -72,7 +72,7 @@ export class MultimeterControlComponent implements OnInit, Device {
   }
 
   getName() {
-    return 'MultimeterControlComponent';
+    return 'HP E1326 DMM';
   }
 
   getType() {

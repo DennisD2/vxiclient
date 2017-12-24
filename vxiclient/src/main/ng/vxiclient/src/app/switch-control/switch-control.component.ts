@@ -2,13 +2,14 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Channel } from '../types/Channel';
 import { VXIService } from '../app.service';
 import { Mutex, MutexInterface } from 'async-mutex';
+import { MObject } from '../types/MObject';
 
 @Component({
-  selector: 'app-hp1345-control',
-  templateUrl: './hp1345-control.component.html',
-  styleUrls: ['./hp1345-control.component.css']
+  selector: 'app-switch-control',
+  templateUrl: './switch-control.component.html',
+  styleUrls: ['./switch-control.component.css']
 })
-export class HP1345ControlComponent implements OnInit {
+export class SwitchControlComponent implements OnInit, MObject {
   @Input() switch0: boolean[]; // = new Array();
   @Input() switch1: boolean[]; // = new Array();
   @Output() onSwitchChanged: EventEmitter<string>;
@@ -31,4 +32,11 @@ export class HP1345ControlComponent implements OnInit {
     console.log('onSwitchChange: ' + channel);
     this.onSwitchChanged.emit('' + channel);
   }
+
+  getName() { return 'HP E1345 Relay MUX - 32 Channels'; }
+
+  /** Required interface methods */
+  getType() { return null; }
+  start() {}
+  stop() {}
 }

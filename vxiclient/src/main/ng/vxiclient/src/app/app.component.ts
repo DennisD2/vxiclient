@@ -9,7 +9,7 @@ import { AppRegistry } from './app.registry';
 /**
  * Overall AppComponent.
  *
- * Starts AppRegistry which keeps everything rolling. The AppComponent keeps a "Pacer" functionality that works like a 
+ * Starts AppRegistry which keeps everything rolling. The AppComponent keeps a "Pacer" functionality that works like a
  * heartbeat.
  *
  */

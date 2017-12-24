@@ -1,5 +1,5 @@
 <div id="multimeter">
-  <h3>Multimeter ({{device}})</h3>
+  <h3>Multimeter ({{getName()}})</h3>
   <p>
     <!-- action buttons -->
     <button (click)="start()">
@@ -46,6 +46,6 @@
   </div>
 
   <!-- switch connected to voltmeter has own control --> 
-  <app-hp1345-control [switch0]="switch0" [switch1]="switch1" (onSwitchChanged)="handleSwitchChange($event)"></app-hp1345-control>
+  <app-switch-control [switch0]="switch0" [switch1]="switch1" (onSwitchChanged)="handleSwitchChange($event)"></app-switch-control>
 
 </div>
