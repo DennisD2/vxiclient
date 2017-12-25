@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Mutex, MutexInterface } from 'async-mutex';
 
 import { AppRegistry } from '../app.registry';
-import { VXIService } from '../services/vxi.service';
+import { MultimeterService } from '../services/multimeter.service';
 import { SwitchComponent } from '../switch/switch.component';
 
 import { VXIDevice } from '../types/VXIDevice';
@@ -64,7 +64,7 @@ export class MultimeterComponent implements OnInit, Device {
   private mutex: Mutex = new Mutex();
 
   constructor(private appRegistry: AppRegistry,
-    private vxiService: VXIService) {
+    private multimeterService: MultimeterService) {
     this.start();
   }
 
@@ -93,7 +93,7 @@ export class MultimeterComponent implements OnInit, Device {
 
   doMeasurementCallback(): any {
     // console.log('doMeasurement');
-    const vxi = this.vxiService;
+    const vxi = this.multimeterService;
     const self = this;
 
     const channelsToScan: string[] = this.channels.map(c => c.name);
@@ -123,19 +123,19 @@ export class MultimeterComponent implements OnInit, Device {
 
   getInfo() {
     console.log('getInfo');
-    const vxi = this.vxiService;
+    const vxi = this.multimeterService;
     const self = this;
 
     this.mutex.acquire().then(function(release) {
       self.device = '?';
 
-      vxi.getInfo().subscribe(value => self.device = value);
+      /*vxi.getInfo().subscribe(value => self.device = value);
       console.log('After getInfo with ' + self.device);
 
       vxi.getIdn().subscribe(value => self.devIdn = value);
       console.log('After getIdn with ' + self.devIdn.name );
 
-      vxi.getDevices().subscribe(value => self.devices = value);
+      vxi.getDevices().subscribe(value => self.devices = value);*/
 
       release();
     });
@@ -144,7 +144,7 @@ export class MultimeterComponent implements OnInit, Device {
   onChangeMode(event: any) {
     // Is called with the Item as event
     console.log('modeOnChangeEvent: ' + event.value);
-    const vxi = this.vxiService;
+    const vxi = this.multimeterService;
     const self = this;
 
     this.mutex.acquire().then(function(release) {

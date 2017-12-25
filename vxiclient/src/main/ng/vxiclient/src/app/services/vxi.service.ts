@@ -11,21 +11,18 @@ import { DeviceIdn } from '../types/DeviceIdn';
 import { VXIDevice } from '../types/VXIDevice';
 import { Channel } from '../types/Channel';
 
+import { ConfigService } from './config.service';
+
 // import {Mutex, MutexInterface} from 'async-mutex';
 
 @Injectable()
 export class VXIService {
-  private baseUrl   = 'http://localhost:8888/vxi/rest/api/hp1300/mfb/hp1301';
-  private vmBaseUrl = 'http://localhost:8888/vxi/rest/api/hp1326/mfb/hp1326';
-
-  channels: Channel[];
-
   // mutex : Mutex = new Mutex();
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private configService: ConfigService) { }
 
   getInfo(): Observable<string> {
-    const dataUrl = this.baseUrl + '/info';
+    const dataUrl = this.configService.get('mainframe') + '/info';
     return this.http
       .get(dataUrl)
       .map((response) => {
@@ -35,7 +32,7 @@ export class VXIService {
   }
 
   getIdn(): Observable<DeviceIdn> {
-    const dataUrl = this.baseUrl + '/idn';
+    const dataUrl = this.configService.get('mainframe') + '/idn';
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
 
@@ -49,7 +46,7 @@ export class VXIService {
   }
 
   getDevices(): Observable<VXIDevice[]> {
-    const dataUrl = this.baseUrl + '/devices';
+    const dataUrl = this.configService.get('mainframe') + '/devices';
 
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
@@ -62,29 +59,7 @@ export class VXIService {
       .catch(this.handleError);
   }
 
-  getMeasurement(channelsToScan: string[]): Observable<Channel[]> {
-    // console.log("to scan: " + JSON.stringify(channelsToScan))
-    const dataUrl = this.vmBaseUrl + '/readFake/7.27';
-
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
-    const body = JSON.stringify(channelsToScan);
-
-    return this.http.post(dataUrl, body, options)
-      .map((response) => response.json() as Channel[])
-      .catch(this.handleError);
-  }
-
-  setMode( device: string, mode: string) {
-    console.log('vxi.setMode:' + device + ' with parameter ' + mode );
-    let url  = this.getBaseUrl(device);
-  }
-
-  getBaseUrl(device: string) {
-    return this.vmBaseUrl;
-  }
-
-  getEnvLog(): Observable<string> {
+ getEnvLog(): Observable<string> {
     const envLoggerBaseUrl = 'http://envlogger';
     const dataUrl = envLoggerBaseUrl + '';
 
@@ -95,10 +70,6 @@ export class VXIService {
       .map((response) => response.text() as string)
       .catch(this.handleError);
 }
-
-  public getChannels(): Channel[] {
-    return this.channels;
-  }
 
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
