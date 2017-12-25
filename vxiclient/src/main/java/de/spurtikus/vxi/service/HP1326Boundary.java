@@ -141,7 +141,7 @@ public class HP1326Boundary extends AbstractBoundary<HP1326> {
 	double oldy[] = new double[2*MAXCHANNELS];
 	
 	@POST
-	@Path("{mainframe}/{devname}/readFake/{range}")
+	@Path("{mainframe}/{devname}/Fakeread/{range}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response readChannelsFake(@Context UriInfo uriInfo,
@@ -185,6 +185,29 @@ public class HP1326Boundary extends AbstractBoundary<HP1326> {
 				sb.append(",");
 			}
 		}
+		sb.append("}");
+		
+		logger.debug(sb.toString());
+		return Response.ok(sb.toString()).build();
+	}
+
+	@GET
+	@Path("{mainframe}/{devname}/FakesetVoltageRange/{acdc}/{range}")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response setVoltageRange(@Context UriInfo uriInfo,
+			@PathParam("mainframe") String mainframe,
+			@PathParam("devname") String devname,
+			@PathParam("acdc") String acdc, 
+			@PathParam("range") Double range) {
+		logger.debug("Incoming URI : {}", uriInfo.getPath());
+		logger.debug("Mainframe: {}", mainframe);
+		logger.debug("Device name: {}", devname);
+		logger.debug("acdc: {}", acdc);
+		logger.debug("Range: {}", range);
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		sb.append(acdc);
 		sb.append("}");
 		
 		logger.debug(sb.toString());

@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ConfigService {
+  private fakeString = 'Fake';
+
   private baseUrl = 'http://localhost:8888/vxi/rest/api';
+
   private urls = [
     { device: 'mainframe', url: this.baseUrl + '/hp1300/mfb/hp1301'},
     { device: 'voltmeter', url: this.baseUrl + '/hp1326/mfb/hp1326'},
@@ -13,10 +16,14 @@ export class ConfigService {
     { device: 'frequency-generator', url: this.baseUrl + '/hp1326/mfb/hp1326'}
   ];
 
-  get( name: string ) {
+  constructor() { }
+
+  public get( name: string ) {
     return this.urls.filter(u => u.device === name)[0].url;
   }
 
-  constructor() { }
+  public fake() {
+    return this.fakeString;
+  }
 
 }

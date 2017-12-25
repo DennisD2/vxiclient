@@ -144,14 +144,13 @@ export class MultimeterComponent implements OnInit, Device {
   onChangeMode(event: any) {
     // Is called with the Item as event
     console.log('modeOnChangeEvent: ' + event.value);
-    const vxi = this.multimeterService;
-    const self = this;
 
-    this.mutex.acquire().then(function(release) {
-      vxi.setMode(self.getName(), event.value);
-      console.log('After setMode' );
-      release();
-    });
+    // event = U
+    // hide R
+    // hide I
+
+    // etc.
+
   }
 
   onChangeACDC(event: any) {
@@ -160,10 +159,31 @@ export class MultimeterComponent implements OnInit, Device {
 
   onRangeChangeDC(event: any) {
     console.log('onrangeChangeEventDC: ' + event.value);
+    const vxi = this.multimeterService;
+    const self = this;
+
+    this.mutex.acquire().then( function(release) {
+      vxi.setVoltageRangeDC(self.getName(), event.value)
+      .subscribe(c => {
+        console.log(c);
+        release();
+      }, c => {
+        console.log('An error occured, releasing mutex');
+        release();
+      });
+    });
   }
 
   onRangeChangeAC(event: any) {
     console.log('onrangeChangeEventAC: ' + event.value);
+    const vxi = this.multimeterService;
+    const self = this;
+
+    this.mutex.acquire().then(function(release) {
+      vxi.setVoltageRangeAC(self.getName(), event.value);
+      console.log('After setMode' );
+      release();
+    });
   }
 
   onAutoChange(event: any) {

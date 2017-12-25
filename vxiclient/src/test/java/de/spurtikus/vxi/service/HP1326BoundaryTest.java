@@ -82,7 +82,7 @@ public class HP1326BoundaryTest {
 	@RunAsClient
 	public void read(@ArquillianResource URL contextPath) {
 		String range = "7.27";
-		String uri = URI + "/readFake/" + range;
+		String uri = URI + "/Fakeread/" + range;
 
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call: " + contextPath + uri);

@@ -11,14 +11,16 @@ import { ConfigService } from './config.service';
 export class MultimeterService extends BaseService {
 
   channels: Channel[];
+  serviceUrl: string;
 
   constructor(private http: Http, private configService: ConfigService) {
     super();
+    this.serviceUrl = this.configService.get('voltmeter') + '/' + this.configService.fake();
   }
 
   getMeasurement(channelsToScan: string[]): Observable<Channel[]> {
     // console.log("to scan: " + JSON.stringify(channelsToScan))
-    const dataUrl = this.configService.get('voltmeter') + '/readFake/7.27';
+    const dataUrl = this.serviceUrl + 'read' + '/7.27';
 
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
@@ -29,9 +31,18 @@ export class MultimeterService extends BaseService {
       .catch(this.handleError);
   }
 
-  setMode( device: string, mode: string) {
-    console.log('vxi.setMode:' + device + ' with parameter ' + mode );
-   // const url  = this.configService.getBaseUrl(device);
+  setVoltageRangeDC ( device: string, mode: string): Observable<string> {
+    console.log('vxi.setVoltageRangeDC:' + device + ' with parameter ' + mode );
+    const dataUrl =  this.serviceUrl + 'setVoltageRange/dc/' + mode;
+    console.log(dataUrl);
+
+    return this.http.get(dataUrl)
+      .map((response) => { console.log(response.text()); return response.text() as string; } )
+      .catch(this.handleError);
   }
 
+  setVoltageRangeAC( device: string, mode: string) {
+    console.log('vxi.setVoltageRangeDC:' + device + ' with parameter ' + mode );
+    const dataUrl =  this.serviceUrl + 'setVoltageRange/ac/' + mode;
+  }
 }
