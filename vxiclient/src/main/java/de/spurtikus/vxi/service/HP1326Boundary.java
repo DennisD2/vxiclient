@@ -191,19 +191,48 @@ public class HP1326Boundary extends AbstractBoundary<HP1326> {
 		return Response.ok(sb.toString()).build();
 	}
 
-	@GET
+	/**
+	 * HP1326 voltage range change.
+	 * 
+	 * TODO: make sure it works for both DC and AC.
+	 * 
+	 * @param uriInfo
+	 * @param mainframe
+	 * @param devname
+	 * @param acdc range change for 'AC' or 'DC' range.
+	 * @param range
+	 * @return
+	 */
+	@POST
 	@Path("{mainframe}/{devname}/FakesetVoltageRange/{acdc}/{range}")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
 	public Response setVoltageRange(@Context UriInfo uriInfo,
 			@PathParam("mainframe") String mainframe,
 			@PathParam("devname") String devname,
 			@PathParam("acdc") String acdc, 
-			@PathParam("range") Double range) {
+			@PathParam("range") Double range,
+			List<Integer> channels) {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
 		logger.debug("Device name: {}", devname);
 		logger.debug("acdc: {}", acdc);
 		logger.debug("Range: {}", range);
+		logger.debug("Channels: {}", channels);
+
+		try {
+			connManager = ConnectionManager.getInstance(this.getClass(), mainframe, devname);
+		} catch (Exception e) {
+			logger.error(
+					"Cannot get wrapper instance. This is usually an initialization problem.");
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		try {
+			getDevice(mainframe, devname).setVoltageRange(range, channels);
+		} catch (Exception e) {
+			logger.error("Error accessing device.");
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");

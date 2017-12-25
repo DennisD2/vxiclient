@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { Mutex, MutexInterface } from 'async-mutex';
 
@@ -111,6 +112,27 @@ export class MultimeterComponent implements OnInit, Device {
     return this.channelResult;
   }
 
+  /**
+   * Adds aspects 'mutex' and 'resolve Observable' around a method.
+   *
+   * @param f method to surround with mutex and resolving aspect.
+   */
+  mutexedCall( f: Function ) {
+    console.log('Mutex:enter');
+
+    this.mutex.acquire().then(function(release) {
+      f()
+      .subscribe(c => {
+        console.log(c);
+        release();
+      }, c => {
+        console.log('An error occured, releasing mutex');
+        release();
+      });
+    });
+    console.log('Mutex:exit');
+  }
+
   record(onoff: String) {
     console.log('record' + onoff);
     if (onoff === 'on') {
@@ -157,33 +179,26 @@ export class MultimeterComponent implements OnInit, Device {
     console.log('onChangeACDC: ' + event.value);
   }
 
+
+
   onRangeChangeDC(event: any) {
     console.log('onrangeChangeEventDC: ' + event.value);
-    const vxi = this.multimeterService;
     const self = this;
+    const channelsToScan: string[] = this.channels.map(c => c.name);
+    const f: Function = (): Observable<any> => {
+      return self.multimeterService.setVoltageRangeDC(channelsToScan, self.getName(), event.value); };
 
-    this.mutex.acquire().then( function(release) {
-      vxi.setVoltageRangeDC(self.getName(), event.value)
-      .subscribe(c => {
-        console.log(c);
-        release();
-      }, c => {
-        console.log('An error occured, releasing mutex');
-        release();
-      });
-    });
+    this.mutexedCall(f);
   }
 
   onRangeChangeAC(event: any) {
     console.log('onrangeChangeEventAC: ' + event.value);
-    const vxi = this.multimeterService;
     const self = this;
+    const channelsToScan: string[] = this.channels.map(c => c.name);
+    const f: Function = (): Observable<any> => {
+      return self.multimeterService.setVoltageRangeAC(channelsToScan, self.getName(), event.value); };
 
-    this.mutex.acquire().then(function(release) {
-      vxi.setVoltageRangeAC(self.getName(), event.value);
-      console.log('After setMode' );
-      release();
-    });
+    this.mutexedCall(f);
   }
 
   onAutoChange(event: any) {

@@ -10,7 +10,6 @@ import { ConfigService } from './config.service';
 @Injectable()
 export class MultimeterService extends BaseService {
 
-  channels: Channel[];
   serviceUrl: string;
 
   constructor(private http: Http, private configService: ConfigService) {
@@ -31,18 +30,32 @@ export class MultimeterService extends BaseService {
       .catch(this.handleError);
   }
 
-  setVoltageRangeDC ( device: string, mode: string): Observable<string> {
+  setVoltageRangeDC(channelsToScan: string[], device: string, mode: string): Observable<string> {
     console.log('vxi.setVoltageRangeDC:' + device + ' with parameter ' + mode );
     const dataUrl =  this.serviceUrl + 'setVoltageRange/dc/' + mode;
     console.log(dataUrl);
 
-    return this.http.get(dataUrl)
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
+    const body = JSON.stringify(channelsToScan);
+    // console.log(body);
+
+    return this.http.post(dataUrl, body, options)
       .map((response) => { console.log(response.text()); return response.text() as string; } )
       .catch(this.handleError);
   }
 
-  setVoltageRangeAC( device: string, mode: string) {
+  setVoltageRangeAC(channelsToScan: string[], device: string, mode: string) {
     console.log('vxi.setVoltageRangeDC:' + device + ' with parameter ' + mode );
     const dataUrl =  this.serviceUrl + 'setVoltageRange/ac/' + mode;
-  }
+    console.log(dataUrl);
+
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
+    const body = JSON.stringify(channelsToScan);
+    // console.log(body);
+
+    return this.http.post(dataUrl, body, options)
+      .map((response) => { console.log(response.text()); return response.text() as string; } )
+      .catch(this.handleError);  }
 }
