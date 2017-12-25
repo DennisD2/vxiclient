@@ -25,12 +25,14 @@
         <option *ngFor="let m of allowedACDC" [ngValue]="m">{{m.value}}</option>
       </select> 
       
-      <label for="m_u_range_dc">DC Volts Range:</label>
-      <select name="m_u_range_dc" [(ngModel)]="selectedDCRange" (ngModelChange)="onRangeChangeDC($event)">
-        <option *ngFor="let m of allowedDCRanges" [ngValue]="m">{{m.value}}</option>
-      </select> 
-    
-      <label for="m_u_range_ac">DC Volts Range:</label>
+      <div id="m_u_range_dc_div">
+        <label for="m_u_range_dc">DC Volts Range:</label>
+        <select name="m_u_range_dc" [(ngModel)]="selectedDCRange" (ngModelChange)="onRangeChangeDC($event)">
+          <option *ngFor="let m of allowedDCRanges" [ngValue]="m">{{m.value}}</option>
+        </select> 
+      </div>
+
+      <label for="m_u_range_ac">AC Volts Range:</label>
       <select name="m_u_range_ac" [(ngModel)]="selectedACRange" (ngModelChange)="onRangeChangeAC($event)">
         <option *ngFor="let m of allowedACRanges" [ngValue]="m">{{m.value}}</option>
       </select> 
@@ -47,6 +49,6 @@
     </div>
 
   <!-- switch connected to voltmeter has own control --> 
-  <app-switch-control [switch0]="switch0" [switch1]="switch1" (onSwitchChanged)="handleSwitchChange($event)"></app-switch-control>
+  <app-switch [switch0]="switch0" [switch1]="switch1" (onSwitchChanged)="handleSwitchChange($event)"></app-switch>
 
 </div>

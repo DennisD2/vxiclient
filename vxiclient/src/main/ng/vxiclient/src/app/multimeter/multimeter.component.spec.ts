@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MultimeterControlComponent } from './multimeter-control.component';
+import { MultimeterComponent } from './multimeter.component';
 
-describe('HP1326ViewComponent', () => {
-  let component: MultimeterControlComponent;
-  let fixture: ComponentFixture<MultimeterControlComponent>;
+describe('MultimeterComponent', () => {
+  let component: MultimeterComponent;
+  let fixture: ComponentFixture<MultimeterComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MultimeterControlComponent ]
+      declarations: [ MultimeterComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MultimeterControlComponent);
+    fixture = TestBed.createComponent(MultimeterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -7,9 +7,9 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import { DeviceIdn } from './types/DeviceIdn';
-import { VXIDevice } from './types/VXIDevice';
-import { Channel } from './types/Channel';
+import { DeviceIdn } from '../types/DeviceIdn';
+import { VXIDevice } from '../types/VXIDevice';
+import { Channel } from '../types/Channel';
 
 // import {Mutex, MutexInterface} from 'async-mutex';
 
@@ -73,6 +73,15 @@ export class VXIService {
     return this.http.post(dataUrl, body, options)
       .map((response) => response.json() as Channel[])
       .catch(this.handleError);
+  }
+
+  setMode( device: string, mode: string) {
+    console.log('vxi.setMode:' + device + ' with parameter ' + mode );
+    let url  = this.getBaseUrl(device);
+  }
+
+  getBaseUrl(device: string) {
+    return this.vmBaseUrl;
   }
 
   getEnvLog(): Observable<string> {

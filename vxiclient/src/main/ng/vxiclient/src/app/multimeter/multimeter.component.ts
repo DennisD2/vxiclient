@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Mutex, MutexInterface } from 'async-mutex';
 
 import { AppRegistry } from '../app.registry';
-import { VXIService } from '../app.service';
-import { SwitchControlComponent } from '../switch-control/switch-control.component';
+import { VXIService } from '../services/vxi.service';
+import { SwitchComponent } from '../switch/switch.component';
 
 import { VXIDevice } from '../types/VXIDevice';
 import { DeviceIdn } from '../types/DeviceIdn';
@@ -16,11 +16,11 @@ import { Channel } from '../types/Channel';
  *
  */
 @Component({
-  selector: 'app-multimeter-control',
-  templateUrl: './multimeter-control.component.html',
-  styleUrls: ['./multimeter-control.component.css']
+  selector: 'app-multimeter',
+  templateUrl: './multimeter.component.html',
+  styleUrls: ['./multimeter.component.css']
 })
-export class MultimeterControlComponent implements OnInit, Device {
+export class MultimeterComponent implements OnInit, Device {
   type = 'Sample';
   active: boolean;
 
@@ -64,7 +64,7 @@ export class MultimeterControlComponent implements OnInit, Device {
   private mutex: Mutex = new Mutex();
 
   constructor(private appRegistry: AppRegistry,
-    private imageService: VXIService) {
+    private vxiService: VXIService) {
     this.start();
   }
 
@@ -72,7 +72,7 @@ export class MultimeterControlComponent implements OnInit, Device {
   }
 
   getName() {
-    return 'HP E1326 DMM';
+    return 'voltmeter';
   }
 
   getType() {
@@ -93,12 +93,12 @@ export class MultimeterControlComponent implements OnInit, Device {
 
   doMeasurementCallback(): any {
     // console.log('doMeasurement');
-    const is = this.imageService;
+    const vxi = this.vxiService;
     const self = this;
 
     const channelsToScan: string[] = this.channels.map(c => c.name);
     this.mutex.acquire().then( function(release) {
-      is.getMeasurement(channelsToScan)
+      vxi.getMeasurement(channelsToScan)
       .subscribe(c => {
         self.channelResult = c as Channel[];
         // console.log(JSON.stringify(self.channels))
@@ -123,19 +123,19 @@ export class MultimeterControlComponent implements OnInit, Device {
 
   getInfo() {
     console.log('getInfo');
-    const is = this.imageService;
+    const vxi = this.vxiService;
     const self = this;
 
     this.mutex.acquire().then(function(release) {
       self.device = '?';
 
-      is.getInfo().subscribe(value => self.device = value);
+      vxi.getInfo().subscribe(value => self.device = value);
       console.log('After getInfo with ' + self.device);
 
-      is.getIdn().subscribe(value => self.devIdn = value);
+      vxi.getIdn().subscribe(value => self.devIdn = value);
       console.log('After getIdn with ' + self.devIdn.name );
 
-      is.getDevices().subscribe(value => self.devices = value);
+      vxi.getDevices().subscribe(value => self.devices = value);
 
       release();
     });
@@ -144,6 +144,14 @@ export class MultimeterControlComponent implements OnInit, Device {
   onChangeMode(event: any) {
     // Is called with the Item as event
     console.log('modeOnChangeEvent: ' + event.value);
+    const vxi = this.vxiService;
+    const self = this;
+
+    this.mutex.acquire().then(function(release) {
+      vxi.setMode(self.getName(), event.value);
+      console.log('After setMode' );
+      release();
+    });
   }
 
   onChangeACDC(event: any) {

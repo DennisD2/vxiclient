@@ -1,15 +1,15 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Channel } from '../types/Channel';
-import { VXIService } from '../app.service';
+import { VXIService } from '../services/vxi.service';
 import { Mutex, MutexInterface } from 'async-mutex';
 import { MObject } from '../types/MObject';
 
 @Component({
-  selector: 'app-switch-control',
-  templateUrl: './switch-control.component.html',
-  styleUrls: ['./switch-control.component.css']
+  selector: 'app-switch',
+  templateUrl: './switch.component.html',
+  styleUrls: ['./switch.component.css']
 })
-export class SwitchControlComponent implements OnInit, MObject {
+export class SwitchComponent implements OnInit, MObject {
   @Input() switch0: boolean[]; // = new Array();
   @Input() switch1: boolean[]; // = new Array();
   @Output() onSwitchChanged: EventEmitter<string>;

@@ -9,22 +9,25 @@ import { MaterialModule } from '@angular/material';
 import { AppComponent } from './app.component';
 import { AppRegistry } from './app.registry';
 
-import { VXIService } from './app.service';
+import { VXIService } from './services/vxi.service';
+import { MultimeterService } from './services/multimeter.service';
+import { ConfigService } from './services/config.service';
 
 import { GraphViewComponent } from './graph-view/graph-view.component';
-import { MultimeterControlComponent } from './multimeter-control/multimeter-control.component';
-import { SwitchControlComponent } from './switch-control/switch-control.component';
+import { EventLogComponent } from './event-log/event-log.component';
+
+import { MultimeterComponent } from './multimeter/multimeter.component';
+import { SwitchComponent } from './switch/switch.component';
 import { CounterComponent } from './counter/counter.component';
 import { FrequencyGeneratorComponent } from './frequency-generator/frequency-generator.component';
 import { DigitalIOComponent } from './digital-io/digital-io.component';
-import { EventLogComponent } from './event-log/event-log.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GraphViewComponent,
-    MultimeterControlComponent,
-    SwitchControlComponent,
+    MultimeterComponent,
+    SwitchComponent,
     CounterComponent,
     FrequencyGeneratorComponent,
     DigitalIOComponent,
@@ -38,6 +41,8 @@ import { EventLogComponent } from './event-log/event-log.component';
     MaterialModule
   ],
   providers: [
+    ConfigService,
+    MultimeterService,
     VXIService,
     AppRegistry],
   bootstrap: [AppComponent]

@@ -93,7 +93,7 @@ public class HP1326BoundaryTest {
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
 		try {
-			Thread.sleep(5000000);
+			Thread.sleep(50000000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
