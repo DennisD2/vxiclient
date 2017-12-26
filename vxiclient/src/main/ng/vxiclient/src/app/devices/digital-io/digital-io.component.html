@@ -1,82 +1,94 @@
 <div id="e1330">
-		<hr>
-		<h3>HP1330 Digital I/O</h3>
-		<div id="digconfig">
-			<div id="digconfig_polarity" style="border:1px solid black; width: 10%;; padding-top: 3px; padding-left: 3px;">
-				Polarity<br>
-				DATA0:
-				<input type="radio" name="polarity_0" value="pos" checked>pos
- 				<input type="radio" name="polarity_0" value="neg">neg<br>
-				DATA1:
-				<input type="radio" name="polarity_1" value="pos" checked>pos
- 				<input type="radio" name="polarity_1" value="neg">neg<br>
-				DATA2:
-				<input type="radio" name="polarity_2" value="pos" checked>pos
- 				<input type="radio" name="polarity_2" value="neg">neg<br>
-				DATA3:
-				<input type="radio" name="polarity_3" value="pos" checked>pos
- 				<input type="radio" name="polarity_3" value="neg">neg
+	<hr>
+	<h3>Digital I/O ({{getName()}})</h3>
+	<p>
+		<!-- action buttons -->
+		<button (click)="start()">
+			<md-icon>settings_power</md-icon>
+			<span>Start</span>
+		</button>
+		<button (click)="stop()">
+			<md-icon>settings_power</md-icon>
+			<span>Stop</span>
+		</button>
+	</p>
+	
+	<div id="digconfig" *ngIf="active">
+		<div id="digconfig_polarity" style="border:1px solid black; width: 10%;; padding-top: 3px; padding-left: 3px;">
+			Polarity<br>
+			DATA0:
+			<input type="radio" name="polarity_0" value="pos" checked>pos
+			<input type="radio" name="polarity_0" value="neg">neg<br>
+			DATA1:
+			<input type="radio" name="polarity_1" value="pos" checked>pos
+			<input type="radio" name="polarity_1" value="neg">neg<br>
+			DATA2:
+			<input type="radio" name="polarity_2" value="pos" checked>pos
+			<input type="radio" name="polarity_2" value="neg">neg<br>
+			DATA3:
+			<input type="radio" name="polarity_3" value="pos" checked>pos
+			<input type="radio" name="polarity_3" value="neg">neg
+		</div>
+		Data<br>
+		<div id="data0_config" style="border:1px solid black;width: 25%; display: inline; background: #ffff00; padding-top: 3px; padding-left: 3px;">
+			DATA0:
+			<div id="data0" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;" >
+				7 <input type="checkbox" name="bit7" value="false" onchange="digi_changeBit('0,7');">
+				6 <input type="checkbox" name="bit6" value="false" onchange="digi_changeBit('0,6');">
+				5 <input type="checkbox" name="bit5" value="false" onchange="digi_changeBit('0,5');">
+				4 <input type="checkbox" name="bit4" value="false" onchange="digi_changeBit('0,4');">
+				3 <input type="checkbox" name="bit3" value="false" onchange="digi_changeBit('0,3');">
+				2 <input type="checkbox" name="bit2" value="false" onchange="digi_changeBit('0,2');">
+				1 <input type="checkbox" name="bit1" value="false" onchange="digi_changeBit('0,1');">
+				0 <input type="checkbox" name="bit0" value="false" onchange="digi_changeBit('0,0');">
 			</div>
-			Data<br>
-			<div id="data0_config" style="border:1px solid black;width: 25%; display: inline; background: #ffff00; padding-top: 3px; padding-left: 3px;">
-				DATA0:
-				<div id="data0" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;" >
-					7 <input type="checkbox" name="bit7" value="false" onchange="digi_changeBit('0,7');">
-					6 <input type="checkbox" name="bit6" value="false" onchange="digi_changeBit('0,6');">
-					5 <input type="checkbox" name="bit5" value="false" onchange="digi_changeBit('0,5');">
-					4 <input type="checkbox" name="bit4" value="false" onchange="digi_changeBit('0,4');">
-					3 <input type="checkbox" name="bit3" value="false" onchange="digi_changeBit('0,3');">
-					2 <input type="checkbox" name="bit2" value="false" onchange="digi_changeBit('0,2');">
-					1 <input type="checkbox" name="bit1" value="false" onchange="digi_changeBit('0,1');">
-					0 <input type="checkbox" name="bit0" value="false" onchange="digi_changeBit('0,0');">
-				</div>
+		</div>
+		<div id="data1_config" style="border:1px solid black;width: 25%; display: inline; background: #ffffff; padding-top: 3px; padding-left: 3px;">
+			DATA1:
+			<div id="data1" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;">
+				7 <input type="checkbox" name="bit7" value="false" onchange="digi_changeBit('1,7');">
+				6 <input type="checkbox" name="bit6" value="false" onchange="digi_changeBit('1,6');">
+				5 <input type="checkbox" name="bit5" value="false" onchange="digi_changeBit('1,5');">
+				4 <input type="checkbox" name="bit4" value="false" onchange="digi_changeBit('1,4');">
+				3 <input type="checkbox" name="bit3" value="false" onchange="digi_changeBit('1,3');">
+				2 <input type="checkbox" name="bit2" value="false" onchange="digi_changeBit('1,2');">
+				1 <input type="checkbox" name="bit1" value="false" onchange="digi_changeBit('1,1');">
+				0 <input type="checkbox" name="bit0" value="false" onchange="digi_changeBit('1,0');">
 			</div>
-			<div id="data1_config" style="border:1px solid black;width: 25%; display: inline; background: #ffffff; padding-top: 3px; padding-left: 3px;">
-				DATA1:
-				<div id="data1" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;">
-					7 <input type="checkbox" name="bit7" value="false" onchange="digi_changeBit('1,7');">
-					6 <input type="checkbox" name="bit6" value="false" onchange="digi_changeBit('1,6');">
-					5 <input type="checkbox" name="bit5" value="false" onchange="digi_changeBit('1,5');">
-					4 <input type="checkbox" name="bit4" value="false" onchange="digi_changeBit('1,4');">
-					3 <input type="checkbox" name="bit3" value="false" onchange="digi_changeBit('1,3');">
-					2 <input type="checkbox" name="bit2" value="false" onchange="digi_changeBit('1,2');">
-					1 <input type="checkbox" name="bit1" value="false" onchange="digi_changeBit('1,1');">
-					0 <input type="checkbox" name="bit0" value="false" onchange="digi_changeBit('1,0');">
-				</div>
+		</div>
+		<div id="data2_config" style="border:1px solid black;width: 25%; display: inline; background: #ffff00; padding-top: 3px; padding-left: 3px;">
+			DATA2:
+			<div id="data2" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;">
+				7 <input type="checkbox" name="bit7" value="false" onchange="digi_changeBit('2,7');">
+				6 <input type="checkbox" name="bit6" value="false" onchange="digi_changeBit('2,6');">
+				5 <input type="checkbox" name="bit5" value="false" onchange="digi_changeBit('2,5');">
+				4 <input type="checkbox" name="bit4" value="false" onchange="digi_changeBit('2,4');">
+				3 <input type="checkbox" name="bit3" value="false" onchange="digi_changeBit('2,3');">
+				2 <input type="checkbox" name="bit2" value="false" onchange="digi_changeBit('2,2');">
+				1 <input type="checkbox" name="bit1" value="false" onchange="digi_changeBit('2,1');">
+				0 <input type="checkbox" name="bit0" value="false" onchange="digi_changeBit('2,0');">
 			</div>
-			<div id="data2_config" style="border:1px solid black;width: 25%; display: inline; background: #ffff00; padding-top: 3px; padding-left: 3px;">
-				DATA2:
-				<div id="data2" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;">
-					7 <input type="checkbox" name="bit7" value="false" onchange="digi_changeBit('2,7');">
-					6 <input type="checkbox" name="bit6" value="false" onchange="digi_changeBit('2,6');">
-					5 <input type="checkbox" name="bit5" value="false" onchange="digi_changeBit('2,5');">
-					4 <input type="checkbox" name="bit4" value="false" onchange="digi_changeBit('2,4');">
-					3 <input type="checkbox" name="bit3" value="false" onchange="digi_changeBit('2,3');">
-					2 <input type="checkbox" name="bit2" value="false" onchange="digi_changeBit('2,2');">
-					1 <input type="checkbox" name="bit1" value="false" onchange="digi_changeBit('2,1');">
-					0 <input type="checkbox" name="bit0" value="false" onchange="digi_changeBit('2,0');">
-				</div>
-			</div>
-			<div id="data3_config" style="border:1px solid black;width: 25%; display: inline; background: #ffffff; padding-top: 3px; padding-left: 3px;">
-				DATA3:
-				<div id="data3" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;">
-					7 <input type="checkbox" name="bit7" value="false" onchange="digi_changeBit('3,7');">
-					6 <input type="checkbox" name="bit6" value="false" onchange="digi_changeBit('3,6');">
-					5 <input type="checkbox" name="bit5" value="false" onchange="digi_changeBit('3,5');">
-					4 <input type="checkbox" name="bit4" value="false" onchange="digi_changeBit('3,4');">
-					3 <input type="checkbox" name="bit3" value="false" onchange="digi_changeBit('3,3');">
-					2 <input type="checkbox" name="bit2" value="false" onchange="digi_changeBit('3,2');">
-					1 <input type="checkbox" name="bit1" value="false" onchange="digi_changeBit('3,1');">
-					0 <input type="checkbox" name="bit0" value="false" onchange="digi_changeBit('3,0');">
-				</div>
+		</div>
+		<div id="data3_config" style="border:1px solid black;width: 25%; display: inline; background: #ffffff; padding-top: 3px; padding-left: 3px;">
+			DATA3:
+			<div id="data3" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;">
+				7 <input type="checkbox" name="bit7" value="false" onchange="digi_changeBit('3,7');">
+				6 <input type="checkbox" name="bit6" value="false" onchange="digi_changeBit('3,6');">
+				5 <input type="checkbox" name="bit5" value="false" onchange="digi_changeBit('3,5');">
+				4 <input type="checkbox" name="bit4" value="false" onchange="digi_changeBit('3,4');">
+				3 <input type="checkbox" name="bit3" value="false" onchange="digi_changeBit('3,3');">
+				2 <input type="checkbox" name="bit2" value="false" onchange="digi_changeBit('3,2');">
+				1 <input type="checkbox" name="bit1" value="false" onchange="digi_changeBit('3,1');">
+				0 <input type="checkbox" name="bit0" value="false" onchange="digi_changeBit('3,0');">
 			</div>
 		</div>
 	</div>
-	<script>
-		function digi_changeBit(bit) {
-			console.log("change bit" + bit);
-			//var selectedValue = document.getElementById('afg_sweep_time').value;
-			//vxiclient.generator.setSweepTime(selectedValue);
-		}
-	</script>
-	<!-- end of e1330 div -->
+</div>
+<script>
+	function digi_changeBit(bit) {
+		console.log("change bit" + bit);
+		//var selectedValue = document.getElementById('afg_sweep_time').value;
+		//vxiclient.generator.setSweepTime(selectedValue);
+	}
+</script>
+<!-- end of e1330 div -->

@@ -1,9 +1,23 @@
 <div id="counter">
-    <hr>
-    <h3>HP E1333 Counter</h3>
+  <hr>
+  <h3>Counter ({{getName()}})</h3>
   <p>
-    <button onclick="start_counter_loop('E1333')">Start counter loop</button>
-    <button onclick="stop_counter_loop('E1333')">Stop counter loop</button>
+    <!-- action buttons -->
+    <button (click)="start()">
+      <md-icon>settings_power</md-icon>
+      <span>Start</span>
+    </button>
+    <button (click)="stop()">
+      <md-icon>settings_power</md-icon>
+      <span>Stop</span>
+    </button>
   </p>
+  
+  <div id="config" *ngIf="active">
+    <p>
+      <button onclick="start_counter_loop('E1333')">Start counter loop</button>
+      <button onclick="stop_counter_loop('E1333')">Stop counter loop</button>
+    </p>
 
+  </div>
 </div>

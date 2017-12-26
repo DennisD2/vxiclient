@@ -1,107 +1,123 @@
-<div id="afg">
-    <hr>
-    <h3>HP1340 Arbitrary Function Generator</h3>
+<div id="afg" >
+  <hr>
+  <h3>Arbitrary Function Generator  ({{getName()}})</h3>
+  <p>
+      <!-- action buttons -->
+      <button (click)="start()">
+        <md-icon>settings_power</md-icon>
+        <span>Start</span>
+      </button>
+      <button (click)="stop()">
+        <md-icon>settings_power</md-icon>
+        <span>Stop</span>
+      </button>
+  </p>
 
-  <div id="afg_std_waveform_div" style="display: inline;">
-    Standard Waveform:
-    <select id="afg_std_waveform" onchange="afg_std_waveformOnChangeEvent();">
-      <option value="RAMP">Ramp</option>
-      <option value="SQUARE">Square</option>
-      <option value="SINE" selected>Sine</option>
-      <option value="DC">DC</option>
-      <option value="TRIANGLE">Triangle</option>
-    </select>
-  </div>
+   <!-- config inputs -->
+   <div id="config" *ngIf="active">
 
-  Amplitude [V]:
-  <input type="text" id="afg_amplitude" value="5.0" onchange="afg_amplitudeOnChangeEvent();">
-  <br> Fixed Waveform Generator:
-  <div id="afg_builtin_waveform_div" style="display: inline;">
-    Builtin Waveform:
-    <select id="afg_builtin_waveform" onchange="afg_builtin_waveformOnChangeEvent();">
-      <option value="Harmonic_Chord_3rd_4th_5th">Harmonic Chord 3rd,4th,5th
-      </option>
-      <option value="Haversine">Haversine</option>
-      <option value="Ramp_Falling" selected>Ramp falling</option>
-      <option value="Ramp_Falling_First_20">Ramp falling, first 20 terms</option>
-      <option value="Ramp_Rising">Ramp rising</option>
-      <option value="Ramp_Rising_First_20">Ramp rising, first 20 terms
-      </option>
-      <option value="Sine">Sine</option>
-      <option value="Sine_Linear_Rising_8_cycles">Sine, linear rising 8 cycles</option>
-      <option value="Sine_Positive_Half_Cycle">Sine, positive half cycle (cutie)</option>
-      <option value="Sinx_per_x">sin(x)/x for 8.25 radians</option>
-      <option value="Square">Square</option>
-      <option value="Square_First_4">Square, first 4 terms(cutie)
-      </option>
-      <option value="Square_First_10">Square, first 10 terms</option>
-      <option value="Triangle">Triangle</option>
-      <option value="White_Noise">White noise</option>
-      <option value="White_Noise_Modulated">White noise, modulated (cutie)</option>
-    </select>
-  </div>
+    <div id="afg_std_waveform_div" style="display: inline;">
+      Standard Waveform:
+      <select id="afg_std_waveform" onchange="afg_std_waveformOnChangeEvent();">
+        <option value="RAMP">Ramp</option>
+        <option value="SQUARE">Square</option>
+        <option value="SINE" selected>Sine</option>
+        <option value="DC">DC</option>
+        <option value="TRIANGLE">Triangle</option>
+      </select>
+    </div>
 
-  Frequency:
-  <input type="text" id="afg_frequency" value="1E6" onchange="afg_frequencyOnChangeEvent();">
-  <br> Sweep Generator: Start Frequency:
-  <input type="text" id="afg_sweep_start_frequency" value="1E3" onchange="afg_sweepStartfrequencyOnChangeEvent();"> Stop Frequency:
-  <input type="text" id="afg_sweep_stop_frequency" value="1E5" onchange="afg_sweepStopfrequencyOnChangeEvent();"> Points:
-  <input type="text" id="afg_sweep_points" value="1000" onchange="afg_sweepPointsOnChangeEvent();"> Time [s]:
-  <input type="text" id="afg_sweep_time" value="10" onchange="afg_sweepTimeOnChangeEvent();">
-  <button onclick="vxiclient.generator.setSweep();">Update Sweep
-  </button>
-  <br> Marker Feed:
-  <div id="afg_marker_feed_div" style="display: inline;">
-    Standard Waveform:
-    <select id="afg_marker_feed" onchange="afg_markerFeedOnChangeEvent();">
-      <option value="OUTPUT_ZERO" selected>Output Zero</option>
-      <option value="SEGMENT">Segment</option>
-      <option value="SOURCE_ROSC">Ref. oscillator</option>
-      <option value="SOURCE_SWEEP">Sweep</option>
-    </select>
-  </div>
-  <div id="afg_marker_pol_div" style="display: inline;">
-    Standard Waveform:
-    <select id="afg_marker_pol" onchange="afg_markerPolarityOnChangeEvent();">
-      <option value="NORM" selected>Normal</option>
-      <option value="INV">Inverted</option>
-    </select>
-  </div>
+    Amplitude [V]:
+    <input type="text" id="afg_amplitude" value="5.0" onchange="afg_amplitudeOnChangeEvent();">
+    <br> Fixed Waveform Generator:
+    <div id="afg_builtin_waveform_div" style="display: inline;">
+      Builtin Waveform:
+      <select id="afg_builtin_waveform" onchange="afg_builtin_waveformOnChangeEvent();">
+        <option value="Harmonic_Chord_3rd_4th_5th">Harmonic Chord 3rd,4th,5th
+        </option>
+        <option value="Haversine">Haversine</option>
+        <option value="Ramp_Falling" selected>Ramp falling</option>
+        <option value="Ramp_Falling_First_20">Ramp falling, first 20 terms</option>
+        <option value="Ramp_Rising">Ramp rising</option>
+        <option value="Ramp_Rising_First_20">Ramp rising, first 20 terms
+        </option>
+        <option value="Sine">Sine</option>
+        <option value="Sine_Linear_Rising_8_cycles">Sine, linear rising 8 cycles</option>
+        <option value="Sine_Positive_Half_Cycle">Sine, positive half cycle (cutie)</option>
+        <option value="Sinx_per_x">sin(x)/x for 8.25 radians</option>
+        <option value="Square">Square</option>
+        <option value="Square_First_4">Square, first 4 terms(cutie)
+        </option>
+        <option value="Square_First_10">Square, first 10 terms</option>
+        <option value="Triangle">Triangle</option>
+        <option value="White_Noise">White noise</option>
+        <option value="White_Noise_Modulated">White noise, modulated (cutie)</option>
+      </select>
+    </div>
 
-  <script>
-    function afg_std_waveformOnChangeEvent() {
-      var selectedValue = document.getElementById('afg_std_waveform').value;
-      vxiclient.generator.setStandardWaveform(selectedValue);
-    }
-    function afg_frequencyOnChangeEvent() {
-      var selectedValue = document.getElementById('afg_frequency').value;
-      vxiclient.generator.setFrequency(selectedValue);
-    }
-    function afg_amplitudeOnChangeEvent() {
-      var selectedValue = document.getElementById('afg_amplitude').value;
-      vxiclient.generator.setAmplitude(selectedValue);
-    }
-    function afg_builtin_waveformOnChangeEvent() {
-      var selectedValue = document.getElementById('afg_builtin_waveform').value;
-      vxiclient.generator.setBuiltinWaveform(selectedValue);
-    }
+    Frequency:
+    <input type="text" id="afg_frequency" value="1E6" onchange="afg_frequencyOnChangeEvent();">
+    <br> Sweep Generator: Start Frequency:
+    <input type="text" id="afg_sweep_start_frequency" value="1E3" onchange="afg_sweepStartfrequencyOnChangeEvent();"> Stop Frequency:
+    <input type="text" id="afg_sweep_stop_frequency" value="1E5" onchange="afg_sweepStopfrequencyOnChangeEvent();"> Points:
+    <input type="text" id="afg_sweep_points" value="1000" onchange="afg_sweepPointsOnChangeEvent();"> Time [s]:
+    <input type="text" id="afg_sweep_time" value="10" onchange="afg_sweepTimeOnChangeEvent();">
+    <button onclick="vxiclient.generator.setSweep();">Update Sweep
+    </button>
+    <br> Marker Feed:
+    <div id="afg_marker_feed_div" style="display: inline;">
+      Standard Waveform:
+      <select id="afg_marker_feed" onchange="afg_markerFeedOnChangeEvent();">
+        <option value="OUTPUT_ZERO" selected>Output Zero</option>
+        <option value="SEGMENT">Segment</option>
+        <option value="SOURCE_ROSC">Ref. oscillator</option>
+        <option value="SOURCE_SWEEP">Sweep</option>
+      </select>
+    </div>
+    <div id="afg_marker_pol_div" style="display: inline;">
+      Standard Waveform:
+      <select id="afg_marker_pol" onchange="afg_markerPolarityOnChangeEvent();">
+        <option value="NORM" selected>Normal</option>
+        <option value="INV">Inverted</option>
+      </select>
+    </div>
 
-    function afg_sweepStartfrequencyOnChangeEvent() {
-      var selectedValue = document.getElementById('afg_sweep_start_frequency').value;
-      vxiclient.generator.setSweepStartFrequency(selectedValue);
-    }
-    function afg_sweepStopfrequencyOnChangeEvent() {
-      var selectedValue = document.getElementById('afg_sweep_stop_frequency').value;
-      vxiclient.generator.setSweepStopFrequency(selectedValue);
-    }
-    function afg_sweepPointsOnChangeEvent() {
-      var selectedValue = document.getElementById('afg_sweep_points').value;
-      vxiclient.generator.setSweepPoints(selectedValue);
-    }
-    function afg_sweepTimeOnChangeEvent() {
-      var selectedValue = document.getElementById('afg_sweep_time').value;
-      vxiclient.generator.setSweepTime(selectedValue);
-    }
-  </script>
+    <script>
+      function afg_std_waveformOnChangeEvent() {
+        var selectedValue = document.getElementById('afg_std_waveform').value;
+        vxiclient.generator.setStandardWaveform(selectedValue);
+      }
+      function afg_frequencyOnChangeEvent() {
+        var selectedValue = document.getElementById('afg_frequency').value;
+        vxiclient.generator.setFrequency(selectedValue);
+      }
+      function afg_amplitudeOnChangeEvent() {
+        var selectedValue = document.getElementById('afg_amplitude').value;
+        vxiclient.generator.setAmplitude(selectedValue);
+      }
+      function afg_builtin_waveformOnChangeEvent() {
+        var selectedValue = document.getElementById('afg_builtin_waveform').value;
+        vxiclient.generator.setBuiltinWaveform(selectedValue);
+      }
+
+      function afg_sweepStartfrequencyOnChangeEvent() {
+        var selectedValue = document.getElementById('afg_sweep_start_frequency').value;
+        vxiclient.generator.setSweepStartFrequency(selectedValue);
+      }
+      function afg_sweepStopfrequencyOnChangeEvent() {
+        var selectedValue = document.getElementById('afg_sweep_stop_frequency').value;
+        vxiclient.generator.setSweepStopFrequency(selectedValue);
+      }
+      function afg_sweepPointsOnChangeEvent() {
+        var selectedValue = document.getElementById('afg_sweep_points').value;
+        vxiclient.generator.setSweepPoints(selectedValue);
+      }
+      function afg_sweepTimeOnChangeEvent() {
+        var selectedValue = document.getElementById('afg_sweep_time').value;
+        vxiclient.generator.setSweepTime(selectedValue);
+      }
+    </script>
+
+    </div>
 </div>
 <!-- end of e1340 div -->
