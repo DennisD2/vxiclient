@@ -12,18 +12,15 @@ import { VXIDevice } from '../types/VXIDevice';
 
 @Injectable()
 export class MainframeService extends BaseService  {
-  // Name of device; must be unique to identify device in mainframe
-  deviceName = 'mainframe';
-  // Service URL for this device; used as base URL for all commands
-  serviceUrl: string;
 
   constructor(protected http: Http, protected configService: ConfigService) {
     super(http, configService);
+    this.deviceName = 'mainframe';
     this.serviceUrl = this.configService.get(this.deviceName) + '/' + this.configService.fake();
   }
 
   getDevices(): Observable<VXIDevice[]> {
-    const dataUrl = this.configService.get('mainframe') + '/devices';
+    const dataUrl = this.serviceUrl + '/devices';
 
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });

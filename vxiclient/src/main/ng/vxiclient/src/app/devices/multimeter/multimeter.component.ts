@@ -132,22 +132,12 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
     console.log('onChangeACDC: ' + event.value);
   }
 
-  onRangeChangeDC(event: any) {
-    console.log('onrangeChangeEventDC: ' + event.value);
+  onRangeChange(acdc: string, event: any) {
+    console.log('onrangeChangeEvent: ' + acdc + ', ' + event.value);
     const self = this;
     const channelsToScan: string[] = this.channels.map(c => c.name);
     const f: Function = (): Observable<any> => {
-      return self.multimeterService.setVoltageRangeDC(channelsToScan, self.getName(), event.value);
-    };
-    this.mutexedCall(f);
-  }
-
-  onRangeChangeAC(event: any) {
-    console.log('onrangeChangeEventAC: ' + event.value);
-    const self = this;
-    const channelsToScan: string[] = this.channels.map(c => c.name);
-    const f: Function = (): Observable<any> => {
-      return self.multimeterService.setVoltageRangeAC(channelsToScan, self.getName(), event.value);
+      return self.multimeterService.setVoltageRange(channelsToScan, self.getName(), acdc, event.value);
     };
     this.mutexedCall(f);
   }

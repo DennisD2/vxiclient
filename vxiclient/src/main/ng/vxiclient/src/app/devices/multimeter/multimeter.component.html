@@ -27,13 +27,13 @@
       
       <div id="m_u_range_dc_div">
         <label for="m_u_range_dc">DC Volts Range:</label>
-        <select name="m_u_range_dc" [(ngModel)]="selectedDCRange" (ngModelChange)="onRangeChangeDC($event)">
+        <select name="m_u_range_dc" [(ngModel)]="selectedDCRange" (ngModelChange)="onRangeChange('dc', $event)">
           <option *ngFor="let m of allowedDCRanges" [ngValue]="m">{{m.value}}</option>
         </select> 
       </div>
 
       <label for="m_u_range_ac">AC Volts Range:</label>
-      <select name="m_u_range_ac" [(ngModel)]="selectedACRange" (ngModelChange)="onRangeChangeAC($event)">
+      <select name="m_u_range_ac" [(ngModel)]="selectedACRange" (ngModelChange)="onRangeChange('ac', $event)">
         <option *ngFor="let m of allowedACRanges" [ngValue]="m">{{m.value}}</option>
       </select> 
   
