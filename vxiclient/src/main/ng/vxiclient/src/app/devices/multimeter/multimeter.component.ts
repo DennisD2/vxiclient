@@ -5,11 +5,12 @@ import { Mutex, MutexInterface } from 'async-mutex';
 
 import { AppRegistry } from '../../app.registry';
 import { MultimeterService } from '../../services/multimeter.service';
+import { BaseDevice } from '../base.device';
 import { SwitchComponent } from '../switch/switch.component';
+import { Device } from '../../types/Device';
 
 import { VXIDevice } from '../../types/VXIDevice';
 import { DeviceIdn } from '../../types/DeviceIdn';
-import { Device } from '../../types/Device';
 import { Channel } from '../../types/Channel';
 
 /**
@@ -21,10 +22,7 @@ import { Channel } from '../../types/Channel';
   templateUrl: './multimeter.component.html',
   styleUrls: ['./multimeter.component.css']
 })
-export class MultimeterComponent implements OnInit, Device {
-  type = 'Sample';
-  active: boolean;
-
+export class MultimeterComponent extends BaseDevice implements OnInit, Device {
   device = 'unknown';
   devIdn: DeviceIdn = { name: 'unknown'};
   devices: VXIDevice[] = [];
@@ -64,32 +62,15 @@ export class MultimeterComponent implements OnInit, Device {
 
   private mutex: Mutex = new Mutex();
 
-  constructor(private appRegistry: AppRegistry,
+  constructor(protected appRegistry: AppRegistry,
     private multimeterService: MultimeterService) {
-    this.start();
+      super(appRegistry);
+      this.type = 'Sample';
+      this.name = 'voltmeter';
+      this.start();
   }
 
   ngOnInit() {
-  }
-
-  getName() {
-    return 'voltmeter';
-  }
-
-  getType() {
-    return this.type;
-  }
-
-  start() {
-    console.log('start');
-    this.appRegistry.subscribeDevice(this);
-    this.active = true;
-  }
-
-  stop() {
-    console.log('stop');
-    this.appRegistry.unsubscribeDevice(this);
-    this.active = false;
   }
 
   doMeasurementCallback(): any {
