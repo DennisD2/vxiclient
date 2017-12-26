@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Channel } from '../types/Channel';
-import { VXIService } from '../services/vxi.service';
+import { Channel } from '../../types/Channel';
+import { VXIService } from '../../services/vxi.service';
 import { Mutex, MutexInterface } from 'async-mutex';
-import { MObject } from '../types/MObject';
+import { MObject } from '../../types/MObject';
 
 @Component({
   selector: 'app-switch',

@@ -3,14 +3,14 @@ import { Observable } from 'rxjs/Observable';
 
 import { Mutex, MutexInterface } from 'async-mutex';
 
-import { AppRegistry } from '../app.registry';
-import { MultimeterService } from '../services/multimeter.service';
+import { AppRegistry } from '../../app.registry';
+import { MultimeterService } from '../../services/multimeter.service';
 import { SwitchComponent } from '../switch/switch.component';
 
-import { VXIDevice } from '../types/VXIDevice';
-import { DeviceIdn } from '../types/DeviceIdn';
-import { Device } from '../types/Device';
-import { Channel } from '../types/Channel';
+import { VXIDevice } from '../../types/VXIDevice';
+import { DeviceIdn } from '../../types/DeviceIdn';
+import { Device } from '../../types/Device';
+import { Channel } from '../../types/Channel';
 
 /**
  * Multimeter class. Supports HP E1326 and E1411.

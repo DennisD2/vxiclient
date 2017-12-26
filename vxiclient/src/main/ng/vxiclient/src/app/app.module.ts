@@ -16,11 +16,11 @@ import { ConfigService } from './services/config.service';
 import { GraphViewComponent } from './graph-view/graph-view.component';
 import { EventLogComponent } from './event-log/event-log.component';
 
-import { MultimeterComponent } from './multimeter/multimeter.component';
-import { SwitchComponent } from './switch/switch.component';
-import { CounterComponent } from './counter/counter.component';
-import { FrequencyGeneratorComponent } from './frequency-generator/frequency-generator.component';
-import { DigitalIOComponent } from './digital-io/digital-io.component';
+import { MultimeterComponent } from './devices/multimeter/multimeter.component';
+import { SwitchComponent } from './devices/switch/switch.component';
+import { CounterComponent } from './devices/counter/counter.component';
+import { FrequencyGeneratorComponent } from './devices/frequency-generator/frequency-generator.component';
+import { DigitalIOComponent } from './devices/digital-io/digital-io.component';
 
 @NgModule({
   declarations: [
