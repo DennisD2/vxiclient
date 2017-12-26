@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Channel } from '../../types/Channel';
-import { VXIService } from '../../services/vxi.service';
 import { Mutex, MutexInterface } from 'async-mutex';
 import { MObject } from '../../types/MObject';
 
@@ -14,7 +13,7 @@ export class SwitchComponent implements OnInit, MObject {
   @Input() switch1: boolean[]; // = new Array();
   @Output() onSwitchChanged: EventEmitter<string>;
 
-  constructor(private imageService: VXIService) {
+  constructor() {
     this.onSwitchChanged = new EventEmitter();
   }
 

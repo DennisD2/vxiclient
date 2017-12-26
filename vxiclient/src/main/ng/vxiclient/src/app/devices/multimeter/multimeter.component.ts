@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { Mutex, MutexInterface } from 'async-mutex';
-
 import { AppRegistry } from '../../app.registry';
 import { MultimeterService } from '../../services/multimeter.service';
 import { BaseDevice } from '../base.device';
-import { SwitchComponent } from '../switch/switch.component';
 import { Device } from '../../types/Device';
+import { SwitchComponent } from '../switch/switch.component';
 
 import { VXIDevice } from '../../types/VXIDevice';
 import { DeviceIdn } from '../../types/DeviceIdn';
@@ -60,8 +58,6 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
   switch0: boolean[] = new Array();
   switch1: boolean[] = new Array();
 
-  private mutex: Mutex = new Mutex();
-
   constructor(protected appRegistry: AppRegistry,
     private multimeterService: MultimeterService) {
       super(appRegistry);
@@ -79,39 +75,17 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
     const self = this;
 
     const channelsToScan: string[] = this.channels.map(c => c.name);
-    this.mutex.acquire().then( function(release) {
+    BaseDevice.mutex.acquire().then( function(release) {
       vxi.getMeasurement(channelsToScan)
-      .subscribe(c => {
-        self.channelResult = c as Channel[];
-        // console.log(JSON.stringify(self.channels))
-       release();
-      }, c => {
-        console.log('An error occured, releasing mutex');
+        .subscribe(c => {
+          self.channelResult = c as Channel[];
+          // console.log(JSON.stringify(self.channels))
+         }, c => {
+          console.log('An error occured, releasing mutex');
+        });
         release();
-      });
     });
     return this.channelResult;
-  }
-
-  /**
-   * Adds aspects 'mutex' and 'resolve Observable' around a method.
-   *
-   * @param f method to surround with mutex and resolving aspect.
-   */
-  mutexedCall( f: Function ) {
-    console.log('Mutex:enter');
-
-    this.mutex.acquire().then(function(release) {
-      f()
-      .subscribe(c => {
-        console.log(c);
-        release();
-      }, c => {
-        console.log('An error occured, releasing mutex');
-        release();
-      });
-    });
-    console.log('Mutex:exit');
   }
 
   record(onoff: String) {
@@ -126,19 +100,17 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
 
   getInfo() {
     console.log('getInfo');
-    const vxi = this.multimeterService;
     const self = this;
 
-    this.mutex.acquire().then(function(release) {
-      self.device = '?';
+    BaseDevice.mutex.acquire().then(function(release) {
 
       /*vxi.getInfo().subscribe(value => self.device = value);
-      console.log('After getInfo with ' + self.device);
+      console.log('After getInfo with ' + self.device);*/
 
-      vxi.getIdn().subscribe(value => self.devIdn = value);
+      self.multimeterService.getIdn().subscribe(value => self.devIdn = value);
       console.log('After getIdn with ' + self.devIdn.name );
 
-      vxi.getDevices().subscribe(value => self.devices = value);*/
+      /*vxi.getDevices().subscribe(value => self.devices = value);*/
 
       release();
     });
@@ -160,15 +132,13 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
     console.log('onChangeACDC: ' + event.value);
   }
 
-
-
   onRangeChangeDC(event: any) {
     console.log('onrangeChangeEventDC: ' + event.value);
     const self = this;
     const channelsToScan: string[] = this.channels.map(c => c.name);
     const f: Function = (): Observable<any> => {
-      return self.multimeterService.setVoltageRangeDC(channelsToScan, self.getName(), event.value); };
-
+      return self.multimeterService.setVoltageRangeDC(channelsToScan, self.getName(), event.value);
+    };
     this.mutexedCall(f);
   }
 
@@ -177,8 +147,8 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
     const self = this;
     const channelsToScan: string[] = this.channels.map(c => c.name);
     const f: Function = (): Observable<any> => {
-      return self.multimeterService.setVoltageRangeAC(channelsToScan, self.getName(), event.value); };
-
+      return self.multimeterService.setVoltageRangeAC(channelsToScan, self.getName(), event.value);
+    };
     this.mutexedCall(f);
   }
 

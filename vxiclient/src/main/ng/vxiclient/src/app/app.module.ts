@@ -9,7 +9,7 @@ import { MaterialModule } from '@angular/material';
 import { AppComponent } from './app.component';
 import { AppRegistry } from './app.registry';
 
-import { VXIService } from './services/vxi.service';
+import { MainframeService } from './services/mainframe.service';
 import { MultimeterService } from './services/multimeter.service';
 import { ConfigService } from './services/config.service';
 
@@ -42,8 +42,8 @@ import { DigitalIOComponent } from './devices/digital-io/digital-io.component';
   ],
   providers: [
     ConfigService,
+    MainframeService,
     MultimeterService,
-    VXIService,
     AppRegistry],
   bootstrap: [AppComponent]
 })

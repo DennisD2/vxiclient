@@ -9,12 +9,14 @@ import { ConfigService } from './config.service';
 
 @Injectable()
 export class MultimeterService extends BaseService {
-
+  // Name of device; must be unique to identify device in mainframe
+  deviceName = 'voltmeter';
+  // Service URL for this device; used as base URL for all commands
   serviceUrl: string;
 
-  constructor(private http: Http, private configService: ConfigService) {
-    super();
-    this.serviceUrl = this.configService.get('voltmeter') + '/' + this.configService.fake();
+  constructor(protected http: Http, protected configService: ConfigService) {
+    super(http, configService);
+    this.serviceUrl = this.configService.get(this.deviceName) + '/' + this.configService.fake();
   }
 
   getMeasurement(channelsToScan: string[]): Observable<Channel[]> {
