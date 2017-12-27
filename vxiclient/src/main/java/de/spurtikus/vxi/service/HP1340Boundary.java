@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import de.spurtikus.devices.hp.HP1340;
 import de.spurtikus.devices.hp.HP1340.StandardWaveForm;
+import de.spurtikus.vxi.Constants;
 
 /**
  * Boundary for HP1340 AFG. See class {HP1340}.
@@ -26,7 +27,7 @@ import de.spurtikus.devices.hp.HP1340.StandardWaveForm;
  * @author dennis
  *
  */
-@Path("/api/hp1340")
+@Path(Constants.URL_AFG)
 public class HP1340Boundary extends AbstractBoundary<HP1340> {
 	public final static String className = "HP1340Boundary";
 

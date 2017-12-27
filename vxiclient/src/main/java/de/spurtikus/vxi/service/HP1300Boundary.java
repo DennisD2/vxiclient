@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.spurtikus.devices.hp.HP1300b;
+import de.spurtikus.vxi.Constants;
 import de.spurtikus.vxi.mainframes.hp1300b.VXIDevice;
 
 /**
@@ -27,7 +28,7 @@ import de.spurtikus.vxi.mainframes.hp1300b.VXIDevice;
  * @author dennis
  *
  */
-@Path("/api/hp1300")
+@Path(Constants.URL_MAINFRAME)
 public class HP1300Boundary extends AbstractBoundary<HP1300b> {
 	public final static String className = "HP1300Boundary";
 

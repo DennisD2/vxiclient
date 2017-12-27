@@ -223,8 +223,8 @@ public class Configuration {
 					method.invoke(conf, value);
 					called = true;
 					break;
-				case "Map":
-					Map<String, String> mval = JSonStringToMap(value);
+				case "List":
+					List<DeviceInfo> mval = JSonStringToList(value, conf.getName());
 					method.invoke(conf, mval);
 					called = true;
 					break;
@@ -240,11 +240,14 @@ public class Configuration {
 		}
 	}
 
-	protected static Map<String, String> JSonStringToMap(String value) {
-		java.lang.reflect.Type mapType = new TypeToken<Map<String, String>>() {
-		}.getType();
+	protected static List<DeviceInfo> JSonStringToList(String value, String mainframe) {
+		java.lang.reflect.Type listType = new TypeToken<List<DeviceInfo>>(){}.getType();
 		Gson gson = new Gson();
-		Map<String, String> devs = gson.fromJson(value, mapType);
+		List<DeviceInfo> devs = gson.fromJson(value, listType);
+		if (devs != null) {
+			// Initialize 'mainframe' attribute
+			devs.stream().forEach(dev -> dev.setMainframe(mainframe));
+		}
 		return devs;
 	}
 

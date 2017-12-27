@@ -1,6 +1,9 @@
 package de.spurtikus.vxi.connectors;
 
+import java.util.List;
 import java.util.Map;
+
+import de.spurtikus.vxi.service.DeviceInfo;
 
 /**
  * Connector Configuration Interface.
@@ -27,7 +30,7 @@ public interface ConnectorConfig {
 	 * 
 	 * @return list of devices managed by this connector.
 	 */
-	public Map<String, String> getDevices();
+	public List<DeviceInfo> getDevices();
 
 	/**
 	 * Sets list of devices managed by this connector.
@@ -35,7 +38,7 @@ public interface ConnectorConfig {
 	 * @param devices
 	 *            list of devices managed by this connector.
 	 */
-	public void setDevices(Map<String, String> devices);
+	public void setDevices(List<DeviceInfo> devices);
 
 	/**
 	 * Get a device by its name.

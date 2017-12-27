@@ -1,13 +1,15 @@
 package de.spurtikus.vxi.connectors;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
+import de.spurtikus.vxi.service.DeviceInfo;
 
 public abstract class AbstractConnectorConfig implements ConnectorConfig {
 	private String name;
 	private int id = 0;
 	private boolean enabled = true;
-	private Map<String, String> devices = new HashMap<String, String>();
+	private List<DeviceInfo> devices = new ArrayList<DeviceInfo>();
 
 	@Override
 	public String getName() {
@@ -43,17 +45,17 @@ public abstract class AbstractConnectorConfig implements ConnectorConfig {
 	}
 
 	@Override
-	public Map<String, String> getDevices() {
+	public List<DeviceInfo> getDevices() {
 		return devices;
 	}
 
 	@Override
-	public void setDevices(Map<String, String> devices) {
+	public void setDevices(List<DeviceInfo> devices) {
 		this.devices = devices;
 	}
 
 	@Override
 	public String getDeviceIdByName(String name) {
-		return devices.get(name);
+		return devices.stream().filter(d -> d.getName().equals(name)).findAny().get().getAddress();
 	}
 }

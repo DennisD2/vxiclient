@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.spurtikus.devices.hp.HP1300Pacer;
+import de.spurtikus.vxi.Constants;
 
 /**
  * Boundary for Pacer functionality built in in HP1300 mainframe. See class {HP1300Pacer}.
@@ -23,7 +24,7 @@ import de.spurtikus.devices.hp.HP1300Pacer;
  * @author dennis
  *
  */
-@Path("/api/hp1300pacer")
+@Path(Constants.URL_PACER)
 public class HP1300PacerBoundary extends AbstractBoundary<HP1300Pacer> {
 	public final static String className = "HP1300PacerBoundary";
 

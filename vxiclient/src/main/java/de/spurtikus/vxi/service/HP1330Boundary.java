@@ -1,9 +1,5 @@
 package de.spurtikus.vxi.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -21,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import de.spurtikus.devices.hp.HP1330;
 import de.spurtikus.devices.hp.HP1330.PortDescription;
+import de.spurtikus.vxi.Constants;
 
 /**
  * Boundary for HP E1330 Digital I/O control. See class {HP1330}.
@@ -28,7 +25,7 @@ import de.spurtikus.devices.hp.HP1330.PortDescription;
  * @author dennis
  *
  */
-@Path("/api/hp1330")
+@Path(Constants.URL_DIGITALIO)
 public class HP1330Boundary extends AbstractBoundary<HP1330> {
 	public final static String className = "HP1330Boundary";
 

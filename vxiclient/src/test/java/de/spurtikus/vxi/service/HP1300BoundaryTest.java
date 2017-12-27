@@ -22,15 +22,16 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import de.spurtikus.vxi.Constants;
+
 @RunWith(Arquillian.class)
 public class HP1300BoundaryTest {
 
-	public final String BASE_URI = "rest/api";
-	public final String DEVICECLASS = "hp1300";
+	public final String BASE_URI = Constants.SERVICE_ROOT;
+	public final String DEVICECLASS = Constants.URL_MAINFRAME;
 	public final String MAINFRAME = "mfb";
 	public final String DEVICENAME = "hp1301";
-	public final String URI = BASE_URI + "/" + DEVICECLASS + "/" + MAINFRAME
-			+ "/" + DEVICENAME;
+	public final String URI = BASE_URI + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
 
 	@Deployment
 	public static WebArchive createDeployment() {
@@ -51,7 +52,7 @@ public class HP1300BoundaryTest {
 		return jar;
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	@RunAsClient
 	public void info(@ArquillianResource URL contextPath) {
@@ -76,14 +77,14 @@ public class HP1300BoundaryTest {
 		System.out.println(result);
 		assertTrue(response.getStatus() < 400);
 		assertEquals("{\"name\":\"HEWLETT-PACKARD,E1301A,0,A.07.00\"}", result);
-		try {
+		/*try {
 			Thread.sleep(5000000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	@RunAsClient
 	public void devices(@ArquillianResource URL contextPath) {

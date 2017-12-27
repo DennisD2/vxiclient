@@ -22,14 +22,16 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import de.spurtikus.vxi.Constants;
+
 @RunWith(Arquillian.class)
 public class HP1300PacerBoundaryTest {
 
-	public final String BASE_URI = "rest/api";
-	public final String DEVICECLASS = "hp1300pacer";
+	public final String BASE_URI = Constants.SERVICE_ROOT;
+	public final String DEVICECLASS = Constants.URL_PACER;
 	public final String MAINFRAME = "mfb";
 	public final String DEVICENAME = "hp1300pacer";
-	public final String URI = BASE_URI + "/" + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
+	public final String URI = BASE_URI + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
 
 	@Deployment
 	public static WebArchive createDeployment() {

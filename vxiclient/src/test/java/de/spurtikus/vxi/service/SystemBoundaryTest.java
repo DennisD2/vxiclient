@@ -20,8 +20,13 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import de.spurtikus.vxi.Constants;
+
 @RunWith(Arquillian.class)
 public class SystemBoundaryTest {
+	public final String BASE_URI = Constants.SERVICE_ROOT;
+	public final String DEVICECLASS = Constants.URL_SYSTEM;
+	public final String URI = BASE_URI + DEVICECLASS ;
 
 	@Deployment
 	public static WebArchive createDeployment() {
@@ -43,13 +48,39 @@ public class SystemBoundaryTest {
 
 	@Test
 	@RunAsClient
+	public void defaultAnswer(@ArquillianResource URL contextPath) {
+		Client client = ClientBuilder.newClient();
+		String url = contextPath + URI + "/";
+		System.out.println(url);
+		final Response response = client.target(url)
+				.request(MediaType.TEXT_PLAIN).get();
+		assertTrue(response.getStatus()<400);
+		assertEquals("VXI system REST API. Valid URLs: /info, /config.", response.readEntity(String.class));
+	}
+	
+	@Test
+	@RunAsClient
 	public void info(@ArquillianResource URL contextPath) {
 		Client client = ClientBuilder.newClient();
-		System.out.println(contextPath + "rest/api/system/info");
-		final Response response = client.target(contextPath + "rest/api/system/info")
+		String url = contextPath + URI + "/info";
+		System.out.println(url);
+		final Response response = client.target(url)
 				.request(MediaType.TEXT_PLAIN).get();
 		assertTrue(response.getStatus()<400);
 		assertEquals("VXI system REST API", response.readEntity(String.class));
 	}
 	
+	@Test
+	@RunAsClient
+	public void getConfig(@ArquillianResource URL contextPath) {
+		Client client = ClientBuilder.newClient();
+		String url = contextPath + URI + "/getConfig";
+		System.out.println(url);
+		final Response response = client.target(url)
+				.request(MediaType.APPLICATION_JSON).post(null);
+		assertTrue(response.getStatus()<400);
+		String res = response.readEntity(String.class);
+		System.out.println(res);
+		//assertEquals("VXI system REST API", response.readEntity(String.class));
+	}
 }

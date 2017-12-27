@@ -26,15 +26,16 @@ import org.junit.runner.RunWith;
 
 import de.spurtikus.devices.hp.HP1330;
 import de.spurtikus.devices.hp.HP1330.PortDescription;
+import de.spurtikus.vxi.Constants;
 
 @RunWith(Arquillian.class)
 public class HP1330BoundaryTest {
 
-	public final String BASE_URI = "rest/api";
-	public final String DEVICECLASS = "hp1330";
+	public final String BASE_URI = Constants.SERVICE_ROOT;
+	public final String DEVICECLASS = Constants.URL_DIGITALIO;
 	public final String MAINFRAME = "mfb";
 	public final String DEVICENAME = "hp1330";
-	public final String URI = BASE_URI + "/" + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
+	public final String URI = BASE_URI + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
 
 	@Deployment
 	public static WebArchive createDeployment() {

@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.spurtikus.devices.hp.HP1351;
+import de.spurtikus.vxi.Constants;
 
 /**
  * Boundary for HP1351 FET Switch. See class {HP1351}.
@@ -23,7 +24,7 @@ import de.spurtikus.devices.hp.HP1351;
  * @author dennis
  *
  */
-@Path("/api/hp1351")
+@Path(Constants.URL_SWITCH)
 public class HP1351Boundary extends AbstractBoundary<HP1351> {
 	public final static String className = "HP1351Boundary";
 

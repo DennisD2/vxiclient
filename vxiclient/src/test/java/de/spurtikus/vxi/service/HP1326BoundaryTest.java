@@ -24,14 +24,16 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import de.spurtikus.vxi.Constants;
+
 @RunWith(Arquillian.class)
 public class HP1326BoundaryTest {
 
-	public final String BASE_URI = "rest/api";
-	public final String DEVICECLASS = "hp1326";
+	public final String BASE_URI = Constants.SERVICE_ROOT;
+	public final String DEVICECLASS = Constants.URL_VOLTMETER;
 	public final String MAINFRAME = "mfb";
 	public final String DEVICENAME = "hp1326";
-	public final String URI = BASE_URI + "/" + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
+	public final String URI = BASE_URI + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
 
 	@Deployment
 	public static WebArchive createDeployment() {
@@ -63,7 +65,7 @@ public class HP1326BoundaryTest {
 		System.out.println(uri + " -> " + res);
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	@RunAsClient
 	public void idn(@ArquillianResource URL contextPath) {

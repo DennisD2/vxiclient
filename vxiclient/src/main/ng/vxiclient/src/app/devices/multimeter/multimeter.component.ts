@@ -119,13 +119,6 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
   onChangeMode(event: any) {
     // Is called with the Item as event
     console.log('modeOnChangeEvent: ' + event.value);
-
-    // event = U
-    // hide R
-    // hide I
-
-    // etc.
-
   }
 
   onChangeACDC(event: any) {
@@ -143,7 +136,7 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
   }
 
   onAutoChange(event: any) {
-    console.log('onrangeChangeEventAC: ' + event.value);
+    console.log('onAutoChange: ' + event.value);
   }
 
   handleSwitchChange(ch: string) {

@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.spurtikus.devices.hp.HP1333;
+import de.spurtikus.vxi.Constants;
 
 /**
  * Boundary for HP1333 Counter. See class {HP1333}.
@@ -23,7 +24,7 @@ import de.spurtikus.devices.hp.HP1333;
  * @author dennis
  *
  */
-@Path("/api/hp1333")
+@Path(Constants.URL_COUNTER)
 public class HP1333Boundary extends AbstractBoundary<HP1333> {
 	public final static String className = "HP1333Boundary";
 
