@@ -13,12 +13,11 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
   constructor(protected appRegistry: AppRegistry,
     /*private multimeterService: MultimeterService*/) {
       super(appRegistry);
-      this.type = 'none';
-      this.name = 'afg';
-      this.start();
+      this.resultDataType = 'none';
   }
 
   ngOnInit() {
+    this.start();
   }
 
 }

@@ -9,20 +9,16 @@ import { ConfigService } from './config.service';
 import { DeviceIdn } from '../types/DeviceIdn';
 import { VXIDevice } from '../types/VXIDevice';
 
-
 @Injectable()
 export class MainframeService extends BaseService  {
 
   constructor(protected http: Http, protected configService: ConfigService) {
     super(http, configService);
-    this.deviceType = 'mainframe';
   }
 
-  getDevices(): Observable<VXIDevice[]> {
-    if (this.serviceUrl === undefined) {
-      this.serviceUrl = this.configService.getURL(this.deviceType) + '/' + this.configService.fake();
-    }
-    const dataUrl = this.serviceUrl + '/devices';
+  getDevices(deviceName: string): Observable<VXIDevice[]> {
+    const serviceUrl = this.configService.getURL('', deviceName) + '/' + this.configService.fake();
+    const dataUrl = serviceUrl + '/devices';
 
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });

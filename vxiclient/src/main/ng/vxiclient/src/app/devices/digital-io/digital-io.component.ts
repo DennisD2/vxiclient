@@ -13,12 +13,11 @@ export class DigitalIOComponent extends BaseDevice implements OnInit, Device {
   constructor(protected appRegistry: AppRegistry,
     /*private multimeterService: MultimeterService*/) {
       super(appRegistry);
-      this.type = 'none';
-      this.name = 'digitalIO';
-      this.start();
+      this.resultDataType = 'none';
   }
 
   ngOnInit() {
+    this.start();
   }
 
 }

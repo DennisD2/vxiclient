@@ -1,5 +1,6 @@
 export interface DeviceDTO {
-    deviceName: string;
-    deviceType: string;
-    deviceURL: string;
+    name: string;
+    type: string;
+    URL: string;
+    mainframe: string;
 }

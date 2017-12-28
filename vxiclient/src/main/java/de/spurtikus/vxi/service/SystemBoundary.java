@@ -69,7 +69,8 @@ public class SystemBoundary {
 				String name = d.getName();
 				String url = /*Constants.SERVICE_ROOT +*/ restUrlForType(d.getType()) + '/' + d.getMainframe() + '/' + d.getName();
 				String type = d.getType();
-				ExternalVXIDescriptor de = new ExternalVXIDescriptor(name, type, url);
+				String mf = d.getMainframe();
+				ExternalVXIDescriptor de = new ExternalVXIDescriptor(name, type, url, mf);
 				extDevs.add(de);
 			}
 		}

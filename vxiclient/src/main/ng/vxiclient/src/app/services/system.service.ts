@@ -8,18 +8,23 @@ import { DeviceDTO } from '../types/DeviceDTO';
 import { BaseService } from './base.service';
 import { ConfigService } from './config.service';
 
+import { Mutex, MutexInterface } from 'async-mutex';
+
 @Injectable()
 export class SystemService extends BaseService {
+  // Access mutex
+  protected static mutex: Mutex = new Mutex();
+  // Device configuration
   config: DeviceDTO[];
 
   constructor(protected http: Http, protected configService: ConfigService) {
     super(http, configService);
-    this.deviceType = 'system';
-    this.serviceUrl = this.configService.getURL(this.deviceType) + '/' /*+ this.configService.fake()*/;
+    // this.deviceMainframe = '';
   }
 
-  r(): Observable<any> {
-    const dataUrl = this.serviceUrl + 'getConfig';
+  private doLoad(): Observable<any> {
+    const serviceUrl = this.configService.getURL('', 'system') + '/';
+    const dataUrl = serviceUrl + 'getConfig';
 
     console.log('Reading config from server at ' + dataUrl);
     const headers = new Headers({ 'Content-Type': 'application/json' });
@@ -33,19 +38,23 @@ export class SystemService extends BaseService {
       .catch(this.handleError);
   }
 
-  readConfiguration() {
+  public loadConfiguration() {
     const self = this;
     SystemService.mutex.acquire().then( function(release) {
-      self.r()
+      self.doLoad()
         .subscribe(c => {
           self.config = c;
-          console.log(JSON.stringify(c));
+          // console.log(JSON.stringify(c));
           self.copyToConfigService();
          }, c => {
           console.log('An error occured, releasing mutex');
         });
         release();
     });
+  }
+
+  public getConfiguration(): DeviceDTO[] {
+    return this.config;
   }
 
   copyToConfigService() {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Input } from '@angular/core';
 
 import { AppRegistry } from '../app.registry';
 import { Device } from '../types/Device';
@@ -8,9 +8,11 @@ import { Mutex, MutexInterface } from 'async-mutex';
 export class BaseDevice implements Device {
   protected static mutex: Mutex = new Mutex();
 
+  @Input('deviceName') deviceName = 'no name';
+  @Input('mainframe') mainframe = 'no mainframe';
+
   active: boolean;
-  type = 'no type';
-  name = 'no name';
+  resultDataType = 'no type';
 
   constructor(protected appRegistry: AppRegistry) { }
 
@@ -27,11 +29,11 @@ export class BaseDevice implements Device {
   }
 
   getName() {
-    return this.name;
+    return this.deviceName;
   }
 
-  getType() {
-    return this.type;
+  getResultDataType() {
+    return this.resultDataType;
   }
 
   doMeasurementCallback(): any {

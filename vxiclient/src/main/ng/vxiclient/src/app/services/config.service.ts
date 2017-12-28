@@ -16,7 +16,7 @@ export class ConfigService {
 
   private devices: DeviceDTO[] = [
     // At startup, only the system device is known. All other devices will be filled in during client startup.
-    { deviceType: 'system', deviceName: 'system', deviceURL: '/system'},
+    { type: 'system', name: 'system', URL: '/system', mainframe: ''},
   ];
 
   constructor() { }
@@ -27,21 +27,20 @@ export class ConfigService {
    * @param device device to add.
    */
   addDevice( device: DeviceDTO) {
-    console.log('Adding device ' + device.deviceName + ' of type: ' + device.deviceType + ' with URL ' + device.deviceURL);
+    console.log('Adding device ' + device.name + ' on mainframe ' + device.mainframe + ' of type: ' 
+      + device.type + ' with URL ' + device.URL);
     this.devices.push(device);
   }
 
   /**
    * Get absolute service URL for a device.
    *
-   * TODO: this will not work if we have multiple devices of same type.
-   *
    * @param type device type.
    */
-  public getURL( type: string ) {
-    console.log('Getting URL for type: ' + type);
-    const l = this.devices.filter(u => u.deviceType === type);
-    return this.baseUrl + l[0].deviceURL;
+  public getURL( mainframe: string,  name: string ) {
+    console.log('Getting URL for name: ' + name);
+    const l = this.devices.filter(u => u.name === name && u.mainframe === mainframe);
+    return this.baseUrl + l[0].URL;
   }
 
   public fake() {

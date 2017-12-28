@@ -1,13 +1,15 @@
 package de.spurtikus.vxi.service;
 
 public class ExternalVXIDescriptor {
-	public String deviceName;
-	public String deviceType;
-	public String deviceURL;
+	public String name;
+	public String type;
+	public String URL;
+	public String mainframe;
 
-	public ExternalVXIDescriptor(String name, String type, String url) {
-		this.deviceName = name;
-		this.deviceType = type;
-		this.deviceURL = url;
+	public ExternalVXIDescriptor(String name, String type, String url, String mainframe) {
+		this.name = name;
+		this.type = type;
+		this.URL = url;
+		this.mainframe = mainframe;
 	}
 }

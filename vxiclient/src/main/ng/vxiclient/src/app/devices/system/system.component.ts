@@ -13,10 +13,14 @@ export class SystemComponent implements OnInit, MObject  {
   constructor(private systemService: SystemService) {
     // get configuration from server
     console.log('CTR SystemComponent');
-    this.systemService.readConfiguration();
+    this.systemService.loadConfiguration();
    }
 
   ngOnInit() {
+  }
+
+  getDevices() {
+    return this.systemService.getConfiguration();
   }
 
   getName() { return 'System'; }

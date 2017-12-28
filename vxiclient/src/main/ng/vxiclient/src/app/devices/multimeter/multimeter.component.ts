@@ -21,7 +21,6 @@ import { Channel } from '../../types/Channel';
   styleUrls: ['./multimeter.component.css']
 })
 export class MultimeterComponent extends BaseDevice implements OnInit, Device {
-  device = 'unknown';
   devIdn: DeviceIdn = { name: 'unknown'};
   devices: VXIDevice[] = [];
 
@@ -61,12 +60,11 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
   constructor(protected appRegistry: AppRegistry,
     private multimeterService: MultimeterService) {
       super(appRegistry);
-      this.type = 'Sample';
-      this.name = 'multimeter';
-      this.start();
+      this.resultDataType = 'Sample';
   }
 
   ngOnInit() {
+    this.start();
   }
 
   doMeasurementCallback(): any {
@@ -76,7 +74,7 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
 
     const channelsToScan: string[] = this.channels.map(c => c.name);
     BaseDevice.mutex.acquire().then( function(release) {
-      vxi.getMeasurement(channelsToScan)
+      vxi.getMeasurement(self.mainframe, self.deviceName, channelsToScan)
         .subscribe(c => {
           self.channelResult = c as Channel[];
           // console.log(JSON.stringify(self.channels))
@@ -107,7 +105,7 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
       /*vxi.getInfo().subscribe(value => self.device = value);
       console.log('After getInfo with ' + self.device);*/
 
-      self.multimeterService.getIdn().subscribe(value => self.devIdn = value);
+      self.multimeterService.getIdn(self.mainframe, self.deviceName).subscribe(value => self.devIdn = value);
       console.log('After getIdn with ' + self.devIdn.name );
 
       /*vxi.getDevices().subscribe(value => self.devices = value);*/
@@ -130,7 +128,7 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
     const self = this;
     const channelsToScan: string[] = this.channels.map(c => c.name);
     const f: Function = (): Observable<any> => {
-      return self.multimeterService.setVoltageRange(channelsToScan, self.getName(), acdc, event.value);
+      return self.multimeterService.setVoltageRange(self.mainframe, self.deviceName, channelsToScan, acdc, event.value);
     };
     this.mutexedCall(f);
   }

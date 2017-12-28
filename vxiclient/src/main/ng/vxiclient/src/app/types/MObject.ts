@@ -2,7 +2,7 @@
  * Root of all managed 'measurement' objects.
  */
 export interface MObject {
-    getType();
+    // getType();
     getName() ;
     start();
     stop();
