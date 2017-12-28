@@ -19,7 +19,6 @@ export class SystemService extends BaseService {
 
   constructor(protected http: Http, protected configService: ConfigService) {
     super(http, configService);
-    // this.deviceMainframe = '';
   }
 
   private doLoad(): Observable<any> {

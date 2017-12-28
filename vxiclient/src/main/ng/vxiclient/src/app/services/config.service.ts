@@ -16,7 +16,7 @@ export class ConfigService {
 
   private devices: DeviceDTO[] = [
     // At startup, only the system device is known. All other devices will be filled in during client startup.
-    { type: 'system', name: 'system', URL: '/system', mainframe: ''},
+    { type: 'system', name: 'system', URL: '/system', mainframe: '', vxiDevice: null },
   ];
 
   constructor() { }
@@ -27,7 +27,7 @@ export class ConfigService {
    * @param device device to add.
    */
   addDevice( device: DeviceDTO) {
-    console.log('Adding device ' + device.name + ' on mainframe ' + device.mainframe + ' of type: ' 
+    console.log('Adding device ' + device.name + ' on mainframe ' + device.mainframe + ' of type: '
       + device.type + ' with URL ' + device.URL);
     this.devices.push(device);
   }
@@ -38,8 +38,8 @@ export class ConfigService {
    * @param type device type.
    */
   public getURL( mainframe: string,  name: string ) {
-    console.log('Getting URL for name: ' + name);
     const l = this.devices.filter(u => u.name === name && u.mainframe === mainframe);
+    // console.log('Got URL for name:' + name + ': ' + this.baseUrl + l[0].URL );
     return this.baseUrl + l[0].URL;
   }
 
