@@ -12,11 +12,13 @@ export class MultimeterService extends BaseService {
 
   constructor(protected http: Http, protected configService: ConfigService) {
     super(http, configService);
-    this.deviceName = 'voltmeter';
-    this.serviceUrl = this.configService.get(this.deviceName) + '/' + this.configService.fake();
-  }
+    this.deviceType = 'multimeter';
+   }
 
   getMeasurement(channelsToScan: string[]): Observable<Channel[]> {
+    if (this.serviceUrl === undefined) {
+      this.serviceUrl = this.configService.getURL(this.deviceType) + '/' + this.configService.fake();
+    }
     // console.log("to scan: " + JSON.stringify(channelsToScan))
     const dataUrl = this.serviceUrl + 'read' + '/7.27';
 
@@ -30,6 +32,9 @@ export class MultimeterService extends BaseService {
   }
 
   setVoltageRange(channelsToScan: string[], device: string, acdc: string, mode: string): Observable<string> {
+    if (this.serviceUrl === undefined) {
+      this.serviceUrl = this.configService.getURL(this.deviceType) + '/' + this.configService.fake();
+    }
     console.log('vxi.setVoltageRangeDC:' + device + ' with parameter ' + mode + ', ' + acdc );
     const dataUrl =  this.serviceUrl + 'setVoltageRange/' + acdc + '/' + mode;
     console.log(dataUrl);

@@ -9,9 +9,10 @@ import { MaterialModule } from '@angular/material';
 import { AppComponent } from './app.component';
 import { AppRegistry } from './app.registry';
 
+import { ConfigService } from './services/config.service';
+import { SystemService } from './services/system.service';
 import { MainframeService } from './services/mainframe.service';
 import { MultimeterService } from './services/multimeter.service';
-import { ConfigService } from './services/config.service';
 
 import { GraphViewComponent } from './graph-view/graph-view.component';
 import { EventLogComponent } from './event-log/event-log.component';
@@ -21,6 +22,7 @@ import { SwitchComponent } from './devices/switch/switch.component';
 import { CounterComponent } from './devices/counter/counter.component';
 import { FrequencyGeneratorComponent } from './devices/frequency-generator/frequency-generator.component';
 import { DigitalIOComponent } from './devices/digital-io/digital-io.component';
+import { SystemComponent } from './devices/system/system.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { DigitalIOComponent } from './devices/digital-io/digital-io.component';
     CounterComponent,
     FrequencyGeneratorComponent,
     DigitalIOComponent,
-    EventLogComponent
+    EventLogComponent,
+    SystemComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +45,7 @@ import { DigitalIOComponent } from './devices/digital-io/digital-io.component';
   ],
   providers: [
     ConfigService,
+    SystemService,
     MainframeService,
     MultimeterService,
     AppRegistry],

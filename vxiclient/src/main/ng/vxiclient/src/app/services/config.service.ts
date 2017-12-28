@@ -1,25 +1,47 @@
 import { Injectable } from '@angular/core';
 
+import { DeviceDTO } from '../types/DeviceDTO';
+
+/**
+ * Configuration service.
+ *
+ * Keeps a list of all devices, their types and their URLs. This list is filled during client startup from SystemService.
+ *
+ */
 @Injectable()
 export class ConfigService {
   private fakeString = 'Fake';
 
-  private baseUrl = 'http://localhost:8888/vxi/rest/api';
+  private baseUrl = 'http://localhost:8888/vxi/api/rest';
 
-  private urls = [
-    { device: 'mainframe', url: this.baseUrl + '/hp1300/mfb/hp1301'},
-    { device: 'voltmeter', url: this.baseUrl + '/hp1326/mfb/hp1326'},
-
-    { device: 'counter', url: this.baseUrl + '/hp1333/mfb/hp1333'},
-    { device: 'digital-io', url: this.baseUrl + '/hp1330/mfb/hp1330'},
-    { device: 'switch', url: this.baseUrl + '/hp1345/mfb/hp1345'},
-    { device: 'frequency-generator', url: this.baseUrl + '/hp1326/mfb/hp1326'}
+  private devices: DeviceDTO[] = [
+    // At startup, only the system device is known. All other devices will be filled in during client startup.
+    { deviceType: 'system', deviceName: 'system', deviceURL: '/system'},
   ];
 
   constructor() { }
 
-  public get( name: string ) {
-    return this.urls.filter(u => u.device === name)[0].url;
+  /**
+   * Add a device.
+   *
+   * @param device device to add.
+   */
+  addDevice( device: DeviceDTO) {
+    console.log('Adding device ' + device.deviceName + ' of type: ' + device.deviceType + ' with URL ' + device.deviceURL);
+    this.devices.push(device);
+  }
+
+  /**
+   * Get absolute service URL for a device.
+   *
+   * TODO: this will not work if we have multiple devices of same type.
+   *
+   * @param type device type.
+   */
+  public getURL( type: string ) {
+    console.log('Getting URL for type: ' + type);
+    const l = this.devices.filter(u => u.deviceType === type);
+    return this.baseUrl + l[0].deviceURL;
   }
 
   public fake() {

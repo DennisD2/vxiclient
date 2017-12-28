@@ -35,6 +35,6 @@ public class Constants {
 	public static final String URL_SWITCH = "/hp1351";
 	public static final String URL_AFG = "/hp1340";
 	public static final String URL_DIGITALIO = "/hp1330";
-	public static final String URL_VOLTMETER = "/hp1326";
+	public static final String URL_MULTIMETER = "/hp1326";
 
 }

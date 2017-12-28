@@ -15,11 +15,13 @@ export class MainframeService extends BaseService  {
 
   constructor(protected http: Http, protected configService: ConfigService) {
     super(http, configService);
-    this.deviceName = 'mainframe';
-    this.serviceUrl = this.configService.get(this.deviceName) + '/' + this.configService.fake();
+    this.deviceType = 'mainframe';
   }
 
   getDevices(): Observable<VXIDevice[]> {
+    if (this.serviceUrl === undefined) {
+      this.serviceUrl = this.configService.getURL(this.deviceType) + '/' + this.configService.fake();
+    }
     const dataUrl = this.serviceUrl + '/devices';
 
     const headers = new Headers({ 'Content-Type': 'application/json' });

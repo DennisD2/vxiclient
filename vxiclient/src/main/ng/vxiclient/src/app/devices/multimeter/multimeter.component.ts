@@ -62,7 +62,7 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
     private multimeterService: MultimeterService) {
       super(appRegistry);
       this.type = 'Sample';
-      this.name = 'voltmeter';
+      this.name = 'multimeter';
       this.start();
   }
 

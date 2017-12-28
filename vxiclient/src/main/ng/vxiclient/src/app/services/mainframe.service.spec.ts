@@ -1,8 +1,8 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { MainframeService } from './mainframe.service.service';
+import { MainframeService } from './mainframe.service';
 
-describe('MainframeServiceService', () => {
+describe('MainframeService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [MainframeService]

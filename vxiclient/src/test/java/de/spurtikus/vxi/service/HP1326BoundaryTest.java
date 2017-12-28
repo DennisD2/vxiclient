@@ -30,7 +30,7 @@ import de.spurtikus.vxi.Constants;
 public class HP1326BoundaryTest {
 
 	public final String BASE_URI = Constants.SERVICE_ROOT;
-	public final String DEVICECLASS = Constants.URL_VOLTMETER;
+	public final String DEVICECLASS = Constants.URL_MULTIMETER;
 	public final String MAINFRAME = "mfb";
 	public final String DEVICENAME = "hp1326";
 	public final String URI = BASE_URI + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;

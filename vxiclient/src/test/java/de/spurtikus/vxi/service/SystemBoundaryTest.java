@@ -82,5 +82,11 @@ public class SystemBoundaryTest {
 		String res = response.readEntity(String.class);
 		System.out.println(res);
 		//assertEquals("VXI system REST API", response.readEntity(String.class));
+		try {
+			Thread.sleep(50000000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
+
 }

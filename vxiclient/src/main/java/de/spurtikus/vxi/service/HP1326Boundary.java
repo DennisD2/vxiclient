@@ -32,7 +32,7 @@ import de.spurtikus.vxi.Constants;
  * @author dennis
  *
  */
-@Path(Constants.URL_VOLTMETER)
+@Path(Constants.URL_MULTIMETER)
 public class HP1326Boundary extends AbstractBoundary<HP1326> {
 	public final static String className = "HP1326Boundary";
 

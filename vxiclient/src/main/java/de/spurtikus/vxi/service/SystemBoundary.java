@@ -67,7 +67,7 @@ public class SystemBoundary {
 		for (ConnectorConfig c: confs) {
 			for (DeviceInfo d: c.getDevices()) {
 				String name = d.getName();
-				String url = Constants.SERVICE_ROOT + restUrlForType(d.getType()) + '/' + d.getMainframe() + '/' + d.getName();
+				String url = /*Constants.SERVICE_ROOT +*/ restUrlForType(d.getType()) + '/' + d.getMainframe() + '/' + d.getName();
 				String type = d.getType();
 				ExternalVXIDescriptor de = new ExternalVXIDescriptor(name, type, url);
 				extDevs.add(de);
@@ -80,7 +80,7 @@ public class SystemBoundary {
 		String u="?";
 		switch (type) {
 		case "mainframe": u=Constants.URL_MAINFRAME; break;
-		case "voltmeter": u=Constants.URL_VOLTMETER; break;
+		case "multimeter": u=Constants.URL_MULTIMETER; break;
 		case "pacer":     u=Constants.URL_PACER; break;
 		case "counter": u=Constants.URL_COUNTER; break;
 		case "switch": u=Constants.URL_SWITCH; break;

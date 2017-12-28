@@ -5,6 +5,7 @@ import { OnInit } from '@angular/core';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 
 import { AppRegistry } from './app.registry';
+import { SystemService } from './services/system.service';
 
 /**
  * Overall AppComponent.
@@ -30,8 +31,7 @@ export class AppComponent implements OnInit {
   // pacer IntervalObservable's subscription
   subscription: any;
 
-  constructor(private appRegistry: AppRegistry) {
-    console.log('App CTR');
+  constructor(private appRegistry: AppRegistry, private systemService: SystemService) {
   }
 
   ngOnInit() {
