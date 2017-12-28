@@ -16,9 +16,9 @@ export class MainframeService extends BaseService  {
     super(http, configService);
   }
 
-  getDevices(deviceName: string): Observable<VXIDevice[]> {
-    const serviceUrl = this.configService.getURL('', deviceName) + '/' + this.configService.fake();
-    const dataUrl = serviceUrl + '/devices';
+  getDevices(mainframe: string, deviceName: string): Observable<VXIDevice[]> {
+    const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
+    const dataUrl = serviceUrl + 'devices';
 
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });

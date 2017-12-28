@@ -9,6 +9,7 @@ import { BaseService } from './base.service';
 import { ConfigService } from './config.service';
 
 import { Mutex, MutexInterface } from 'async-mutex';
+import { MainframeService } from './mainframe.service';
 
 @Injectable()
 export class SystemService extends BaseService {
@@ -17,7 +18,7 @@ export class SystemService extends BaseService {
   // Device configuration
   config: DeviceDTO[];
 
-  constructor(protected http: Http, protected configService: ConfigService) {
+  constructor(protected http: Http, protected configService: ConfigService, protected mainframeService: MainframeService) {
     super(http, configService);
   }
 
@@ -58,5 +59,20 @@ export class SystemService extends BaseService {
 
   copyToConfigService() {
     this.config.forEach( d => this.configService.addDevice(d));
+    const self = this;
+    let vxiDevices: any;
+    console.error('HEHE HERE IM AM WORKING ON - ADD FAKE GETDEVICES');
+    SystemService.mutex.acquire().then( function(release) {
+      // TODO: mfb in next line is wrong
+      self.mainframeService.getDevices('mfb', 'hp1301')
+      .subscribe(c => {
+        // console.log(JSON.stringify(c));
+        vxiDevices = c;
+       }, c => {
+        console.log('An error occured, releasing mutex');
+      });
+      release();
+    });
+    console.log(vxiDevices);
   }
 }

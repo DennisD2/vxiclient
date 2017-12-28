@@ -38,8 +38,9 @@ export class ConfigService {
    * @param type device type.
    */
   public getURL( mainframe: string,  name: string ) {
+    console.log('Find URL for name:' + name );
     const l = this.devices.filter(u => u.name === name && u.mainframe === mainframe);
-    // console.log('Got URL for name:' + name + ': ' + this.baseUrl + l[0].URL );
+    console.log('Got URL for name:' + name + ': ' + this.baseUrl + l[0].URL );
     return this.baseUrl + l[0].URL;
   }
 

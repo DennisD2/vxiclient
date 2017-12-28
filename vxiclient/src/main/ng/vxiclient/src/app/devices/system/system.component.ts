@@ -20,7 +20,8 @@ export class SystemComponent implements OnInit, MObject  {
   }
 
   getDevices() {
-    return this.systemService.getConfiguration();
+    const devs = this.systemService.getConfiguration();
+    return devs;
   }
 
   getName() { return 'System'; }
