@@ -13,7 +13,7 @@ import { ConfigService } from './services/config.service';
 import { SystemService } from './services/system.service';
 import { MainframeService } from './services/mainframe.service';
 import { MultimeterService } from './services/multimeter.service';
-import { SwitchService } from './services/switch.service';
+import { DigitalIOService } from './services/digital-io.service';
 
 import { GraphViewComponent } from './graph-view/graph-view.component';
 import { EventLogComponent } from './event-log/event-log.component';
@@ -49,7 +49,7 @@ import { SystemComponent } from './devices/system/system.component';
     SystemService,
     MainframeService,
     MultimeterService,
-    SwitchService,
+    DigitalIOService,
     AppRegistry],
   bootstrap: [AppComponent]
 })

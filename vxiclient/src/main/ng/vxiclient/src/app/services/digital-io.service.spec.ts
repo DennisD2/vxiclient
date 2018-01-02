@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { SwitchService } from './switch.service';
+import { DigitalIOService } from './digital-io.service';
 
 describe('SwitchService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SwitchService]
+      providers: [DigitalIOService]
     });
   });
 
-  it('should be created', inject([SwitchService], (service: SwitchService) => {
+  it('should be created', inject([DigitalIOService], (service: DigitalIOService) => {
     expect(service).toBeTruthy();
   }));
 });

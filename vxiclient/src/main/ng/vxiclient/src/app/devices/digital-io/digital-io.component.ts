@@ -3,7 +3,7 @@ import { BaseDevice } from '../base.device';
 import { Device } from '../../types/Device';
 import { AppRegistry } from '../../app.registry';
 
-import { SwitchService } from '../../services/switch.service';
+import { DigitalIOService } from '../../services/digital-io.service';
 
 @Component({
   selector: 'app-digital-io',
@@ -22,7 +22,7 @@ export class DigitalIOComponent extends BaseDevice implements OnInit, Device {
   polarity3 = 'pos';
 
   constructor(protected appRegistry: AppRegistry,
-    private switchService: SwitchService) {
+    private switchService: DigitalIOService) {
       super(appRegistry);
       this.resultDataType = 'none';
   }
@@ -42,7 +42,7 @@ export class DigitalIOComponent extends BaseDevice implements OnInit, Device {
     const self = this;
     BaseDevice.mutex.acquire().then(function(release) {
       console.log('Before setByte ');
-      self.switchService.setByte(byte, bit).subscribe(v => {});
+      self.switchService.setByte(self.mainframe, self.deviceName, byte, bit).subscribe(v => {});
       console.log('After setByte ');
       release();
     });
@@ -52,7 +52,7 @@ export class DigitalIOComponent extends BaseDevice implements OnInit, Device {
     console.log('onPolarityChange: ' + byte + ', ' + value  );
     const self = this;
     BaseDevice.mutex.acquire().then(function(release) {
-      self.switchService.setPolarity(byte, value).subscribe(v => {});
+      self.switchService.setPolarity(self.mainframe, self.deviceName, byte, value).subscribe(v => {});
       console.log('After setByte ');
       release();
     });
