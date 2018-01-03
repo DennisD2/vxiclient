@@ -6,4 +6,5 @@ import { MObject } from './MObject';
  */
 export interface View extends MObject {
     newSampleCallback(data: any);
+    getAcceptedDataType(): string;
 }

@@ -16,7 +16,7 @@ declare var Plotly: any;
   styleUrls: ['./graph-view.component.css']
 })
 export class GraphViewComponent implements OnInit, View {
-  type = 'Sample';
+  dataType = 'Sample';
   private active = true;
   private initialized = false;
 
@@ -39,7 +39,11 @@ export class GraphViewComponent implements OnInit, View {
   }
 
   getType() {
-    return this.type;
+    return this.dataType;
+  }
+
+  getAcceptedDataType() {
+    return this.dataType;
   }
 
   start() {

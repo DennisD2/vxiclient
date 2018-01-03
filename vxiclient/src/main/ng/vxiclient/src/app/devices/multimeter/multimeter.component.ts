@@ -89,7 +89,7 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
   record(onoff: String) {
     console.log('record' + onoff);
     if (onoff === 'on') {
-      this.appRegistry.publish('hehe');
+      this.appRegistry.publish('command', 'hehe');
     }
     if (onoff === 'off') {
       this.appRegistry.roll();

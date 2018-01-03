@@ -74,22 +74,24 @@ export class AppRegistry {
     console.log('device unsubscribed: ' +  dev.getName());
   }
 
-  /*measure() {
-    this.devices.map((d) => {
-      console.log('measure device: ' + d.getName())
-      d.doMeasurementCallback();
-    })
-  */
-
   /**
    * Publish data to all subscribers (views).
+   * 
+   * @param datTypea type of data to publish
    * @param data data to publish
    */
-  publish(data: any) {
+  publish(dataType: string, data: any) {
+    let published = false;
     this.views.map((v) => {
-      console.log('publish to view: ' + v.getName());
-      v.newSampleCallback(data);
+      if (v.getAcceptedDataType() === dataType) {
+        console.log('publish data type: ' + dataType + ' to view: ' + v.getName());
+        v.newSampleCallback(data);
+        published = true;
+      }
     });
+    if (!published) {
+      console.log('No consumer for data type: ' + dataType );
+    }
   }
 
   /**
@@ -101,7 +103,7 @@ export class AppRegistry {
       const data = d.doMeasurementCallback();
       if (data !== undefined) {
         console.log('measured: ' + JSON.stringify(data));
-       this.publish(data);
+       this.publish(d.getResultDataType(), data);
       }
     });
   }

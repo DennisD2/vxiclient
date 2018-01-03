@@ -5,4 +5,5 @@ import { MObject } from './MObject';
  */
 export interface Device extends MObject {
     doMeasurementCallback(): any;
+    getResultDataType(): string;
 }
