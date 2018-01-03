@@ -100,6 +100,41 @@ public class HP1300Boundary extends AbstractBoundary<HP1300b> {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
+		boolean fakeResult = false;
+		List<VXIDevice> devices = new ArrayList<>();
+		try {
+			devices = getDevice(mainframe, devname).listDevices(fakeResult);
+		} catch (Exception e) {
+			logger.error("Error accessing device.");
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		for (VXIDevice d : devices) {
+			logger.debug("{}", d.toString());
+		}
+		return Response.ok(devices).build();
+	}
+	
+	//[{"name":"hp1301","type":"mainframe","URL":"/hp1300/mfb/hp1301","mainframe":"mfb"},{"name":"hp1300pacer","type":"pacer","URL":"/hp1300pacer/mfb/hp1300pacer","mainframe":"mfb"},{"name":"hp1326","type":"multimeter","URL":"/hp1326/mfb/hp1326","mainframe":"mfb"},{"name":"hp1333","type":"counter","URL":"/hp1333/mfb/hp1333","mainframe":"mfb"},{"name":"hp1351","type":"switch","URL":"/hp1351/mfb/hp1351","mainframe":"mfb"},{"name":"hp1340","type":"afg","URL":"/hp1340/mfb/hp1340","mainframe":"mfb"},{"name":"hp1330","type":"digitalIO","URL":"/hp1330/mfb/hp1330","mainframe":"mfb"},{"name":"hp1411","type":"multimeter","URL":"/hp1326/mfc/hp1411","mainframe":"mfc"},{"name":"hp1330","type":"digitalIO","URL":"/hp1330/mfc/hp1330","mainframe":"mfc"}]
+	@POST
+	@Path("{mainframe}/{devname}/Fakedevices")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response listDevicesFake(@Context UriInfo uriInfo,
+			@PathParam("mainframe") String mainframe,
+			@PathParam("devname") String devname) {
+		logger.debug("Incoming URI : {}", uriInfo.getPath());
+		logger.debug("Mainframe: {}", mainframe);
+		logger.debug("Device name: {}", devname);
+
+		try {
+			connManager = ConnectionManager.getInstance(this.getClass(),
+					mainframe, devname);
+		} catch (Exception e) {
+			logger.error(
+					"Cannot get wrapper instance. This is usually an initialization problem.");
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
 		boolean fakeResult = true;
 		List<VXIDevice> devices = new ArrayList<>();
 		try {

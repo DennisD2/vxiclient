@@ -40,10 +40,16 @@ export class DigitalIOComponent extends BaseDevice implements OnInit, Device {
   onSwitchChange(byte: number, bit: number) {
     console.log('onSwitchChange: ' + byte + ', ' + bit );
     const self = this;
+    let data: boolean[];
+    if (byte === 0) { data = this.data0; }
+    if (byte === 1) { data = this.data1; }
+    if (byte === 2) { data = this.data2; }
+    if (byte === 3) { data = this.data3; }
+    const bitval = data[bit];
     BaseDevice.mutex.acquire().then(function(release) {
-      console.log('Before setByte ');
-      self.switchService.setByte(self.mainframe, self.deviceName, byte, bit).subscribe(v => {});
-      console.log('After setByte ');
+      console.log('Before setBit ');
+      self.switchService.setBit(self.mainframe, self.deviceName, byte, bit, bitval).subscribe(v => {});
+      console.log('After setBit ');
       release();
     });
   }

@@ -54,7 +54,7 @@ public class SystemBoundary {
 	@Path("/getConfig")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response setVoltageRange(@Context UriInfo uriInfo) {
+	public Response getConfig(@Context UriInfo uriInfo) {
 		// Load configuration
 		try {
 			Configuration.load();

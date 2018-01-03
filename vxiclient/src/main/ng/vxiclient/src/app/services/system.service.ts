@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Headers, Http, Response, RequestOptions } from '@angular/http';
 
 import { DeviceDTO } from '../types/DeviceDTO';
+import { VXIDevice } from '../types/VXIDevice';
 
 import { BaseService } from './base.service';
 import { ConfigService } from './config.service';
@@ -59,6 +60,18 @@ export class SystemService extends BaseService {
 
   copyToConfigService() {
     this.config.forEach( d => this.configService.addDevice(d));
+
+    // TODO:
+    // if we have a HP E130x mainframe, we can inquire additional info for devices:
+    // const vxiDevices = this.addAdditionalDeviceInfo(); <-- already implemented.
+    // use the info from that method to enrich the congiguration read from server.
+  }
+
+  /**
+   * Inquire additional device information from mainframe. Will work only for HP E130x mainframes.
+   * Will not work for Workstation-based mainframes (like V743).
+   */
+  addAdditionalDeviceInfo(): VXIDevice[] {
     const self = this;
     let vxiDevices: any;
     console.error('HEHE HERE IM AM WORKING ON - ADD FAKE GETDEVICES');
@@ -74,5 +87,6 @@ export class SystemService extends BaseService {
       release();
     });
     console.log(vxiDevices);
+    return vxiDevices;
   }
 }

@@ -16,6 +16,13 @@ export class MainframeService extends BaseService  {
     super(http, configService);
   }
 
+  /**
+   * Get list of devices known by this mainframe. Works with HP13xx mainframes, but will not work
+   * with a V743 HP/UX based system via ISCPI.
+   *
+   * @param mainframe mainframe to use
+   * @param deviceName target device in mainframe (e.g. a HP E130x)
+   */
   getDevices(mainframe: string, deviceName: string): Observable<VXIDevice[]> {
     const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
     const dataUrl = serviceUrl + 'devices';
