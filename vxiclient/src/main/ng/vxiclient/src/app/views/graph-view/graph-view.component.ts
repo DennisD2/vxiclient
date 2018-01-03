@@ -1,61 +1,36 @@
 import { Component, OnInit } from '@angular/core';
 
-import 'rxjs/add/operator/map';
-
-import { AppRegistry } from '../app.registry';
-
-import { View } from '../types/View';
-import { Channel } from '../types/Channel';
+import { AppRegistry } from '../../app.registry';
+import { BaseView } from '../base.view';
+import { View } from '../../types/View';
+import { Channel } from '../../types/Channel';
 
 declare var Plotly: any;
 
-
+/**
+ * Graph view component based on Plot.ly.
+ *
+ */
 @Component({
   selector: 'app-graph-view',
   templateUrl: './graph-view.component.html',
   styleUrls: ['./graph-view.component.css']
 })
-export class GraphViewComponent implements OnInit, View {
-  dataType = 'Sample';
-  private active = true;
-  private initialized = false;
-
+export class GraphViewComponent extends BaseView implements OnInit {
+  // List of channels viewed
   channels: Channel[];
-
   // Plotly graph
   private graph; any;
   // Indices of traces (plotly)
   indices: number[];
 
-  constructor(private appRegistry: AppRegistry) {
+  constructor(protected appRegistry: AppRegistry) {
+    super(appRegistry);
+    this.dataType = 'Sample';
     this.start();
   }
 
   ngOnInit() {
-  }
-
-  getName() {
-    return 'GraphView';
-  }
-
-  getType() {
-    return this.dataType;
-  }
-
-  getAcceptedDataType() {
-    return this.dataType;
-  }
-
-  start() {
-    console.log('start');
-    this.appRegistry.subscribeView(this);
-    this.active = true;
-  }
-
-  stop() {
-    console.log('stop');
-    this.appRegistry.unsubscribeView(this);
-    this.active = false;
   }
 
   newSampleCallback(data: any) {
