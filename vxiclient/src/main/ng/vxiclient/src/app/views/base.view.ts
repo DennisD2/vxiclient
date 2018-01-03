@@ -23,10 +23,6 @@ export class BaseView implements View {
     return this.name;
   }
 
-  getType() {
-    return this.dataType;
-  }
-
   getAcceptedDataType() {
     return this.dataType;
   }

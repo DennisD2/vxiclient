@@ -12,7 +12,7 @@ import { AppRegistry } from '../../app.registry';
   templateUrl: './event-log.component.html',
   styleUrls: ['./event-log.component.css']
 })
-export class EventLogComponent extends BaseView implements OnInit {
+export class EventLogComponent extends BaseView {
   request = '?';
   response: string;
 
@@ -21,9 +21,6 @@ export class EventLogComponent extends BaseView implements OnInit {
     this.name = 'LogView';
     this.dataType = 'any';
     this.start();
-  }
-
-  ngOnInit() {
   }
 
   newSampleCallback(data: any) {
