@@ -10,7 +10,6 @@
 <ul *ngFor="let dev of getDevices()">
   <li *ngIf="dev.type==='mainframe'">
     A {{dev.type}} named {{dev.name}} in {{dev.mainframe}} with service URL {{dev.URL}}
-    <!-- <app-counter deviceName="{{dev.name}}" deviceURL="{{dev.URL}}"></app-counter> -->
   </li>
 </ul>
 
@@ -18,7 +17,7 @@
 <ul *ngFor="let dev of getDevices()">
   <li *ngIf="dev.type==='counter'">
     A {{dev.type}} named {{dev.name}} in {{dev.mainframe}} with service URL {{dev.URL}}
-    <!-- <app-counter deviceName="{{dev.name}}" deviceURL="{{dev.URL}}"></app-counter> -->
+    <app-counter deviceName="{{dev.name}}" mainframe="{{dev.mainframe}}"></app-counter>
   </li>
 </ul>
 
@@ -26,7 +25,7 @@
 <ul *ngFor="let dev of getDevices()">
   <li *ngIf="dev.type==='multimeter'">
     A {{dev.type}} named {{dev.name}} in {{dev.mainframe}} with service URL {{dev.URL}}
-    <!-- <app-multimeter deviceName="{{dev.name}}" deviceURL="{{dev.URL}}"></app-multimeter> -->
+    <app-multimeter deviceName="{{dev.name}}" mainframe="{{dev.mainframe}}"></app-multimeter>
   </li>
 </ul>
 
@@ -34,15 +33,15 @@
 <ul *ngFor="let dev of getDevices()">
   <li *ngIf="dev.type==='switch'">
     A {{dev.type}} named {{dev.name}} in {{dev.mainframe}} with service URL {{dev.URL}}
-    <!-- <app-counter deviceName="{{dev.name}}" deviceURL="{{dev.URL}}"></app-counter> -->
+    <!--<app-switch deviceName="{{dev.name}}" mainframe="{{dev.mainframe}}"></app-switch> -->
   </li>
 </ul>
 
 <h3>Frequency Generators</h3>
 <ul *ngFor="let dev of getDevices()">
   <li *ngIf="dev.type==='afg'">
-    A {{dev.type}} named {{dev.name}} in {{dev.mainframe}} with service URL {{dev.URL}}
-    <!-- <app-counter deviceName="{{dev.name}}" deviceURL="{{dev.URL}}"></app-counter> -->
+    An {{dev.type}} named {{dev.name}} in {{dev.mainframe}} with service URL {{dev.URL}}
+    <app-frequency-generator deviceName="{{dev.name}}" mainframe="{{dev.mainframe}}"></app-frequency-generator>
   </li>
 </ul>
 
@@ -50,6 +49,6 @@
 <ul *ngFor="let dev of getDevices()">
   <li *ngIf="dev.type==='digitalIO'">
     A {{dev.type}} named {{dev.name}} in {{dev.mainframe}} with service URL {{dev.URL}}
-    <!-- <app-counter deviceName="{{dev.name}}" deviceURL="{{dev.URL}}"></app-counter> -->
+    <app-digital-io deviceName="{{dev.name}}" mainframe="{{dev.mainframe}}"></app-digital-io>
   </li>
 </ul>
