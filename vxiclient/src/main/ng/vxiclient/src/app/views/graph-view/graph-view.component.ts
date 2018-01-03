@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { AppRegistry } from '../../app.registry';
 import { BaseView } from '../base.view';
-import { View } from '../../types/View';
+
 import { Channel } from '../../types/Channel';
 
 declare var Plotly: any;
@@ -26,6 +26,7 @@ export class GraphViewComponent extends BaseView implements OnInit {
 
   constructor(protected appRegistry: AppRegistry) {
     super(appRegistry);
+    this.name = 'GraphView';
     this.dataType = 'Sample';
     this.start();
   }
@@ -34,7 +35,7 @@ export class GraphViewComponent extends BaseView implements OnInit {
   }
 
   newSampleCallback(data: any) {
-    console.log('new sample: ' + JSON.stringify(data));
+    // console.log('new sample: ' + JSON.stringify(data));
     this.channels = data;
     this.addData();
   }

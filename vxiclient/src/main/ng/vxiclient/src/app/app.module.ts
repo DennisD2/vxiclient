@@ -16,7 +16,7 @@ import { MultimeterService } from './services/multimeter.service';
 import { DigitalIOService } from './services/digital-io.service';
 
 import { GraphViewComponent } from './views/graph-view/graph-view.component';
-import { EventLogComponent } from './event-log/event-log.component';
+import { EventLogComponent } from './views/event-log/event-log.component';
 
 import { MultimeterComponent } from './devices/multimeter/multimeter.component';
 import { SwitchComponent } from './devices/switch/switch.component';

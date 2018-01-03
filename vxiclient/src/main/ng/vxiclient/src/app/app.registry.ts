@@ -76,14 +76,14 @@ export class AppRegistry {
 
   /**
    * Publish data to all subscribers (views).
-   * 
+   *
    * @param datTypea type of data to publish
    * @param data data to publish
    */
   publish(dataType: string, data: any) {
     let published = false;
     this.views.map((v) => {
-      if (v.getAcceptedDataType() === dataType) {
+      if (v.getAcceptedDataType() === dataType || v.getAcceptedDataType() === 'any') {
         console.log('publish data type: ' + dataType + ' to view: ' + v.getName());
         v.newSampleCallback(data);
         published = true;
