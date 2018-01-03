@@ -26,20 +26,26 @@ import de.spurtikus.vxi.connectors.ConnectorConfig;
  * @author dennis
  *
  */
-@Path(Constants.URL_SYSTEM)
+@Path("/" + Constants.URL_SYSTEM)
 public class SystemBoundary {
-	public final static String className = "SystemBoundary";
-
 	private Logger logger = LoggerFactory.getLogger(SystemBoundary.class);
 
 	protected ConnectionManager connManager;
+
+	private String className;
+	
+	private final String defaultMessage = "VXI system REST API.";
+	
+	public SystemBoundary() {
+		className = Constants.URL_SYSTEM.replace("/", "");
+	}
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/")
 	public Response defaultAnswer(@Context UriInfo uriInfo) {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
-		return Response.ok("VXI system REST API. Valid URLs: /info, /config.").build();
+		return Response.ok(defaultMessage).build();
 	}
 
 	@GET
@@ -47,7 +53,7 @@ public class SystemBoundary {
 	@Path("/info")
 	public Response info(@Context UriInfo uriInfo) {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
-		return Response.ok("VXI system REST API").build();
+		return Response.ok(className).build();
 	}
 	
 	@POST

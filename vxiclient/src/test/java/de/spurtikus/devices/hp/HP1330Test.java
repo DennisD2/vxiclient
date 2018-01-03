@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.spurtikus.devices.hp.HP1330.PortDescription;
+import de.spurtikus.devices.hp.DigitalIO.PortDescription;
 import de.spurtikus.vxi.Constants;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
@@ -21,7 +21,7 @@ public class HP1330Test {
 	static final String TEST_DEVICE_NAME = "hp1330";
 	ConnectorConfig config;
 	DeviceLink theLid = null;
-	HP1330 testee = null;
+	DigitalIO testee = null;
 
 	@Before
 	public void before() throws Exception {
@@ -40,7 +40,7 @@ public class HP1330Test {
 		assertNotNull(deviceid);
 		theLid = vxiConnector.initialize(config, deviceid);
 		
-		testee = new HP1330(vxiConnector, theLid);
+		testee = new DigitalIO(vxiConnector, theLid);
 	}
 	
 	//@Ignore
@@ -48,11 +48,11 @@ public class HP1330Test {
 	public void testGetAndSet() throws Exception {
 		testee.initialize();
 
-		PortDescription get = new PortDescription(HP1330.Port.DATA0, HP1330.Bit.BIT0);
+		PortDescription get = new PortDescription(DigitalIO.Port.DATA0, DigitalIO.Bit.BIT0);
 		boolean b = testee.getBit(get);
 		System.out.println("Bit value: " + b);
 
-		PortDescription set = new PortDescription(HP1330.Port.DATA0, HP1330.Bit.BIT1);
+		PortDescription set = new PortDescription(DigitalIO.Port.DATA0, DigitalIO.Bit.BIT1);
 		testee.setBit(set, true);
 		b = testee.getBit(set);
 		System.out.println("Bit value: " + b);
@@ -69,7 +69,7 @@ public class HP1330Test {
 	public void testSetterLoop() throws Exception {
 		testee.initialize();
 
-		PortDescription set = new PortDescription(HP1330.Port.DATA0, HP1330.Bit.BIT1);
+		PortDescription set = new PortDescription(DigitalIO.Port.DATA0, DigitalIO.Bit.BIT1);
 		while (true) {
 			//System.out.println("1");
 			testee.setBit(set, true);

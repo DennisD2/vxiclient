@@ -23,12 +23,12 @@ import org.junit.runner.RunWith;
 import de.spurtikus.vxi.Constants;
 
 @RunWith(Arquillian.class)
-public class HP1333BoundaryTest {
+public class AFGBoundaryTest {
 
 	public final String BASE_URI = Constants.SERVICE_ROOT;
-	public final String DEVICECLASS = Constants.URL_COUNTER;
+	public final String DEVICECLASS = Constants.URL_AFG;
 	public final String MAINFRAME = "mfb";
-	public final String DEVICENAME = "hp1333";
+	public final String DEVICENAME = "hp1340";
 	public final String URI = BASE_URI + "/" + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
 
 	@Deployment
@@ -38,7 +38,7 @@ public class HP1333BoundaryTest {
 				.withTransitivity().as(File.class);
 
 		WebArchive jar = ShrinkWrap.create(WebArchive.class, "vxi.war")
-				.addClass(SystemBoundary.class).addClass(CounterBoundary.class)
+				.addClass(SystemBoundary.class).addClass(AFGBoundary.class)
 				.addAsManifestResource("arquillian.xml").addAsLibraries(lib)
 				.addAsManifestResource("META-INF/context.xml", "context.xml")
 				.setWebXML("web.xml");
@@ -59,7 +59,7 @@ public class HP1333BoundaryTest {
 		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println(uri + " -> " + res);
-		assertEquals(Constants.URL_COUNTER, res);
+		assertEquals(Constants.URL_AFG, res);
 	}
 
 	//@Ignore
@@ -74,36 +74,18 @@ public class HP1333BoundaryTest {
 		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println(uri + " -> " + res);
-		assertEquals("HEWLETT-PACKARD,E1333A,0,A.04.01", res);
+		assertEquals("HEWLETT-PACKARD,E1340A,0,A.01.02", res);
 	}
 
-	//@Ignore
+	// @Ignore
 	@Test
 	@RunAsClient
-	public void setLowPassFilter(@ArquillianResource URL contextPath) {
-		String onoff = "true";
-		String uri = URI + "/lowPassFilter/" + onoff;
-		
-		Client client = ClientBuilder.newClient();
-		System.out.println("Call: " + contextPath + uri);
-		final Response response = client.target(contextPath + uri)
-				.request(MediaType.APPLICATION_JSON).post(null);
-		assertTrue(response.getStatus()<400);
-		String res = response.readEntity(String.class);
-		System.out.println("Call result: " + res);
-		/*try {
-			Thread.sleep(500000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
-	}
-
-	//@Ignore
-	@Test
-	@RunAsClient
-	public void measure(@ArquillianResource URL contextPath) {
-		String channel = "1";
-		String uri = URI + "/measure/" + channel;
+	public void shape(@ArquillianResource URL contextPath) {
+		String waveform = "sin";
+		String amplitude = "5.0";
+		String frequency = "5e5";
+		String uri = URI + "/shape/" + waveform + "/" + amplitude + "/"
+				+ frequency;
 		
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call: " + contextPath + uri);

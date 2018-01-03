@@ -27,16 +27,21 @@ import de.spurtikus.devices.hp.HP1326;
 import de.spurtikus.vxi.Constants;
 
 /**
- * Boundary for HP1326/1411 voltmeter. See class {HP1326}.
+ * Boundary for multimeters.
+ * 
+ * Tested with:
+ * * HP1326/1411 voltmeter. See class {HP1326}.
  * 
  * @author dennis
  *
  */
-@Path(Constants.URL_MULTIMETER)
-public class HP1326Boundary extends AbstractBoundary<HP1326> {
-	public final static String className = "HP1326Boundary";
-
-	private Logger logger = LoggerFactory.getLogger(HP1326Boundary.class);
+@Path("/" + Constants.URL_MULTIMETER)
+public class MultimeterBoundary extends AbstractBoundary<HP1326> {
+	private Logger logger = LoggerFactory.getLogger(MultimeterBoundary.class);
+	
+	public MultimeterBoundary() {
+		className = Constants.URL_MULTIMETER;
+	}
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -47,7 +52,7 @@ public class HP1326Boundary extends AbstractBoundary<HP1326> {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
 		logger.debug("Device name: {}", devname);
-		return Response.ok("HP1326").build();
+		return Response.ok(getClassName()).build();
 	}
 
 	@POST
@@ -80,7 +85,7 @@ public class HP1326Boundary extends AbstractBoundary<HP1326> {
 		}
 		System.out.println(answer);
 
-		return Response.ok("{\"*idn?\":\"" + answer + "\"}").build();
+		return Response.ok(answer).build();
 	}
 
 	/**

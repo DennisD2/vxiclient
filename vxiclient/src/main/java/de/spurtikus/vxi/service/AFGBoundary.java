@@ -27,11 +27,13 @@ import de.spurtikus.vxi.Constants;
  * @author dennis
  *
  */
-@Path(Constants.URL_AFG)
-public class HP1340Boundary extends AbstractBoundary<HP1340> {
-	public final static String className = "HP1340Boundary";
-
-	private Logger logger = LoggerFactory.getLogger(HP1340Boundary.class);
+@Path("/" + Constants.URL_AFG)
+public class AFGBoundary extends AbstractBoundary<HP1340> {
+	private Logger logger = LoggerFactory.getLogger(AFGBoundary.class);
+	
+	public AFGBoundary() {
+		className = Constants.URL_AFG;
+	}
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -42,7 +44,7 @@ public class HP1340Boundary extends AbstractBoundary<HP1340> {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
 		logger.debug("Device name: {}", devname);
-		return Response.ok("HP1340").build();
+		return Response.ok(getClassName()).build();
 	}
 
 	@POST
@@ -77,7 +79,7 @@ public class HP1340Boundary extends AbstractBoundary<HP1340> {
 		}
 		System.out.println(answer);
 
-		return Response.ok("{\"*idn?\":\"" + answer + "\"}").build();
+		return Response.ok(answer).build();
 	}
 
 	/**

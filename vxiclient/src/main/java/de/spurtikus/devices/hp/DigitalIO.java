@@ -7,17 +7,16 @@ import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 
 /**
+ * Digital I/O control.
  * 
- * HP/Agilent/Keysight E1330 Digital I/O control.
- * 
- * Currently implemented functions:
- * 
+ * Tested with:
+ * * HP/Agilent/Keysight E1330.
  *
  * @author dennis
  * 
  */
-public class HP1330 extends BaseHPDevice {
-	static Logger logger = LoggerFactory.getLogger(HP1330.class);
+public class DigitalIO extends BaseHPDevice {
+	static Logger logger = LoggerFactory.getLogger(DigitalIO.class);
 
 	public static enum Port {
 		DATA0, DATA1, DATA2, DATA3
@@ -113,7 +112,7 @@ public class HP1330 extends BaseHPDevice {
 	 * @param link
 	 *            device link
 	 */
-	public HP1330(VXIConnector parent, DeviceLink link) {
+	public DigitalIO(VXIConnector parent, DeviceLink link) {
 		super(parent,link);
 	}
 

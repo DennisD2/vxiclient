@@ -15,24 +15,29 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.spurtikus.devices.hp.HP1330;
-import de.spurtikus.devices.hp.HP1330.Bit;
-import de.spurtikus.devices.hp.HP1330.Polarity;
-import de.spurtikus.devices.hp.HP1330.Port;
-import de.spurtikus.devices.hp.HP1330.PortDescription;
+import de.spurtikus.devices.hp.DigitalIO;
+import de.spurtikus.devices.hp.DigitalIO.Bit;
+import de.spurtikus.devices.hp.DigitalIO.Polarity;
+import de.spurtikus.devices.hp.DigitalIO.Port;
+import de.spurtikus.devices.hp.DigitalIO.PortDescription;
 import de.spurtikus.vxi.Constants;
 
 /**
- * Boundary for HP E1330 Digital I/O control. See class {HP1330}.
+ * Boundary for Digital I/O cards.
+ * 
+ * Tested with:
+ * * HP E1330 Digital I/O control. See class {HP1330}.
  * 
  * @author dennis
  *
  */
-@Path(Constants.URL_DIGITALIO)
-public class HP1330Boundary extends AbstractBoundary<HP1330> {
-	public final static String className = "HP1330Boundary";
-
-	private Logger logger = LoggerFactory.getLogger(HP1330Boundary.class);
+@Path("/" + Constants.URL_DIGITALIO)
+public class DIOBoundary extends AbstractBoundary<DigitalIO> {
+	private Logger logger = LoggerFactory.getLogger(DIOBoundary.class);
+	
+	public DIOBoundary() {
+		className = Constants.URL_DIGITALIO;
+	}
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -43,7 +48,7 @@ public class HP1330Boundary extends AbstractBoundary<HP1330> {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
 		logger.debug("Device name: {}", devname);
-		return Response.ok("HP1330").build();
+		return Response.ok(getClassName()).build();
 	}
 
 	@POST
@@ -78,7 +83,7 @@ public class HP1330Boundary extends AbstractBoundary<HP1330> {
 		}
 		System.out.println(answer);
 
-		return Response.ok("{\"*idn?\":\"" + answer + "\"}").build();
+		return Response.ok(answer).build();
 	}
 
 	/**
@@ -94,7 +99,7 @@ public class HP1330Boundary extends AbstractBoundary<HP1330> {
 	 * @return
 	 */
 	@POST
-	@Path("{mainframe}/{devname}/FakesetBit/{byte}/{bit}/{value}")
+	@Path("{mainframe}/{devname}/setBit/{byte}/{bit}/{value}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response setBit(@Context UriInfo uriInfo,

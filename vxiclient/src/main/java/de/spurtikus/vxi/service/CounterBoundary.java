@@ -19,16 +19,21 @@ import de.spurtikus.devices.hp.HP1333;
 import de.spurtikus.vxi.Constants;
 
 /**
- * Boundary for HP1333 Counter. See class {HP1333}.
+ * Boundary for counters.
+ * 
+ * Tested with:
+ * * HP1333 Counter. See class {HP1333}.
  * 
  * @author dennis
  *
  */
-@Path(Constants.URL_COUNTER)
-public class HP1333Boundary extends AbstractBoundary<HP1333> {
-	public final static String className = "HP1333Boundary";
-
-	private Logger logger = LoggerFactory.getLogger(HP1333Boundary.class);
+@Path("/" + Constants.URL_COUNTER)
+public class CounterBoundary extends AbstractBoundary<HP1333> {
+	private Logger logger = LoggerFactory.getLogger(CounterBoundary.class);
+	
+	public CounterBoundary() {
+		className = Constants.URL_COUNTER;
+	}
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -39,7 +44,7 @@ public class HP1333Boundary extends AbstractBoundary<HP1333> {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
 		logger.debug("Device name: {}", devname);
-		return Response.ok("HP1333").build();
+		return Response.ok(getClassName()).build();
 	}
 
 	@POST
@@ -74,7 +79,7 @@ public class HP1333Boundary extends AbstractBoundary<HP1333> {
 		}
 		System.out.println(answer);
 
-		return Response.ok("{\"*idn?\":\"" + answer + "\"}").build();
+		return Response.ok(answer).build();
 	}
 
 	/**

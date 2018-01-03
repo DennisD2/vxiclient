@@ -19,17 +19,22 @@ import de.spurtikus.devices.hp.HP1300Pacer;
 import de.spurtikus.vxi.Constants;
 
 /**
- * Boundary for Pacer functionality built in in HP1300 mainframe. See class {HP1300Pacer}.
+ * Boundary for Pacer functionality built in in a mainframe. 
+ * 
+ * Tested with: 
+ * * HP 1300/1301. See class {HP1300Pacer}.
  * 
  * @author dennis
  *
  */
-@Path(Constants.URL_PACER)
-public class HP1300PacerBoundary extends AbstractBoundary<HP1300Pacer> {
-	public final static String className = "HP1300PacerBoundary";
-
-	private Logger logger = LoggerFactory.getLogger(HP1300PacerBoundary.class);
-
+@Path("/" + Constants.URL_PACER)
+public class PacerBoundary extends AbstractBoundary<HP1300Pacer> {
+	private Logger logger = LoggerFactory.getLogger(PacerBoundary.class);
+	
+	public PacerBoundary() {
+		className = Constants.URL_PACER;
+	}
+	
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("{mainframe}/{devname}/info")
@@ -39,7 +44,7 @@ public class HP1300PacerBoundary extends AbstractBoundary<HP1300Pacer> {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
 		logger.debug("Device name: {}", devname);
-		return Response.ok("HP1300 (Pacer subfunction)").build();
+		return Response.ok(getClassName()).build();
 	}
 
 	@POST

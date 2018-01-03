@@ -19,16 +19,23 @@ import de.spurtikus.devices.hp.HP1351;
 import de.spurtikus.vxi.Constants;
 
 /**
- * Boundary for HP1351 FET Switch. See class {HP1351}.
+ * Boundary for FET switches.
+ * 
+ * TODO: this boundary should be integrated into HP1330Boundary.
+ * 
+ * Tested with:
+ * * HP1351 FET Switch. See class {HP1351}.
  * 
  * @author dennis
  *
  */
-@Path(Constants.URL_SWITCH)
-public class HP1351Boundary extends AbstractBoundary<HP1351> {
-	public final static String className = "HP1351Boundary";
-
-	private Logger logger = LoggerFactory.getLogger(HP1351Boundary.class);
+@Path("/" + Constants.URL_SWITCH)
+public class SwitchBoundary extends AbstractBoundary<HP1351> {
+	private Logger logger = LoggerFactory.getLogger(SwitchBoundary.class);
+	
+	public SwitchBoundary() {
+		className = Constants.URL_SWITCH;
+	}
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -39,7 +46,7 @@ public class HP1351Boundary extends AbstractBoundary<HP1351> {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
 		logger.debug("Device name: {}", devname);
-		return Response.ok("HP1351").build();
+		return Response.ok(getClassName()).build();
 	}
 
 	@POST
@@ -74,6 +81,6 @@ public class HP1351Boundary extends AbstractBoundary<HP1351> {
 		}
 		System.out.println(answer);
 
-		return Response.ok("{\"*idn?\":\"" + answer + "\"}").build();
+		return Response.ok(answer).build();
 	}
 }

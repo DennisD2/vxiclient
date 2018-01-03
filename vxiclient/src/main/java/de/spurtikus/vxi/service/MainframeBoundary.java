@@ -23,16 +23,21 @@ import de.spurtikus.vxi.Constants;
 import de.spurtikus.vxi.mainframes.hp1300b.VXIDevice;
 
 /**
- * Boundary for HP1300 mainframe. See class {HP1300b}.
+ * Mainframe boundary.
+ * 
+ * Tested with:
+ * * HP1300 mainframe. See class {HP1300b}.
  * 
  * @author dennis
  *
  */
-@Path(Constants.URL_MAINFRAME)
-public class HP1300Boundary extends AbstractBoundary<HP1300b> {
-	public final static String className = "HP1300Boundary";
-
-	private Logger logger = LoggerFactory.getLogger(HP1300Boundary.class);
+@Path("/" + Constants.URL_MAINFRAME)
+public class MainframeBoundary extends AbstractBoundary<HP1300b> {
+	private Logger logger = LoggerFactory.getLogger(MainframeBoundary.class);
+	
+	public MainframeBoundary() {
+		className = Constants.URL_MAINFRAME;
+	}
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -43,7 +48,7 @@ public class HP1300Boundary extends AbstractBoundary<HP1300b> {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
 		logger.debug("Device name: {}", devname);
-		return Response.ok("HP1300").build();
+		return Response.ok(getClassName()).build();
 	}
 
 	@POST
@@ -77,7 +82,7 @@ public class HP1300Boundary extends AbstractBoundary<HP1300b> {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		answer = answer.replace("\n", "");
-		return Response.ok("{\"name\":\"" + answer + "\"}").build();
+		return Response.ok(answer).build();
 	}
 
 	@POST

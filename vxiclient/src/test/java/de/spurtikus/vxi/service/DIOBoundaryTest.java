@@ -1,6 +1,6 @@
 package de.spurtikus.vxi.service;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -18,20 +18,21 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import de.spurtikus.devices.hp.DigitalIO;
+import de.spurtikus.devices.hp.DigitalIO.PortDescription;
 import de.spurtikus.vxi.Constants;
 
 @RunWith(Arquillian.class)
-public class HP1340BoundaryTest {
+public class DIOBoundaryTest {
 
 	public final String BASE_URI = Constants.SERVICE_ROOT;
-	public final String DEVICECLASS = Constants.URL_AFG;
+	public final String DEVICECLASS = Constants.URL_DIGITALIO;
 	public final String MAINFRAME = "mfb";
-	public final String DEVICENAME = "hp1340";
-	public final String URI = BASE_URI + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
+	public final String DEVICENAME = "hp1330";
+	public final String URI = BASE_URI + "/" + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
 
 	@Deployment
 	public static WebArchive createDeployment() {
@@ -40,7 +41,7 @@ public class HP1340BoundaryTest {
 				.withTransitivity().as(File.class);
 
 		WebArchive jar = ShrinkWrap.create(WebArchive.class, "vxi.war")
-				.addClass(SystemBoundary.class).addClass(HP1340Boundary.class)
+				.addClass(SystemBoundary.class).addClass(DIOBoundary.class)
 				.addAsManifestResource("arquillian.xml").addAsLibraries(lib)
 				.addAsManifestResource("META-INF/context.xml", "context.xml")
 				.setWebXML("web.xml");
@@ -61,6 +62,7 @@ public class HP1340BoundaryTest {
 		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println(uri + " -> " + res);
+		assertEquals("dio", res);
 	}
 
 	//@Ignore
@@ -75,30 +77,68 @@ public class HP1340BoundaryTest {
 		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println(uri + " -> " + res);
+		assertEquals("HEWLETT-PACKARD,E1330A,0,A.04.02", res);
 	}
 
-	// @Ignore
+	//@Ignore
 	@Test
 	@RunAsClient
-	public void shape(@ArquillianResource URL contextPath) {
-		String waveform = "sin";
-		String amplitude = "5.0";
-		String frequency = "5e5";
-		String uri = URI + "/shape/" + waveform + "/" + amplitude + "/"
-				+ frequency;
-		
+	public void setBit(@ArquillianResource URL contextPath) {
+		String value = "true";
+		String uri = URI + "/setBit/0/0/" + value;
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call: " + contextPath + uri);
-		final Response response = client.target(contextPath + uri)
-				.request(MediaType.APPLICATION_JSON).post(null);
-		assertTrue(response.getStatus()<400);
+		Response response = client.target(contextPath + uri)
+				.request(MediaType.APPLICATION_JSON)
+				.post(null);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
-		/*try {
-			Thread.sleep(500000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
+		assertTrue(response.getStatus()<400);
+		
+		value = "false";
+		uri = URI + "/setBit/0/0/" + value;
+		System.out.println("Call: " + contextPath + uri);
+		response = client.target(contextPath + uri)
+				.request(MediaType.APPLICATION_JSON)
+				.post(null);
+		res = response.readEntity(String.class);
+		System.out.println("Call result: " + res);
+		assertTrue(response.getStatus()<400);
+	}
+
+	//@Ignore
+	@Test
+	@RunAsClient
+	public void getBit(@ArquillianResource URL contextPath) {
+		String uri = URI + "/getBit/0/0/" ;
+		PortDescription port = new PortDescription(DigitalIO.Port.DATA0, DigitalIO.Bit.BIT0);
+		Client client = ClientBuilder.newClient();
+		System.out.println("Call: " + contextPath + uri);
+		Response response = client.target(contextPath + uri)
+				.request(MediaType.APPLICATION_JSON)
+				.post(null);
+		String res = response.readEntity(String.class);
+		System.out.println("Call result: " + res);
+		assertTrue(response.getStatus()<400);
+		
+		String value = "false";
+		uri = URI + "/setBit/0/0/" + value;
+		System.out.println("Call: " + contextPath + uri);
+		response = client.target(contextPath + uri)
+				.request(MediaType.APPLICATION_JSON)
+				.post(null);
+		res = response.readEntity(String.class);
+		System.out.println("Call result: " + res);
+		assertTrue(response.getStatus()<400);
+
+		uri = URI + "/getBit/0/0/";
+		System.out.println("Call: " + contextPath + uri);
+		response = client.target(contextPath + uri)
+				.request(MediaType.APPLICATION_JSON)
+				.post(null);
+		res = response.readEntity(String.class);
+		System.out.println("Call result: " + res);
+		assertTrue(response.getStatus()<400);
 	}
 
 }

@@ -138,7 +138,7 @@ public class SerialConnector extends AbstractConnector implements VXIConnector {
 		send(link, message + "\n\r");
 
 		String answer = receive(link);
-		return answer.replace(message, "");
+		return answer.replace(message, "").replace("\n", "");
 	}
 
 	/**

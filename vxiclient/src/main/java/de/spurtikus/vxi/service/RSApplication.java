@@ -10,13 +10,13 @@ public class RSApplication extends ResourceConfig {
 
 	public RSApplication() {
 		register(SystemBoundary.class);
-		register(HP1300Boundary.class);
-		register(HP1300PacerBoundary.class);
-		register(HP1326Boundary.class);
-		register(HP1330Boundary.class);
-		register(HP1333Boundary.class);
-		register(HP1340Boundary.class);
-		register(HP1351Boundary.class);
+		register(MainframeBoundary.class);
+		register(PacerBoundary.class);
+		register(MultimeterBoundary.class);
+		register(DIOBoundary.class);
+		register(CounterBoundary.class);
+		register(AFGBoundary.class);
+		register(SwitchBoundary.class);
 		
 		// CORS
 		register(CORSFilter.class);
