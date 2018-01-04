@@ -19,5 +19,49 @@
       <button onclick="stop_counter_loop('E1333')">Stop counter loop</button>
     </p>
 
+    <label for="m_mode">Mode:</label>
+    <select name="m_mode" [(ngModel)]="selectedModeItem" (ngModelChange)="onChangeMode($event)">
+      <option *ngFor="let m of allowedModes" [ngValue]="m">{{m.value}}</option>
+    </select> 
+
+    <label for="m_channel">Channel:</label>
+    <select name="m_channel" [(ngModel)]="selectedChannelItem" (ngModelChange)="onChangeChannel($event)">
+      <option *ngFor="let m of allowedChannel" [ngValue]="m">{{m.value}}</option>
+    </select> 
+
+    <br>
+
+    <label for="m_coupling">Coupling:</label>
+    <select name="m_coupling" [(ngModel)]="selectedCouplingItem" (ngModelChange)="onChangeCoupling($event)">
+      <option *ngFor="let m of allowedCouplings" [ngValue]="m">{{m.value}}</option>
+    </select> 
+
+    <label for="m_attenuation">Attenuation:</label>
+    <select name="m_attenuation" [(ngModel)]="selectedAttenuationItem" (ngModelChange)="onChangeAttenuation($event)">
+      <option *ngFor="let m of allowedAttenuations" [ngValue]="m">{{m.value}}</option>
+    </select> 
+
+    <label for="m_impedance">Impedance:</label>
+    <select name="m_impedance" [(ngModel)]="selectedImpedanceItem" (ngModelChange)="onChangeImpedance($event)">
+      <option *ngFor="let m of allowedImpedances" [ngValue]="m">{{m.value}}</option>
+    </select> 
+
+    <label for="m_lowpass">Lowpass:</label>
+    <select name="m_lowpass" [(ngModel)]="selectedLowpassItem" (ngModelChange)="onChangeLowpass($event)">
+      <option *ngFor="let m of allowedLowpass" [ngValue]="m">{{m.value}}</option>
+    </select> 
+
+    <br>
+
+    <label for="m_eslope">Event Slope:</label>
+    <select name="m_eslope" [(ngModel)]="selectedSlopeItem" (ngModelChange)="onChangeSlope($event)">
+      <option *ngFor="let m of allowedSlopes" [ngValue]="m">{{m.value}}</option>
+    </select> 
+
+    <label for="m_elevel">Event Level:</label>
+    <span>TBD</span>
+
   </div>
 </div>
+<hr>
+

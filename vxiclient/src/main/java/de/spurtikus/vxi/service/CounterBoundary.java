@@ -124,13 +124,13 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 	}
 	
 	/**
-	 * Switch Low Pass Filter on or off.
+	 * Do a measurement.
 	 * 
 	 * @param uriInfo
 	 * @param mainframe
 	 * @param devname
-	 * @param onoff
-	 *            true means low pass filter switch on.
+	 * @param channel
+	 *            Channel to use.
 	 * @return
 	 */
 	@POST
