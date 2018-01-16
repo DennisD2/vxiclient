@@ -14,6 +14,24 @@ import de.spurtikus.vxi.connectors.VXIConnector;
  * 
  * Currently implemented functions:
  * 
+ * *RST
+ * 
+ * INP:COUP DC
+ * 
+ * INP:IMP MIN
+ * 
+ * *idn?
+ * 
+ * HEWLETT-PACKARD,E1333A,0,A.04.01
+ * 
+ * SENS1:FUNC:FREQ
+ * 
+ * SENS1:FREQ:APER 32.768
+ * 
+ * READ1?
+ * 
+ * +0.0000000000E+000
+ * 
  *
  * @author dennis
  * 
@@ -46,6 +64,8 @@ public class HP1333 extends BaseHPDevice {
 		POS, NEG
 	}
 
+	private Double apertures[] = { 65.536, 32.768, 16.384, 8.192, 4.096, 2.048, 1.024,
+			.512, .256, .128, .064, .032, .016, .008, .004, .002 };
 	/**
 	 * True if Counter is started.
 	 */
@@ -60,7 +80,7 @@ public class HP1333 extends BaseHPDevice {
 	 *            vxiConnector containing this device.
 	 */
 	public HP1333(VXIConnector parent, DeviceLink link) {
-		super(parent,link);
+		super(parent, link);
 	}
 
 	/**
@@ -73,12 +93,14 @@ public class HP1333 extends BaseHPDevice {
 	 * @return
 	 */
 	private boolean validateChannel(int channel, boolean includeChannel3) {
-		return channel == 1 || channel == 2 || (includeChannel3 && (channel == 3));
+		return channel == 1 || channel == 2
+				|| (includeChannel3 && (channel == 3));
 	}
 
 	/**
 	 * Initializes device. Sets up some useful start configuration for DMM.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	public void initialize() throws Exception {
 		vxiConnector.send(deviceLink, "*RST;*OPC?");
@@ -88,17 +110,22 @@ public class HP1333 extends BaseHPDevice {
 	/**
 	 * Configures channel mode.
 	 * 
+	 * TODO: SENS or CONF ?
+	 * 
 	 * @param channel
 	 *            channel to control
 	 * @param configuration
 	 *            mode
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public void configure(int channel, CounterConfiguration configuration) throws Exception {
+	public void configure(int channel, CounterConfiguration configuration)
+			throws Exception {
 		if (!validateChannel(channel, false)) {
 			throw new IOException("Invalid channel");
 		}
-		vxiConnector.send(deviceLink, "CONF" + channel + ":" + configuration.toString());
+		// SENS or CONF?
+		vxiConnector.send(deviceLink,
+				"SENS" + channel + ":FUNC:" + configuration.toString());
 	}
 
 	/**
@@ -106,7 +133,7 @@ public class HP1333 extends BaseHPDevice {
 	 * 
 	 * @param filter
 	 *            filter value. If true, the low pass filter is used.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void setLowPassFilter(boolean filter) throws Exception {
 		String f = filter ? "ON" : "OFF";
@@ -118,7 +145,7 @@ public class HP1333 extends BaseHPDevice {
 	 * 
 	 * @param coupling
 	 *            AC or DC coupling.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void setCoupling(Coupling coupling) throws Exception {
 		vxiConnector.send(deviceLink, "INP:COUP " + coupling.toString());
@@ -130,7 +157,7 @@ public class HP1333 extends BaseHPDevice {
 	 * @param attenuation
 	 *            attenuation value. MIN for no attenuation, MAX for 20dB
 	 *            attenuation.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void setAttenuation(Attenuation attenuation) throws Exception {
 		// TODO in manual p 23 , attenuation can also be a number ?!
@@ -142,11 +169,27 @@ public class HP1333 extends BaseHPDevice {
 	 * 
 	 * @param impedance
 	 *            impedance to use. MIN for 50 ohms, MAX for 1 MOhms.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void setImpedance(Impedance impedance) throws Exception {
 		// TODO in manual p 23 , impedance can also be a number ?!
 		vxiConnector.send(deviceLink, "INP:IMP " + impedance.toString());
+	}
+
+	/**
+	 * Controls aperture. Float value between 0.002 seconds (2ms) and 32.768
+	 * seconds.
+	 * 
+	 * @param channel
+	 *            channel to set
+	 * @param aperture
+	 *            aperture to use. Double value.
+	 * @throws Exception
+	 */
+	public void setAperture(int channel, double aperture) throws Exception {
+		//
+		vxiConnector.send(deviceLink,
+				"SENS" + channel + ":FREQ:APER " + aperture);
 	}
 
 	/**
@@ -155,8 +198,8 @@ public class HP1333 extends BaseHPDevice {
 	 * @param channel
 	 *            channel to set
 	 * @param level
-	 *            level to use
-	 * @throws Exception 
+	 *            level to use. Double value.
+	 * @throws Exception
 	 */
 	public void setEventLevel(int channel, double level) throws Exception {
 		if (!validateChannel(channel, false)) {
@@ -176,7 +219,7 @@ public class HP1333 extends BaseHPDevice {
 	 *            channel to set
 	 * @param slope
 	 *            slope to use
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void setEventSlope(int channel, Slope slope) throws Exception {
 		if (!validateChannel(channel, false)) {
@@ -226,25 +269,27 @@ public class HP1333 extends BaseHPDevice {
 		if (!validateChannel(channel, true)) {
 			throw new IOException("Invalid channel");
 		}
-		String s = vxiConnector.send_and_receive(deviceLink, "FETC" + channel + "?");
+		String s = vxiConnector.send_and_receive(deviceLink,
+				"FETC" + channel + "?");
 		double v = Double.parseDouble(s);
 		return v;
 	}
 
 	/**
-	 * Execute a measurement. Use default counter configuration set before. See 
+	 * Execute a measurement. Use default counter configuration set before. See
 	 * 
 	 * @param channel
 	 *            channel to measure
 	 * @return measured value.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public double measure(int channel) throws Exception {
 		if (!validateChannel(channel, true)) {
 			throw new IOException("Invalid channel");
 		}
 		// TODO: handle XXX
-		String s = vxiConnector.send_and_receive(deviceLink, "MEAS" + channel + ":FREQ?");
+		String s = vxiConnector.send_and_receive(deviceLink,
+				"READ" + channel + "?");
 		double v = Double.parseDouble(s);
 		return v;
 	}
@@ -257,17 +302,15 @@ public class HP1333 extends BaseHPDevice {
 	 * @param configuration
 	 *            configuration to use
 	 * @return measured value.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public double measure(int channel, CounterConfiguration configuration) throws Exception {
-		if (!validateChannel(channel, true)) {
-			throw new IOException("Invalid channel");
-		}
-		// TODO: for the "PER" case, see page user manual 31. there are additional args for
-		// period and resolution.
-		String s = vxiConnector.send_and_receive(deviceLink, "MEAS" + channel + ":" + configuration + "?");
-		double v = Double.parseDouble(s);
-		return v;
-	}
+	/*
+	 * public double measure(int channel, CounterConfiguration configuration)
+	 * throws Exception { if (!validateChannel(channel, true)) { throw new
+	 * IOException("Invalid channel"); } // TODO: for the "PER" case, see page
+	 * user manual 31. there are additional args for // period and resolution.
+	 * String s = vxiConnector.send_and_receive(deviceLink, "MEAS" + channel +
+	 * ":" + configuration + "?"); double v = Double.parseDouble(s); return v; }
+	 */
 
 }
