@@ -94,11 +94,11 @@ public class AFGBoundaryTest {
 		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
-		/*try {
+		try {
 			Thread.sleep(500000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 
 }

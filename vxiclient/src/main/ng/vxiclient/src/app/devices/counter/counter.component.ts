@@ -1,7 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { BaseDevice } from '../base.device';
 import { Device } from '../../types/Device';
+
 import { AppRegistry } from '../../app.registry';
+import { CounterService } from '../../services/counter.service';
 
 @Component({
   selector: 'app-counter',
@@ -9,6 +11,10 @@ import { AppRegistry } from '../../app.registry';
   styleUrls: ['./counter.component.css']
 })
 export class CounterComponent  extends BaseDevice implements OnInit, Device {
+  // Channel to scan
+  channel: number;
+  // Scan result
+  channelResult: number;
 
    // Counter modes
    allowedModes = [ {id: 0, value: 'Totalizer'}, {id: 1, value: 'Counter'}, {id: 2, value: 'RAT'},
@@ -42,7 +48,7 @@ export class CounterComponent  extends BaseDevice implements OnInit, Device {
     eventLevel: number;
 
   constructor(protected appRegistry: AppRegistry,
-    /*private multimeterService: MultimeterService*/) {
+    private counterService: CounterService) {
       super(appRegistry);
       this.resultDataType = 'none';
   }
@@ -50,5 +56,50 @@ export class CounterComponent  extends BaseDevice implements OnInit, Device {
   ngOnInit() {
     this.start();
   }
+
+  doMeasurementCallback(): any {
+    // console.log('doMeasurement');
+    const vxi = this.counterService;
+    const self = this;
+
+    // const channelToScan: string[] = this.channels.map(c => c.name);
+    BaseDevice.mutex.acquire().then( function(release) {
+      vxi.getMeasurement(self.mainframe, self.deviceName, self.channel)
+        .subscribe(c => {
+          self.channelResult = c as number;
+          // console.log(JSON.stringify(self.channels))
+         }, c => {
+          console.log('An error occured, releasing mutex');
+        });
+        release();
+    });
+    return this.channelResult;
+  }
+
+  onChangeMode(event: any) {
+    // Is called with the Item as event
+    console.log('onChangeMode: ' + event.value);
+  }
+
+  onChangeChannel(event: any) {
+    console.log('onChangeChannel: ' + event.value);
+  }
+
+  onChangeCoupling(event: any) {
+    console.log('onChangeCoupling: ' + event.value);
+  }
+
+  onChangeImpedance(event: any) {
+    console.log('onChangeImpedance: ' + event.value);
+  }
+
+  onChangeAttenuation(event: any) {
+    console.log('onChangeAttenuation: ' + event.value);
+  }
+
+  onChangeLowpass(event: any) {
+    console.log('onChangeLowpass: ' + event.value);
+  }
+
 
 }
