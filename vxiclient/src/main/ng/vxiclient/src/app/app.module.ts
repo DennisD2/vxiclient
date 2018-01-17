@@ -15,7 +15,7 @@ import { MainframeService } from './services/mainframe.service';
 import { MultimeterService } from './services/multimeter.service';
 import { DigitalIOService } from './services/digital-io.service';
 import { CounterService } from './services/counter.service';
-
+import { FrequencyGeneratorService } from './services/frequency-generator.service';
 import { GraphViewComponent } from './views/graph-view/graph-view.component';
 import { EventLogComponent } from './views/event-log/event-log.component';
 
@@ -52,6 +52,7 @@ import { SystemComponent } from './devices/system/system.component';
     MultimeterService,
     DigitalIOService,
     CounterService,
+    FrequencyGeneratorService,
     AppRegistry],
   bootstrap: [AppComponent]
 })

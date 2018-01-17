@@ -95,7 +95,7 @@ public class AFGBoundaryTest {
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
 		try {
-			Thread.sleep(500000);
+			Thread.sleep(500000000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

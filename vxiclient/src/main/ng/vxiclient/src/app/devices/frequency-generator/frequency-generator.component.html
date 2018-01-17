@@ -16,108 +16,72 @@
    <!-- config inputs -->
    <div id="config" *ngIf="active">
 
-    <div id="afg_std_waveform_div" style="display: inline;">
-      Standard Waveform:
-      <select id="afg_std_waveform" onchange="afg_std_waveformOnChangeEvent();">
-        <option value="RAMP">Ramp</option>
-        <option value="SQUARE">Square</option>
-        <option value="SINE" selected>Sine</option>
-        <option value="DC">DC</option>
-        <option value="TRIANGLE">Triangle</option>
-      </select>
+    <label for="afg_waveform_source">Waveform source:</label>
+    <select name="afg_waveform_source" [(ngModel)]="selectedSourceItem">
+      <option *ngFor="let m of allowedSources" [ngValue]="m">{{m.value}}</option>
+    </select> 
+
+    <div id="afg_std_waveform_div" style="display: inline;" *ngIf="selectedSourceItem.value=='Standard'">
+      <label for="afg_std_waveform">Waveform:</label>
+      <select name="afg_std_waveform" [(ngModel)]="selectedStandardWaveformItem" (ngModelChange)="onStdWaveformChange($event)">
+        <option *ngFor="let m of standardWaveforms" [ngValue]="m">{{m.value}}</option>
+      </select> 
+     </div>
+
+    <div id="afg_builtin_waveform_div" style="display: inline;" *ngIf="selectedSourceItem.value=='Builtin'">
+      <label for="afg_builtin_waveform">Waveform:</label>
+      <select name="afg_builtin_waveform" [(ngModel)]="selectedBuiltinWaveformItem" (ngModelChange)="onBuiltinWaveformChange($event)">
+        <option *ngFor="let m of builtinWaveforms" [ngValue]="m">{{m.value}}</option>
+      </select> 
     </div>
 
-    Amplitude [V]:
-    <input type="text" id="afg_amplitude" value="5.0" onchange="afg_amplitudeOnChangeEvent();">
-    <br> Fixed Waveform Generator:
-    <div id="afg_builtin_waveform_div" style="display: inline;">
-      Builtin Waveform:
-      <select id="afg_builtin_waveform" onchange="afg_builtin_waveformOnChangeEvent();">
-        <option value="Harmonic_Chord_3rd_4th_5th">Harmonic Chord 3rd,4th,5th
-        </option>
-        <option value="Haversine">Haversine</option>
-        <option value="Ramp_Falling" selected>Ramp falling</option>
-        <option value="Ramp_Falling_First_20">Ramp falling, first 20 terms</option>
-        <option value="Ramp_Rising">Ramp rising</option>
-        <option value="Ramp_Rising_First_20">Ramp rising, first 20 terms
-        </option>
-        <option value="Sine">Sine</option>
-        <option value="Sine_Linear_Rising_8_cycles">Sine, linear rising 8 cycles</option>
-        <option value="Sine_Positive_Half_Cycle">Sine, positive half cycle (cutie)</option>
-        <option value="Sinx_per_x">sin(x)/x for 8.25 radians</option>
-        <option value="Square">Square</option>
-        <option value="Square_First_4">Square, first 4 terms(cutie)
-        </option>
-        <option value="Square_First_10">Square, first 10 terms</option>
-        <option value="Triangle">Triangle</option>
-        <option value="White_Noise">White noise</option>
-        <option value="White_Noise_Modulated">White noise, modulated (cutie)</option>
-      </select>
-    </div>
+    <br> 
 
-    Frequency:
-    <input type="text" id="afg_frequency" value="1E6" onchange="afg_frequencyOnChangeEvent();">
-    <br> Sweep Generator: Start Frequency:
-    <input type="text" id="afg_sweep_start_frequency" value="1E3" onchange="afg_sweepStartfrequencyOnChangeEvent();"> Stop Frequency:
-    <input type="text" id="afg_sweep_stop_frequency" value="1E5" onchange="afg_sweepStopfrequencyOnChangeEvent();"> Points:
-    <input type="text" id="afg_sweep_points" value="1000" onchange="afg_sweepPointsOnChangeEvent();"> Time [s]:
-    <input type="text" id="afg_sweep_time" value="10" onchange="afg_sweepTimeOnChangeEvent();">
-    <button onclick="vxiclient.generator.setSweep();">Update Sweep
-    </button>
-    <br> Marker Feed:
-    <div id="afg_marker_feed_div" style="display: inline;">
-      Standard Waveform:
-      <select id="afg_marker_feed" onchange="afg_markerFeedOnChangeEvent();">
-        <option value="OUTPUT_ZERO" selected>Output Zero</option>
-        <option value="SEGMENT">Segment</option>
-        <option value="SOURCE_ROSC">Ref. oscillator</option>
-        <option value="SOURCE_SWEEP">Sweep</option>
-      </select>
-    </div>
-    <div id="afg_marker_pol_div" style="display: inline;">
-      Standard Waveform:
-      <select id="afg_marker_pol" onchange="afg_markerPolarityOnChangeEvent();">
-        <option value="NORM" selected>Normal</option>
-        <option value="INV">Inverted</option>
-      </select>
-    </div>
+    <label for="afg_amplitude">Amplitude [V]:</label>
+    <input type="text" id="afg_amplitude" [(ngModel)]="amplitude" (ngModelChange)="onAmplitudeChange($event)">
 
-    <script>
-      function afg_std_waveformOnChangeEvent() {
-        var selectedValue = document.getElementById('afg_std_waveform').value;
-        vxiclient.generator.setStandardWaveform(selectedValue);
-      }
-      function afg_frequencyOnChangeEvent() {
-        var selectedValue = document.getElementById('afg_frequency').value;
-        vxiclient.generator.setFrequency(selectedValue);
-      }
-      function afg_amplitudeOnChangeEvent() {
-        var selectedValue = document.getElementById('afg_amplitude').value;
-        vxiclient.generator.setAmplitude(selectedValue);
-      }
-      function afg_builtin_waveformOnChangeEvent() {
-        var selectedValue = document.getElementById('afg_builtin_waveform').value;
-        vxiclient.generator.setBuiltinWaveform(selectedValue);
-      }
+    <label for="afg_frequency">Frequency [V]:</label>
+    <input type="text" id="afg_frequency" [(ngModel)]="frequency" (ngModelChange)="onFrequencyChange($event)">
 
-      function afg_sweepStartfrequencyOnChangeEvent() {
-        var selectedValue = document.getElementById('afg_sweep_start_frequency').value;
-        vxiclient.generator.setSweepStartFrequency(selectedValue);
-      }
-      function afg_sweepStopfrequencyOnChangeEvent() {
-        var selectedValue = document.getElementById('afg_sweep_stop_frequency').value;
-        vxiclient.generator.setSweepStopFrequency(selectedValue);
-      }
-      function afg_sweepPointsOnChangeEvent() {
-        var selectedValue = document.getElementById('afg_sweep_points').value;
-        vxiclient.generator.setSweepPoints(selectedValue);
-      }
-      function afg_sweepTimeOnChangeEvent() {
-        var selectedValue = document.getElementById('afg_sweep_time').value;
-        vxiclient.generator.setSweepTime(selectedValue);
-      }
-    </script>
+    <br> 
+    <!-- Sweeping -->
+    <label for="sweeponoff">Sweeping</label>
+    <input id="sweeponoff" type="checkbox" [(ngModel)]="sweeping" (ngModelChange)="onSweepChange($event)">
+
+    <div id="div_sweep" style="display: inline;" *ngIf="sweeping">
+
+      <label for="afg_sweep_start_frequency">Start frequency:</label>
+      <input type="text" id="afg_sweep_start_frequency" [(ngModel)]="sweepStartFrequency" (ngModelChange)="onSweepStartFrequencyChange($event)"> 
+      
+      <label for="afg_sweep_start_frequency">Stop Frequency:</label>
+      <input type="text" id="afg_sweep_stop_frequency" [(ngModel)]="sweepStopFrequency" (ngModelChange)="onSweepStopFrequencyChange($event)">
+      
+      <br> 
+      <label for="afg_sweep_points">Points:</label>
+      <input type="text" id="afg_sweep_points"  [(ngModel)]="sweepPoints" (ngModelChange)="onSweepPointsChange($event)"> 
+      
+      <label for="afg_sweep_time">Time [s]:</label>
+      <input type="text" id="afg_sweep_time" value="10"  [(ngModel)]="sweepTime" (ngModelChange)="onSweepTimeChange($event)">
+
+      <button onclick="vxiclient.generator.setSweep();">Update Sweep
+      </button>
+
+    </div>
+      
+    <br> 
+
+    <!-- Markers -->
+
+    <label for="afg_marker_feed">Marker Feed:</label>
+    <select name="afg_marker_feed" [(ngModel)]="selectedMarkerFeedItem" (ngModelChange)="onMarkerFeedChange($event)">
+      <option *ngFor="let m of markerFeeds" [ngValue]="m">{{m.value}}</option>
+    </select> 
+
+    <label for="afg_marker_pol">Slope:</label>
+    <select name="afg_marker_pol" [(ngModel)]="selectedMarkerPolarityItem" (ngModelChange)="onMarkerPolarityChange($event)">
+      <option *ngFor="let m of markerPolarity" [ngValue]="m">{{m.value}}</option>
+    </select> 
 
     </div>
 </div>
-<!-- end of e1340 div -->
+<!-- end of AFG div -->

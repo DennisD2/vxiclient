@@ -22,7 +22,7 @@ export class CounterComponent  extends BaseDevice implements OnInit, Device {
    selectedModeItem = this.allowedModes[1];
 
     // Channels
-    allowedChannel = [ {id: 0, value: '1 (200Mhz)'}, {id: 1, value: '2 (200Mhz)'}, {id: 2, value: '3 (2GHz)'}];
+    allowedChannel = [ {id: 0, value: '1 (100Mhz)'}, {id: 1, value: '2 (100Mhz)'}, {id: 2, value: '3 (1GHz)'}];
     selectedChannelItem = this.allowedChannel[0];
 
     // Coupling
