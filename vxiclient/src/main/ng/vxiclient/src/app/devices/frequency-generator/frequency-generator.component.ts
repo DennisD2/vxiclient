@@ -24,6 +24,9 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
     // Sweeping
     sweeping = false;
 
+    // Segment value
+    segment = 'A';
+
     sweepStartFrequency = 1E3;
 
     sweepStopFrequency = 1E5;
@@ -67,17 +70,26 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
     this.start();
   }
 
-  onStdWaveformChange(event: any) {
-    console.log('onStdWaveformChange: ' + event.value);
+  restart() {
+    console.log('restart');
+  }
+
+  onStdShapeChange(event: any) {
+    console.log('onStdShapeChange: ' + event.value);
     const self = this;
     const f: Function = (): Observable<any> => {
-      return self.generatorService.changeWaveformOderSo(self.mainframe, self.deviceName, event.value);
+      return self.generatorService.setShape(self.mainframe, self.deviceName, 'standard', event.value, null);
     };
     this.mutexedCall(f);
   }
 
-  onBuiltinWaveformChange(event: any) {
-    console.log('onBuiltinWaveformChange: ' + event.value);
+  onBuiltinShapeChange(event: any) {
+    console.log('onBuiltinShapeChange: ' + event.value);
+    const self = this;
+    const f: Function = (): Observable<any> => {
+      return self.generatorService.setShape(self.mainframe, self.deviceName, 'builtin', event.value, self.segment);
+    };
+    this.mutexedCall(f);
   }
 
   onAmplitudeChange(event: any) {

@@ -18,11 +18,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.spurtikus.devices.hp.HP1340;
+import de.spurtikus.devices.hp.HP1340.BuiltinWaveForm;
 import de.spurtikus.devices.hp.HP1340.StandardWaveForm;
 import de.spurtikus.vxi.Constants;
 
 /**
- * Boundary for HP1340 AFG. See class {HP1340}.
+ * Boundary for Arbitrary Frequency Generators (AFGs).
+ * 
+ * Working devices:
+ * 
+ * HP E1340A, see {HP1340}.
  * 
  * @author dennis
  *
@@ -30,7 +35,7 @@ import de.spurtikus.vxi.Constants;
 @Path("/" + Constants.URL_AFG)
 public class AFGBoundary extends AbstractBoundary<HP1340> {
 	private Logger logger = LoggerFactory.getLogger(AFGBoundary.class);
-	
+
 	public AFGBoundary() {
 		className = Constants.URL_AFG;
 	}
@@ -83,7 +88,7 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 	}
 
 	/**
-	 * Set shape of StandardWaveForm type.
+	 * Set amplitude.
 	 * 
 	 * @param uriInfo
 	 *            Injected uriInfo (injected by HK2/REST)
@@ -91,30 +96,70 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 	 *            Mainframe to use. Comes from vxiserver.properties, e.g. "mfb".
 	 * @param devname
 	 *            Device to use.
-	 * @param waveform
-	 *            Shape of waveform. Example "ramp" or "sin". See
-	 *            {HP1340.StandardWaveForm}.
 	 * @param amplitude
 	 *            Amplitude of waveform. Example '5.0' for 5,0 Volts.
+	 * @return
+	 */
+	@POST
+	@Path("{mainframe}/{devname}/setAmplitude/{amplitude}")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response setAmplitude(@Context UriInfo uriInfo,
+			@PathParam("mainframe") String mainframe,
+			@PathParam("devname") String devname,
+			@PathParam("amplitude") Double amplitude) {
+		logger.debug("Incoming URI : {}", uriInfo.getPath());
+		logger.debug("Mainframe: {}", mainframe);
+		logger.debug("Device name: {}", devname);
+		logger.debug("Amplitude: {}", amplitude);
+
+		try {
+			connManager = ConnectionManager.getInstance(this.getClass(),
+					mainframe, devname);
+		} catch (Exception e) {
+			logger.error(
+					"Cannot get wrapper instance. This is usually an initialization problem.");
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		try {
+			getDevice(mainframe, devname).stop();
+
+			getDevice(mainframe, devname).setAmplitude(amplitude);
+
+			getDevice(mainframe, devname).start();
+		} catch (Exception e) {
+			logger.error("Error accessing device.");
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.ok("done").build();
+	}
+
+	/**
+	 * Set frequency.
+	 * 
+	 * @param uriInfo
+	 *            Injected uriInfo (injected by HK2/REST)
+	 * @param mainframe
+	 *            Mainframe to use. Comes from vxiserver.properties, e.g. "mfb".
+	 * @param devname
+	 *            Device to use.
 	 * @param frequency
 	 *            Frequency of waveform. Example '5e6' for 5MHz and '44000' for
 	 *            44KHz.
 	 * @return
 	 */
 	@POST
-	@Path("{mainframe}/{devname}/shape/{waveform}/{amplitude}/{frequency}")
+	@Path("{mainframe}/{devname}/setFrequency/{frequency}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response shape(@Context UriInfo uriInfo,
+	public Response setFrequency(@Context UriInfo uriInfo,
 			@PathParam("mainframe") String mainframe,
 			@PathParam("devname") String devname,
-			@PathParam("waveform") String waveform,
-			@PathParam("amplitude") Double amplitude,
 			@PathParam("frequency") Double frequency) {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
 		logger.debug("Mainframe: {}", mainframe);
 		logger.debug("Device name: {}", devname);
-		logger.debug("Amplitude: {}", amplitude);
 		logger.debug("Frequency: {}", frequency);
 
 		try {
@@ -126,15 +171,149 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		StandardWaveForm wv = Arrays.stream(StandardWaveForm.values())
-				.filter(v -> v.getValue().toLowerCase().equals(waveform))
-				.findAny().get();
 		try {
 			getDevice(mainframe, devname).stop();
 
-			getDevice(mainframe, devname).setAmplitude(amplitude);
 			getDevice(mainframe, devname).setFrequency(frequency);
+
+			getDevice(mainframe, devname).start();
+		} catch (Exception e) {
+			logger.error("Error accessing device.");
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.ok("done").build();
+	}
+
+	/**
+	 * Set shape of StandardWaveForm type.
+	 * 
+	 * @param uriInfo
+	 *            Injected uriInfo (injected by HK2/REST)
+	 * @param mainframe
+	 *            Mainframe to use. Comes from vxiserver.properties, e.g. "mfb".
+	 * @param devname
+	 *            Device to use.
+	 * @param waveform
+	 *            Shape of waveform. Example "ramp" or "sin". See
+	 *            {HP1340.StandardWaveForm}.
+	 * @return
+	 */
+	@POST
+	@Path("{mainframe}/{devname}/setShape/standard/{waveform}")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response setStandardShape(@Context UriInfo uriInfo,
+			@PathParam("mainframe") String mainframe,
+			@PathParam("devname") String devname,
+			@PathParam("waveform") String waveform) {
+		logger.debug("Incoming URI : {}", uriInfo.getPath());
+		logger.debug("Mainframe: {}", mainframe);
+		logger.debug("Device name: {}", devname);
+		logger.debug("waveform: {}", waveform);
+
+		try {
+			connManager = ConnectionManager.getInstance(this.getClass(),
+					mainframe, devname);
+		} catch (Exception e) {
+			logger.error(
+					"Cannot get wrapper instance. This is usually an initialization problem.");
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		StandardWaveForm wv;
+		// @formatter:off
+		switch (waveform.toLowerCase()) {
+		case "dc": wv = StandardWaveForm.DC; break;
+		case "ramp": wv = StandardWaveForm.RAMP; break;
+		case "sine": wv = StandardWaveForm.SINE; break;
+		case "square": wv = StandardWaveForm.SQUARE; break;
+		case "triangle": wv = StandardWaveForm.TRIANGLE; break;
+		case "usera": wv = StandardWaveForm.USERA; break;
+		case "userb": wv = StandardWaveForm.USERB; break;
+		case "userc": wv = StandardWaveForm.USERC; break;
+		case "userd": wv = StandardWaveForm.USERD; break;
+		default: wv = StandardWaveForm.SQUARE; break;
+		}
+		// @formatter:on
+		try {
+			getDevice(mainframe, devname).stop();
+
 			getDevice(mainframe, devname).setShape(wv);
+
+			getDevice(mainframe, devname).start();
+		} catch (Exception e) {
+			logger.error("Error accessing device.");
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.ok(wv.getValue()).build();
+	}
+
+	/**
+	 * Set shape of BuiltinWaveForm type.
+	 * 
+	 * @param uriInfo
+	 *            Injected uriInfo (injected by HK2/REST)
+	 * @param mainframe
+	 *            Mainframe to use. Comes from vxiserver.properties, e.g. "mfb".
+	 * @param devname
+	 *            Device to use.
+	 * @param waveform
+	 *            Shape of waveform. Example "sine" or "haversine". See
+	 *            {HP1340.BuiltinWaveForm}.
+	 * @param segment
+	 *            Target segment ('A'..'D').
+	 *            {HP1340.StandardWaveForm}.
+	 * @return
+	 */
+	@POST
+	@Path("{mainframe}/{devname}/setShape/builtin/{waveform}/{segment}")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response setBuiltinShape(@Context UriInfo uriInfo,
+			@PathParam("mainframe") String mainframe,
+			@PathParam("devname") String devname,
+			@PathParam("waveform") String waveform,
+			@PathParam("segment") char segment) {
+		logger.debug("Incoming URI : {}", uriInfo.getPath());
+		logger.debug("Mainframe: {}", mainframe);
+		logger.debug("Device name: {}", devname);
+		logger.debug("segment: {}", segment);
+
+		try {
+			connManager = ConnectionManager.getInstance(this.getClass(),
+					mainframe, devname);
+		} catch (Exception e) {
+			logger.error(
+					"Cannot get wrapper instance. This is usually an initialization problem.");
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		BuiltinWaveForm wv;
+		// @formatter:off
+		switch (waveform.toLowerCase()) {
+		case "harmonic": wv = BuiltinWaveForm.Harmonic_Chord_3rd_4th_5th; break;
+		case "haversine": wv = BuiltinWaveForm.Haversine; break;
+		case "ramp_falling": wv = BuiltinWaveForm.Ramp_Falling; break;
+		case "ramp_falling_first_20": wv = BuiltinWaveForm.Ramp_Falling_First_20; break;
+		case "ramp_rising": wv = BuiltinWaveForm.Ramp_Rising; break;
+		case "ramp_rising_first_20": wv = BuiltinWaveForm.Ramp_Rising_First_20; break;
+		case "sine": wv = BuiltinWaveForm.Sine; break;
+		case "sine_linear_rising_8_cycles": wv = BuiltinWaveForm.Sine_Linear_Rising_8_cycles; break;
+		case "sine_positive_half_cycle": wv = BuiltinWaveForm.Sine_Positive_Half_Cycle; break;
+		case "sinx_per_x": wv = BuiltinWaveForm.Sinx_per_x; break;
+		case "square": wv = BuiltinWaveForm.Square; break;
+		case "square_first_10": wv = BuiltinWaveForm.Square_First_10; break;
+		case "square_first_4": wv = BuiltinWaveForm.Square_First_4; break;
+		case "triangle": wv = BuiltinWaveForm.Triangle; break;
+		case "white_noise": wv = BuiltinWaveForm.White_Noise; break;
+		case "white_noise_modulated": wv = BuiltinWaveForm.White_Noise_Modulated; break;
+		default: wv = BuiltinWaveForm.Harmonic_Chord_3rd_4th_5th; break;
+		}
+		// @formatter:on
+		try {
+			getDevice(mainframe, devname).stop();
+
+			getDevice(mainframe, devname).setShape(wv, segment);
 
 			getDevice(mainframe, devname).start();
 		} catch (Exception e) {

@@ -11,13 +11,13 @@ import { DeviceDTO } from '../types/DeviceDTO';
  */
 @Injectable()
 export class ConfigService {
-  private fakeString = 'Fake';
+  private fakeString = ''; // 'Fake';
 
-  private baseUrl = 'http://localhost:8888/vxi/api/rest';
+  private baseUrl = 'http://localhost:8888/vxi/api/rest/';
 
   private devices: DeviceDTO[] = [
     // At startup, only the system device is known. All other devices will be filled in during client startup.
-    { type: 'system', name: 'system', URL: '/system', mainframe: '', vxiDevice: null },
+    { type: 'system', name: 'system', URL: 'system', mainframe: '', vxiDevice: null },
   ];
 
   constructor() { }

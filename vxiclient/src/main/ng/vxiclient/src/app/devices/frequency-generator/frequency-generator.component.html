@@ -12,6 +12,10 @@
         <span>Stop</span>
       </button>
   </p>
+  <button (click)="restart()">
+    <md-icon>Restart</md-icon>
+    <span>Restart</span>
+  </button>
 
    <!-- config inputs -->
    <div id="config" *ngIf="active">
@@ -23,14 +27,14 @@
 
     <div id="afg_std_waveform_div" style="display: inline;" *ngIf="selectedSourceItem.value=='Standard'">
       <label for="afg_std_waveform">Waveform:</label>
-      <select name="afg_std_waveform" [(ngModel)]="selectedStandardWaveformItem" (ngModelChange)="onStdWaveformChange($event)">
+      <select name="afg_std_waveform" [(ngModel)]="selectedStandardWaveformItem" (ngModelChange)="onStdShapeChange($event)">
         <option *ngFor="let m of standardWaveforms" [ngValue]="m">{{m.value}}</option>
       </select> 
      </div>
 
     <div id="afg_builtin_waveform_div" style="display: inline;" *ngIf="selectedSourceItem.value=='Builtin'">
       <label for="afg_builtin_waveform">Waveform:</label>
-      <select name="afg_builtin_waveform" [(ngModel)]="selectedBuiltinWaveformItem" (ngModelChange)="onBuiltinWaveformChange($event)">
+      <select name="afg_builtin_waveform" [(ngModel)]="selectedBuiltinWaveformItem" (ngModelChange)="onBuiltinShapeChange($event)">
         <option *ngFor="let m of builtinWaveforms" [ngValue]="m">{{m.value}}</option>
       </select> 
     </div>

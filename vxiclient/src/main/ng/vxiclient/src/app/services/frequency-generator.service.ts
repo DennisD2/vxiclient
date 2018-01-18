@@ -18,24 +18,23 @@ export class FrequencyGeneratorService extends BaseService {
     return null;
   }
 
-  public changeWaveformOderSo(mainframe: string, deviceName: string, whatever: string): Observable<string> {
+  public setShape(mainframe: string, deviceName: string, shapeType: string, shape: string, segment: string): Observable<string> {
 
     const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
 
-    console.log('vxi.changeWaveformOderSo:' + deviceName + ' with parameter ' + whatever );
-    /*
-    const dataUrl =  serviceUrl + 'setVoltageRange/' + acdc + '/' + mode;
+    console.log('vxi.setShape:' + deviceName + ' with parameter ' + shape );
+
+    let dataUrl =  serviceUrl + 'setShape/' + shapeType + '/' + shape;
+    if (segment !== null) {
+      dataUrl = dataUrl + '/' + segment;
+    }
     console.log(dataUrl);
 
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
-    const body = JSON.stringify(channelsToScan);
-    // console.log(body);
 
-    return this.http.post(dataUrl, body, options)
+    return this.http.post(dataUrl, null, options)
       .map((response) => { console.log(response.text()); return response.text() as string; } )
       .catch(this.handleError);
-    */
-    return null;
   }
 }

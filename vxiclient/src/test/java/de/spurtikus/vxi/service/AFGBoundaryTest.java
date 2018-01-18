@@ -80,12 +80,9 @@ public class AFGBoundaryTest {
 	// @Ignore
 	@Test
 	@RunAsClient
-	public void shape(@ArquillianResource URL contextPath) {
-		String waveform = "sin";
-		String amplitude = "5.0";
-		String frequency = "5e5";
-		String uri = URI + "/shape/" + waveform + "/" + amplitude + "/"
-				+ frequency;
+	public void shapeStandard(@ArquillianResource URL contextPath) {
+		String waveform = "sine";
+		String uri = URI + "/setShape/standard/" + waveform;
 		
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call: " + contextPath + uri);
@@ -100,5 +97,59 @@ public class AFGBoundaryTest {
 			e.printStackTrace();
 		}
 	}
+	
+	// @Ignore
+	@Test
+	@RunAsClient
+	public void shapeBuiltin(@ArquillianResource URL contextPath) {
+		String waveform = "haversine";
+		char segment = 'A';
+		String uri = URI + "/setShape/builtin/" + waveform + "/" + segment;
+		
+		Client client = ClientBuilder.newClient();
+		System.out.println("Call: " + contextPath + uri);
+		final Response response = client.target(contextPath + uri)
+				.request(MediaType.APPLICATION_JSON).post(null);
+		assertTrue(response.getStatus()<400);
+		String res = response.readEntity(String.class);
+		System.out.println("Call result: " + res);
+	}
+
+	
+	@Test
+	@RunAsClient
+	public void amplitude(@ArquillianResource URL contextPath) {
+		String amplitude = "5.0";
+		String uri = URI + "/setAmplitude/" + amplitude;
+		
+		Client client = ClientBuilder.newClient();
+		System.out.println("Call: " + contextPath + uri);
+		final Response response = client.target(contextPath + uri)
+				.request(MediaType.APPLICATION_JSON).post(null);
+		assertTrue(response.getStatus()<400);
+		String res = response.readEntity(String.class);
+		System.out.println("Call result: " + res);
+	}
+
+	@Test
+	@RunAsClient
+	public void frequency(@ArquillianResource URL contextPath) {
+		String frequency = "5e5";
+		String uri = URI + "/setFrequency/" + frequency;
+		
+		Client client = ClientBuilder.newClient();
+		System.out.println("Call: " + contextPath + uri);
+		final Response response = client.target(contextPath + uri)
+				.request(MediaType.APPLICATION_JSON).post(null);
+		assertTrue(response.getStatus()<400);
+		String res = response.readEntity(String.class);
+		System.out.println("Call result: " + res);
+		/*try {
+			Thread.sleep(500000000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}*/
+	}
+
 
 }
