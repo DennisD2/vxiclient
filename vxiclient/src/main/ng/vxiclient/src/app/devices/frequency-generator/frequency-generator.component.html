@@ -46,7 +46,7 @@
     <br> 
     <!-- Sweeping -->
     <label for="sweeponoff">Sweeping</label>
-    <input id="sweeponoff" type="checkbox" [(ngModel)]="sweeping" (ngModelChange)="onSweepChange($event)">
+    <input id="sweeponoff" type="checkbox" [(ngModel)]="sweeping">
 
     <div id="div_sweep" style="display: inline;" *ngIf="sweeping">
 
@@ -63,9 +63,11 @@
       <label for="afg_sweep_time">Time [s]:</label>
       <input type="text" id="afg_sweep_time" value="10"  [(ngModel)]="sweepTime" (ngModelChange)="onSweepTimeChange($event)">
 
-      <button onclick="vxiclient.generator.setSweep();">Update Sweep
+      <button (click)="onSweepChange()">
+        <md-icon>update</md-icon>
+        <span>Update Sweep</span>
       </button>
-
+ 
     </div>
       
     <br> 

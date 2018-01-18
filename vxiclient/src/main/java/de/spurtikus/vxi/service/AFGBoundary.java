@@ -322,5 +322,90 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 		}
 		return Response.ok(wv.getValue()).build();
 	}
+	
+	/**
+	 * Set sweep.
+	 * 
+	 * @param uriInfo
+	 *            Injected uriInfo (injected by HK2/REST)
+	 * @param mainframe
+	 *            Mainframe to use. Comes from vxiserver.properties, e.g. "mfb".
+	 * @param devname
+	 *            Device to use.
+	 * @param start
+	 * 			  Start frequency.
+	 * @param start
+	 * 			  Stop frequency.
+	 * @param points
+	 * 			  number of points in sweep.
+	 * @param duration
+	 * 			  sweep duration in seconds.
+	 * @param amplitude
+	 * 			  sweep amplitude in volts.
+	 * @param waveform
+	 *            Shape of waveform. Example "sine" or "haversine". See
+	 *            {HP1340.BuiltinWaveForm}.
+	 * @return
+	 */
+	@POST
+	@Path("{mainframe}/{devname}/setSweep/{start}/{stop}/{points}/{duration}/{amplitude}/{waveform}")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response setSweep(@Context UriInfo uriInfo,
+			@PathParam("mainframe") String mainframe,
+			@PathParam("devname") String devname,
+			@PathParam("start") double startFrequency,
+			@PathParam("stop") double stopFrequency,
+			@PathParam("points") int points,
+			@PathParam("duration") int duration,
+			@PathParam("amplitude") double amplitude,
+			@PathParam("waveform") String waveform) {
+		logger.debug("Incoming URI : {}", uriInfo.getPath());
+		logger.debug("Mainframe: {}", mainframe);
+		logger.debug("Device name: {}", devname);
+		logger.debug("startFrequency: {}", startFrequency);
+		logger.debug("stopFrequency: {}", stopFrequency);
+		logger.debug("Points: {}", points);
+		logger.debug("Duration: {}", duration);
+		logger.debug("Amplitude: {}", amplitude);
+		logger.debug("waveform: {}", waveform);
+
+		try {
+			connManager = ConnectionManager.getInstance(this.getClass(),
+					mainframe, devname);
+		} catch (Exception e) {
+			logger.error(
+					"Cannot get wrapper instance. This is usually an initialization problem.");
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		StandardWaveForm wv;
+		// @formatter:off
+		switch (waveform.toLowerCase()) {
+		case "dc": wv = StandardWaveForm.DC; break;
+		case "ramp": wv = StandardWaveForm.RAMP; break;
+		case "sine": wv = StandardWaveForm.SINE; break;
+		case "square": wv = StandardWaveForm.SQUARE; break;
+		case "triangle": wv = StandardWaveForm.TRIANGLE; break;
+		case "usera": wv = StandardWaveForm.USERA; break;
+		case "userb": wv = StandardWaveForm.USERB; break;
+		case "userc": wv = StandardWaveForm.USERC; break;
+		case "userd": wv = StandardWaveForm.USERD; break;
+		default: wv = StandardWaveForm.SQUARE; break;
+		}
+		// @formatter:on
+		try {
+			getDevice(mainframe, devname).stop();
+
+			getDevice(mainframe, devname).setSweep(startFrequency, stopFrequency, points, duration, amplitude, wv);
+
+			getDevice(mainframe, devname).start();
+		} catch (Exception e) {
+			logger.error("Error accessing device.");
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.ok(wv.getValue()).build();
+	}
+
 
 }

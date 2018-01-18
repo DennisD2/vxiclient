@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.net.URL;
 
+import javax.ws.rs.Path;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
@@ -91,11 +92,11 @@ public class AFGBoundaryTest {
 		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
-		try {
+		/*try {
 			Thread.sleep(500000000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	// @Ignore
@@ -144,12 +145,54 @@ public class AFGBoundaryTest {
 		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
+		try {
+			Thread.sleep(500000000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	@RunAsClient
+	public void sweep(@ArquillianResource URL contextPath) {
+		//	@Path("{mainframe}/{devname}/setSweep/builtin/{start}/{stop}/{points}/{duration}/{amplitude}/{waveform}")
+		String startFreq = "5e3";
+		String endFreq = "5e5";
+		int points = 100;
+		int duration = 10;
+		String amplitude = "5";
+		String waveform = "sine";
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(URI);
+		sb.append("/setSweep/");
+		sb.append(startFreq);
+		sb.append("/");
+		sb.append(endFreq );
+		sb.append("/");
+		sb.append(points);
+		sb.append("/");
+		sb.append(duration);
+		sb.append("/");
+		sb.append(amplitude);
+		sb.append("/");
+		sb.append(waveform);
+		String uri = sb.toString();
+		
+		Client client = ClientBuilder.newClient();
+		System.out.println("Call: " + contextPath + uri);
+		final Response response = client.target(contextPath + uri)
+				.request(MediaType.APPLICATION_JSON).post(null);
+		assertTrue(response.getStatus()<400);
+		String res = response.readEntity(String.class);
+		System.out.println("Call result: " + res);
 		/*try {
 			Thread.sleep(500000000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}*/
 	}
+
 
 
 }

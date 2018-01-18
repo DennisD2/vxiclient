@@ -68,6 +68,27 @@ export class FrequencyGeneratorService extends BaseService {
       .catch(this.handleError);
   }
 
+  public setSweep(mainframe: string, deviceName: string, start: number, stop: number,
+    points: number, duration: number, amplitude: number, shape: string) {
+      const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
+      console.log('vxi.setSweep:' + deviceName + ' with parameters ' + start );
+
+      const dataUrl =  serviceUrl + 'setSweep'
+        + '/' + start
+        + '/' + stop
+        + '/' + points
+        + '/' + duration
+        + '/' + amplitude
+        + '/' + shape;
+      console.log(dataUrl);
+      const headers = new Headers({ 'Content-Type': 'application/json' });
+      const options = new RequestOptions({ headers: headers });
+
+      return this.http.post(dataUrl, null, options)
+        .map((response) => { console.log(response.text()); return response.text() as string; } )
+        .catch(this.handleError);
+    }
+
   convertShape(shapeType: string, shape: string): string {
     if (shapeType === 'standard') {
       return shape;

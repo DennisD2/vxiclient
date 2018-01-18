@@ -21,15 +21,19 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
   amplitude = 1.0;
   // Waveform frequency
   frequency = 1E3;
-  // Sweeping
-  sweeping = false;
-
   // Segment value
   segment = 'A';
+
+  // Sweeping
+  sweeping = false;
 
   sweepStartFrequency = 1E3;
 
   sweepStopFrequency = 1E5;
+
+  sweepPoints = 100;
+
+  sweepTime = 5;
 
   // Waveform sources
   allowedSources = [ {id: 0, value: 'Standard'}, {id: 1, value: 'Builtin'}, {id: 2, value: 'UserDefined'}];
@@ -109,8 +113,15 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
     this.mutexedCall(f);
   }
 
-  onSweepChange(event: any) {
-    console.log('onSweepChange: ' + event.value);
+  onSweepChange() {
+    console.log('onSweepChange');
+    const self = this;
+    const f: Function = (): Observable<any> => {
+      return self.generatorService.setSweep(self.mainframe, self.deviceName, self.sweepStartFrequency,
+        self.sweepStopFrequency, self.sweepPoints, self.sweepTime, self.amplitude,
+        self.selectedStandardWaveformItem.value);
+    };
+    this.mutexedCall(f);
   }
   onSweepStartFrequencyChange(event: any) {
     console.log('onSweepStartFrequencyChange: ' + event.value);
