@@ -17,54 +17,53 @@ import { FrequencyGeneratorService } from '../../services/frequency-generator.se
   styleUrls: ['./frequency-generator.component.css']
 })
 export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, Device {
-    // Waveform aplitude
-    amplitude = 1.0;
-    // Waveform frequency
-    frequency = 1E3;
-    // Sweeping
-    sweeping = false;
+  // Waveform aplitude
+  amplitude = 1.0;
+  // Waveform frequency
+  frequency = 1E3;
+  // Sweeping
+  sweeping = false;
 
-    // Segment value
-    segment = 'A';
+  // Segment value
+  segment = 'A';
 
-    sweepStartFrequency = 1E3;
+  sweepStartFrequency = 1E3;
 
-    sweepStopFrequency = 1E5;
+  sweepStopFrequency = 1E5;
 
-    // Waveform sources
-    allowedSources = [ {id: 0, value: 'Standard'}, {id: 1, value: 'Builtin'}, {id: 2, value: 'UserDefined'}];
-    selectedSourceItem = this.allowedSources[0];
+  // Waveform sources
+  allowedSources = [ {id: 0, value: 'Standard'}, {id: 1, value: 'Builtin'}, {id: 2, value: 'UserDefined'}];
+  selectedSourceItem = this.allowedSources[0];
 
-    // Standard Waveform types
-    standardWaveforms = [ {id: 0, value: 'Ramp'}, {id: 1, value: 'Square'}, {id: 2, value: 'Sine'},
-      {id: 4, value: 'DC'}, {id: 5, value: 'Triangle'}];
-    selectedStandardWaveformItem = this.standardWaveforms[0];
+  // Standard Waveform types
+  standardWaveforms = [ {id: 0, value: 'Ramp'}, {id: 1, value: 'Square'}, {id: 2, value: 'Sine'},
+    {id: 4, value: 'DC'}, {id: 5, value: 'Triangle'}];
+  selectedStandardWaveformItem = this.standardWaveforms[0];
 
-    // Builtin Waveform types
-    builtinWaveforms = [ {id: 0, value: 'Harmonic chord 3rd,4th,5th'}, {id: 1, value: 'Haversine'}, {id: 2, value: 'Ramp falling'},
-      {id: 3, value: 'Ramp falling (first 20 terms)'}, {id: 4, value: 'Ramp rising'}, {id: 5, value: 'Ramp rising (first 20 terms)'},
-      {id: 6, value: 'Sine'}, {id: 7, value: 'Sine, linear rising 8 cycles'}, {id: 8, value: 'Sine, positive half cycle (cutie)'},
-      {id: 9, value: 'sin(x)/x for 8.25 radians'}, {id: 10, value: 'Square'}, {id: 11, value: 'Square, first 4 terms (cutie)'},
-      {id: 12, value: 'Square, first 10 terms'}, {id: 13, value: 'Triangle'}, {id: 14, value: 'White Noise'},
-      {id: 15, value: 'White Noise (Modulated)(cutie)'}
-    ];
-    selectedBuiltinWaveformItem = this.builtinWaveforms[0];
+  // Builtin Waveform types
+  builtinWaveforms = [ {id: 0, value: 'Harmonic chord 3rd,4th,5th'}, {id: 1, value: 'Haversine'}, {id: 2, value: 'Ramp falling'},
+    {id: 3, value: 'Ramp falling (first 20 terms)'}, {id: 4, value: 'Ramp rising'}, {id: 5, value: 'Ramp rising (first 20 terms)'},
+    {id: 6, value: 'Sine'}, {id: 7, value: 'Sine, linear rising 8 cycles'}, {id: 8, value: 'Sine, positive half cycle (cutie)'},
+    {id: 9, value: 'sin(x)/x for 8.25 radians'}, {id: 10, value: 'Square'}, {id: 11, value: 'Square, first 4 terms (cutie)'},
+    {id: 12, value: 'Square, first 10 terms'}, {id: 13, value: 'Triangle'}, {id: 14, value: 'White Noise'},
+    {id: 15, value: 'White Noise (Modulated)(cutie)'}
+  ];
+  selectedBuiltinWaveformItem = this.builtinWaveforms[0];
 
-    // Marker feeds
-    markerFeeds = [ {id: 0, value: 'Output Zero'}, {id: 1, value: 'Segment'}, {id: 2, value: 'Source ROSC'},
+  // Marker feeds
+  markerFeeds = [ {id: 0, value: 'Output Zero'}, {id: 1, value: 'Segment'}, {id: 2, value: 'Source ROSC'},
     {id: 4, value: 'Source Sweep'}];
-    selectedMarkerFeedItem = this.markerFeeds[0];
+  selectedMarkerFeedItem = this.markerFeeds[0];
 
-    // Marker polarity
-    markerPolarity = [ {id: 0, value: 'Normal'}, {id: 1, value: 'Inverse'}];
-    selectedMarkerPolarityItem = this.markerPolarity[0];
+  // Marker polarity
+  markerPolarity = [ {id: 0, value: 'Normal'}, {id: 1, value: 'Inverse'}];
+  selectedMarkerPolarityItem = this.markerPolarity[0];
 
-
-    constructor(protected appRegistry: AppRegistry,
+  constructor(protected appRegistry: AppRegistry,
       private generatorService: FrequencyGeneratorService) {
       super(appRegistry);
       this.resultDataType = 'none';
-   }
+  }
 
   ngOnInit() {
     this.start();

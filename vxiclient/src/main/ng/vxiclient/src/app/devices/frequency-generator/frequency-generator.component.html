@@ -12,10 +12,6 @@
         <span>Stop</span>
       </button>
   </p>
-  <button (click)="restart()">
-    <md-icon>Restart</md-icon>
-    <span>Restart</span>
-  </button>
 
    <!-- config inputs -->
    <div id="config" *ngIf="active">
@@ -44,7 +40,7 @@
     <label for="afg_amplitude">Amplitude [V]:</label>
     <input type="text" id="afg_amplitude" [(ngModel)]="amplitude" (ngModelChange)="onAmplitudeChange()">
 
-    <label for="afg_frequency">Frequency [V]:</label>
+    <label for="afg_frequency">Frequency [Hz]:</label>
     <input type="text" id="afg_frequency" [(ngModel)]="frequency" (ngModelChange)="onFrequencyChange()">
 
     <br> 
