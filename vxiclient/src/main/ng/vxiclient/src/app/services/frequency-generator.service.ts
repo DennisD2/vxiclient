@@ -19,9 +19,7 @@ export class FrequencyGeneratorService extends BaseService {
   }
 
   public setShape(mainframe: string, deviceName: string, shapeType: string, shape: string, segment: string): Observable<string> {
-
     const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
-
     console.log('vxi.setShape:' + deviceName + ' with parameter ' + shape );
 
     shape = this.convertShape(shapeType, shape);
@@ -30,6 +28,36 @@ export class FrequencyGeneratorService extends BaseService {
     if (segment !== null) {
       dataUrl = dataUrl + '/' + segment;
     }
+    console.log(dataUrl);
+
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
+
+    return this.http.post(dataUrl, null, options)
+      .map((response) => { console.log(response.text()); return response.text() as string; } )
+      .catch(this.handleError);
+  }
+
+  public setAmplitude(mainframe: string, deviceName: string, amplitude: number): Observable<string> {
+    const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
+    console.log('vxi.setShape:' + deviceName + ' with parameter ' + amplitude );
+
+    const dataUrl =  serviceUrl + 'setAmplitude/' + amplitude;
+    console.log(dataUrl);
+
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
+
+    return this.http.post(dataUrl, null, options)
+      .map((response) => { console.log(response.text()); return response.text() as string; } )
+      .catch(this.handleError);
+  }
+
+  public setFrequency(mainframe: string, deviceName: string, frequency: number): Observable<string> {
+    const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
+    console.log('vxi.setShape:' + deviceName + ' with parameter ' + frequency );
+
+    const dataUrl =  serviceUrl + 'setFrequency/' + frequency;
     console.log(dataUrl);
 
     const headers = new Headers({ 'Content-Type': 'application/json' });

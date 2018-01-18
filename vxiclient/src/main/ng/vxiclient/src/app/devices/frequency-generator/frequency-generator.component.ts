@@ -93,11 +93,21 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
   }
 
   onAmplitudeChange(event: any) {
-    console.log('onAmplitudeChange: ' + event.value);
-  }
+    console.log('onAmplitudeChange: ' + this.amplitude);
+    const self = this;
+    const f: Function = (): Observable<any> => {
+      return self.generatorService.setAmplitude(self.mainframe, self.deviceName, self.amplitude);
+    };
+    this.mutexedCall(f);
+ }
 
   onFrequencyChange(event: any) {
-    console.log('onFrequencyChange: ' + event.value);
+    console.log('onFrequencyChange: ' + this.frequency);
+    const self = this;
+    const f: Function = (): Observable<any> => {
+      return self.generatorService.setFrequency(self.mainframe, self.deviceName, self.frequency);
+    };
+    this.mutexedCall(f);
   }
 
   onSweepChange(event: any) {
