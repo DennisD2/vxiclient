@@ -1,5 +1,4 @@
-<div id="counter">
-  <hr>
+<div id="counter" class="device_div">
   <h3>{{deviceName}} (a Counter in mainframe {{mainframe}})</h3>
   <p>
     <!-- action buttons -->
@@ -13,7 +12,7 @@
     </button>
   </p>
   
-  <div id="config" *ngIf="active">
+  <div id="config" *ngIf="active"class="device_section_div">
     <p>
       <button onclick="start_counter_loop('E1333')">Start counter loop</button>
       <button onclick="stop_counter_loop('E1333')">Stop counter loop</button>
@@ -63,5 +62,5 @@
 
   </div>
 </div>
-<hr>
+
 

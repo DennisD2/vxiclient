@@ -1,5 +1,4 @@
-<div id="afg" >
-  <hr>
+<div id="afg" class="device_div">
   <h3>{{deviceName}} (Arbitrary Function Generator in {{mainframe}})</h3>
   <p>
       <!-- action buttons -->
@@ -23,7 +22,7 @@
 
     <br>
 
-    <div style="border:1px solid black; width: 70%;; padding-top: 3px; padding-left: 3px;">
+    <div class="device_section_div">
       <span *ngIf="!sweeping">
         <label for="afg_waveform_source">Waveform source:</label>
         <select name="afg_waveform_source" [(ngModel)]="selectedSourceItem">
@@ -48,19 +47,19 @@
       <br> 
 
       <label for="afg_amplitude">Amplitude [V]:</label>
-      <input type="text" id="afg_amplitude" [(ngModel)]="amplitude" (ngModelChange)="onAmplitudeChange()">
+      <input type="text" id="afg_amplitude" [(ngModel)]="amplitude" (ngModelChange)="onAmplitudeChange()" size=10>
 
       <label for="afg_frequency">Frequency [Hz]:</label>
-      <input type="text" id="afg_frequency" [(ngModel)]="frequency" (ngModelChange)="onFrequencyChange()">
+      <input type="text" id="afg_frequency" [(ngModel)]="frequency" (ngModelChange)="onFrequencyChange()"  size=10>
 
       <label for="afg_offset">Offset [V]:</label>
-      <input type="text" id="afg_offset" [(ngModel)]="offset" (ngModelChange)="onOffsetChange()">
+      <input type="text" id="afg_offset" [(ngModel)]="offset" (ngModelChange)="onOffsetChange()" size=10>
 
     </div>
 
     <br> 
     <!-- Sweeping -->
-    <div style="border:1px solid black; width: 70%;; padding-top: 3px; padding-left: 3px;">
+    <div class="device_section_div">
       <label for="sweeponoff">Sweeping</label>
       <input id="sweeponoff" type="checkbox" [(ngModel)]="sweeping" (ngModelChange)="onSweepValueChange($event)">
 
@@ -89,7 +88,7 @@
     <br> 
 
     <!-- Markers -->
-    <div style="border:1px solid black; width: 70%;; padding-top: 3px; padding-left: 3px;">
+    <div class="device_section_div">
       <label for="afg_marker_feed">Marker Feed:</label>
       <select name="afg_marker_feed" [(ngModel)]="selectedMarkerFeedItem" (ngModelChange)="onMarkerChange($event)">
         <option *ngFor="let m of markerFeeds" [ngValue]="m">{{m.value}}</option>

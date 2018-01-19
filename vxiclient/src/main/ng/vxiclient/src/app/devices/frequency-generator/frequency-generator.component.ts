@@ -128,7 +128,7 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
     this.mutexedCall(f);
   }
 
-  onOffsetChange(event: any) {
+    onOffsetChange(event: any) {
   console.log('onOffsetChange: ' + this.offset);
   const self = this;
   const f: Function = (): Observable<any> => {
@@ -137,14 +137,14 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
   this.mutexedCall(f);
 }
 
-onFrequencyChange(event: any) {
+  onFrequencyChange(event: any) {
     console.log('onFrequencyChange: ' + this.frequency);
     const self = this;
     const f: Function = (): Observable<any> => {
       return self.generatorService.setFrequency(self.mainframe, self.deviceName, self.frequency);
     };
     this.mutexedCall(f);
-}
+  }
 
   onShapeChange() {
     console.log('onShapeChange');

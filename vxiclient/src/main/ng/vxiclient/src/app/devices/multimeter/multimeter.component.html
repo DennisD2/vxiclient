@@ -1,5 +1,4 @@
-<div id="multimeter">
-  <hr>
+<div id="multimeter" class="device_div">
   <h3>{{deviceName}} (Multimeter in {{mainframe}})</h3>
   <p>
     <!-- action buttons -->
@@ -14,7 +13,7 @@
   </p>
 
   <!-- config inputs -->
-  <div id="mconfig" *ngIf="active">
+  <div id="mconfig" *ngIf="active" class="device_section_div">
       <label for="m_mode">Mode:</label>
       <select name="m_mode" [(ngModel)]="selectedModeItem" (ngModelChange)="onChangeMode($event)">
         <option *ngFor="let m of allowedModes" [ngValue]="m">{{m.value}}</option>
