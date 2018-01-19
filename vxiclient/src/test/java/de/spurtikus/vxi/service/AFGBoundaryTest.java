@@ -177,6 +177,21 @@ public class AFGBoundaryTest {
 
 	@Test
 	@RunAsClient
+	public void offset(@ArquillianResource URL contextPath) {
+		String offset = "1.0";
+		String uri = URI + "/setOffset/" + offset;
+
+		Client client = ClientBuilder.newClient();
+		System.out.println("Call: " + contextPath + uri);
+		final Response response = client.target(contextPath + uri)
+				.request(MediaType.APPLICATION_JSON).post(null);
+		assertTrue(response.getStatus() < 400);
+		String res = response.readEntity(String.class);
+		System.out.println("Call result: " + res);
+	}
+
+	@Test
+	@RunAsClient
 	public void sweep(@ArquillianResource URL contextPath) {
 		// @Path("{mainframe}/{devname}/setSweep/builtin/{start}/{stop}/{points}/{duration}/{amplitude}/{waveform}")
 		String startFreq = "5e3";

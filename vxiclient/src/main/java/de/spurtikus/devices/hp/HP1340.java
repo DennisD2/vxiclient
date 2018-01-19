@@ -94,7 +94,7 @@ public class HP1340 extends BaseHPDevice {
 		boolean cal_stat_ac;
 		String arb_dac_sour;
 	}
-	
+
 	/**
 	 * Standard waveforms
 	 * 
@@ -299,32 +299,65 @@ public class HP1340 extends BaseHPDevice {
 			logger.info("AFG not running.");
 		}
 	}
-	
-	// *RST; *EMC +0;:CAL:STAT:AC 1;:ARB:DAC:SOUR INT;:VOLT:AMPL:UNIT:VOLT V;:ROSC:FREQ:EXT +4.294967296E+007; :ROSC:SOUR INT; GATE:STAT 0;:FREQ:FIX +1.000000000E+004; FSK +1.000000000E+004,+1.500000000E+007; MODE FIX; STAR +0.000000000E+000; STOP +1.500000000E+007;:SWE:COUN +9.90000000E+037; POIN +1.001000000E+003; TIME +1.050000000E+000;:FUNC:SHAP SIN;:RAMP:POL NORM;:VOLT:AMPL +0.00000000E+000; OFFS +0.00000000E+000;:OUTP:LOAD +5.00000000E+001;:ARM:COUN +9.90000000E+037; LAY2:COUN +1.00000000E+000; SLOP POS; SOUR IMM;:MARK:FEED "SEGM"; POL NORM;:FUNC:USER NONE
 
-	public String getConfig()
-			throws Exception {
+	/**
+	 * Dump and returns configuration of device.
+	 * 
+	 * HP E1340A returns for example:
+	 * 
+	 * *RST; *EMC +0;:CAL:STAT:AC 1;:ARB:DAC:SOUR INT;:VOLT:AMPL:UNIT:VOLT
+	 * V;:ROSC:FREQ:EXT +4.294967296E+007; :ROSC:SOUR INT; GATE:STAT 0;:FREQ:FIX
+	 * +1.000000000E+004; FSK +1.000000000E+004,+1.500000000E+007; MODE FIX;
+	 * STAR +0.000000000E+000; STOP +1.500000000E+007;:SWE:COUN
+	 * +9.90000000E+037; POIN +1.001000000E+003; TIME
+	 * +1.050000000E+000;:FUNC:SHAP SIN;:RAMP:POL NORM;:VOLT:AMPL
+	 * +0.00000000E+000; OFFS +0.00000000E+000;:OUTP:LOAD
+	 * +5.00000000E+001;:ARM:COUN +9.90000000E+037; LAY2:COUN +1.00000000E+000;
+	 * SLOP POS; SOUR IMM;:MARK:FEED "SEGM"; POL NORM;:FUNC:USER NONE
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String getConfig() throws Exception {
 		String cmd = "*LRN?";
 		String answer = vxiConnector.send_and_receive(deviceLink, cmd);
-		//System.out.println(answer);
-		
+		// System.out.println(answer);
+
 		String configs[] = answer.split(";");
-		for (String c: configs) {
+		for (String c : configs) {
 			System.out.println(c);
 		}
 		return answer;
 	}
 
+	/**
+	 * Set frequency.
+	 * 
+	 * @param frequency
+	 * @throws Exception
+	 */
 	public void setFrequency(Double frequency) throws Exception {
 		String cmd = "SOUR:FREQ:FIX " + Double.toString(frequency) + ";";
 		vxiConnector.send(deviceLink, cmd);
 	}
 
+	/**
+	 * Set Offset.
+	 * 
+	 * @param offset
+	 * @throws Exception
+	 */
 	public void setOffset(Double offset) throws Exception {
 		String cmd = "SOUR:VOLT:OFFS " + Double.toString(offset) + "V";
 		vxiConnector.send(deviceLink, cmd);
 	}
 
+	/**
+	 * Set Amplitude.
+	 * 
+	 * @param amplitude
+	 * @throws Exception
+	 */
 	public void setAmplitude(Double amplitude) throws Exception {
 		String cmd = "SOUR:VOLT:LEV:IMM:AMPL " + Double.toString(amplitude)
 				+ "V;";
@@ -579,8 +612,9 @@ public class HP1340 extends BaseHPDevice {
 	 * where data type 'byte' is defined as a signed integer with 7 bits, bit 8
 	 * then is the sign bit.
 	 * 
-	 * This function does work only with prologix controller, because the Prologix requirement
-	 * for sending 8 bit data is met (by escaping some chars: CR,LF,ESC,VT).
+	 * This function does work only with prologix controller, because the
+	 * Prologix requirement for sending 8 bit data is met (by escaping some
+	 * chars: CR,LF,ESC,VT).
 	 * 
 	 * @param waveform
 	 *            4096 point DAC array with waveform data.
@@ -596,18 +630,24 @@ public class HP1340 extends BaseHPDevice {
 		boolean escape;
 
 		prefix_userDefinedWF();
-		
+
 		for (int i = 0; i < waveform.length; i++) {
 			short theValue = waveform[i];
-			
+
 			// MSB
 			// max value possible as byte 1 is 0x0f
 			// Some chars needed to be escaped (Prologix special)
-			escape=false;
+			escape = false;
 			b = (byte) ((theValue >> 8) & 0xf);
-			if (b == Constants.CR) {	escape = true; } 
-			if (!escape && (b == Constants.VT)) { escape = true; } 
-			if (!escape && (b == Constants.LF)) { escape = true; } 
+			if (b == Constants.CR) {
+				escape = true;
+			}
+			if (!escape && (b == Constants.VT)) {
+				escape = true;
+			}
+			if (!escape && (b == Constants.LF)) {
+				escape = true;
+			}
 			if (escape) {
 				t[0] = Constants.ESC; // add escape char
 				values += new String(t);
@@ -618,13 +658,23 @@ public class HP1340 extends BaseHPDevice {
 			// LSB
 			// max value possible as byte 2 is 0x7f: bit 8 cannot be set
 			// Maybe: byte=8 bit signed Int, resulting in a FAIL lateron?!?
-			escape = false; 
+			escape = false;
 			b = (byte) (theValue & 0xff);
-			if ((b & 0x80) != 0) { b = (byte) (b & 0x7f); } // <-- does not work with escape!!!
-			if (b == Constants.CR) { escape = true; } 
-			if (!escape && (b == Constants.VT)) { escape = true; }  
-			if (!escape && (b == Constants.LF)) { escape = true; }  
-			if (!escape && (b == Constants.ESC)) { escape = true; } 
+			if ((b & 0x80) != 0) {
+				b = (byte) (b & 0x7f);
+			} // <-- does not work with escape!!!
+			if (b == Constants.CR) {
+				escape = true;
+			}
+			if (!escape && (b == Constants.VT)) {
+				escape = true;
+			}
+			if (!escape && (b == Constants.LF)) {
+				escape = true;
+			}
+			if (!escape && (b == Constants.ESC)) {
+				escape = true;
+			}
 			if (escape) {
 				t[0] = Constants.ESC; // add escape char
 				values += new String(t);
@@ -728,15 +778,23 @@ public class HP1340 extends BaseHPDevice {
 		sleep(100);
 	}
 
+	/**
+	 * Set marker. See page 167
+	 * 
+	 * @param feed
+	 *            feed/source type. Out of OUTP:ZERO, SEGM, SOUR:ROSC, SOUR:SWE
+	 * @param polarity
+	 *            marker polarity. INV or NORM.
+	 * @throws Exception
+	 */
 	public void setMarker(MarkerFeedType feed, PolarityType polarity)
 			throws Exception {
-		// See page 167
-		// FeedType OUTP:ZERO, SEGM, SOUR:ROSC, SOUR:SWE
+		// Feed
 		String cmd = "SOUR:MARK:FEED \"" + feed.getValue() + "\"";
 		vxiConnector.send(deviceLink, cmd);
-		// polarityType INV/NORM
+		// Polarity
 		cmd = "SOUR:MARK:POL " + polarity.getValue();
 		vxiConnector.send(deviceLink, cmd);
 	}
-		
+
 }

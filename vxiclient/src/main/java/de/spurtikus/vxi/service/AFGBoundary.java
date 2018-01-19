@@ -1,7 +1,5 @@
 package de.spurtikus.vxi.service;
 
-import java.util.Arrays;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -127,9 +125,9 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 		}
 		return Response.ok("done").build();
 	}
-	
+
 	/**
-	 * getConfiguration.
+	 * Get configuration.
 	 * 
 	 * @param uriInfo
 	 *            Injected uriInfo (injected by HK2/REST)
@@ -166,7 +164,6 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 		}
 		return Response.ok(answer).build();
 	}
-
 
 	/**
 	 * Set amplitude.
@@ -205,6 +202,51 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 		try {
 			getDevice(mainframe, devname).stop();
 			getDevice(mainframe, devname).setAmplitude(amplitude);
+			getDevice(mainframe, devname).start();
+		} catch (Exception e) {
+			logger.error("Error accessing device.");
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.ok("done").build();
+	}
+	
+	/**
+	 * Set offset.
+	 * 
+	 * @param uriInfo
+	 *            Injected uriInfo (injected by HK2/REST)
+	 * @param mainframe
+	 *            Mainframe to use. Comes from vxiserver.properties, e.g. "mfb".
+	 * @param devname
+	 *            Device to use.
+	 * @param offset
+	 *            Offset of waveform. Example '5.0' for 5,0 Volts.
+	 * @return
+	 */
+	@POST
+	@Path("{mainframe}/{devname}/setOffset/{offset}")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response setOffset(@Context UriInfo uriInfo,
+			@PathParam("mainframe") String mainframe,
+			@PathParam("devname") String devname,
+			@PathParam("offset") Double offset) {
+		logger.debug("Incoming URI : {}", uriInfo.getPath());
+		logger.debug("Mainframe: {}", mainframe);
+		logger.debug("Device name: {}", devname);
+		logger.debug("offset: {}", offset);
+
+		try {
+			connManager = ConnectionManager.getInstance(this.getClass(),
+					mainframe, devname);
+		} catch (Exception e) {
+			logger.error(MSG_NO_WRAPPER);
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		try {
+			getDevice(mainframe, devname).stop();
+			getDevice(mainframe, devname).setOffset(offset);
 			getDevice(mainframe, devname).start();
 		} catch (Exception e) {
 			logger.error("Error accessing device.");
@@ -294,20 +336,7 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		StandardWaveForm wv;
-		// @formatter:off
-		switch (waveform.toLowerCase()) {
-		case "dc": wv = StandardWaveForm.DC; break;
-		case "ramp": wv = StandardWaveForm.RAMP; break;
-		case "sine": wv = StandardWaveForm.SINE; break;
-		case "square": wv = StandardWaveForm.SQUARE; break;
-		case "triangle": wv = StandardWaveForm.TRIANGLE; break;
-		case "usera": wv = StandardWaveForm.USERA; break;
-		case "userb": wv = StandardWaveForm.USERB; break;
-		case "userc": wv = StandardWaveForm.USERC; break;
-		case "userd": wv = StandardWaveForm.USERD; break;
-		default: wv = StandardWaveForm.SQUARE; break;
-		}
+		StandardWaveForm wv = toStandardWaveForm(waveform);
 		// @formatter:on
 		try {
 			getDevice(mainframe, devname).stop();
@@ -358,28 +387,7 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		BuiltinWaveForm wv;
-		// @formatter:off
-		switch (waveform.toLowerCase()) {
-		case "harmonic": wv = BuiltinWaveForm.Harmonic_Chord_3rd_4th_5th; break;
-		case "haversine": wv = BuiltinWaveForm.Haversine; break;
-		case "ramp_falling": wv = BuiltinWaveForm.Ramp_Falling; break;
-		case "ramp_falling_first_20": wv = BuiltinWaveForm.Ramp_Falling_First_20; break;
-		case "ramp_rising": wv = BuiltinWaveForm.Ramp_Rising; break;
-		case "ramp_rising_first_20": wv = BuiltinWaveForm.Ramp_Rising_First_20; break;
-		case "sine": wv = BuiltinWaveForm.Sine; break;
-		case "sine_linear_rising_8_cycles": wv = BuiltinWaveForm.Sine_Linear_Rising_8_cycles; break;
-		case "sine_positive_half_cycle": wv = BuiltinWaveForm.Sine_Positive_Half_Cycle; break;
-		case "sinx_per_x": wv = BuiltinWaveForm.Sinx_per_x; break;
-		case "square": wv = BuiltinWaveForm.Square; break;
-		case "square_first_10": wv = BuiltinWaveForm.Square_First_10; break;
-		case "square_first_4": wv = BuiltinWaveForm.Square_First_4; break;
-		case "triangle": wv = BuiltinWaveForm.Triangle; break;
-		case "white_noise": wv = BuiltinWaveForm.White_Noise; break;
-		case "white_noise_modulated": wv = BuiltinWaveForm.White_Noise_Modulated; break;
-		default: wv = BuiltinWaveForm.Harmonic_Chord_3rd_4th_5th; break;
-		}
-		// @formatter:on
+		BuiltinWaveForm wv = toBuiltinWaveForm(waveform);
 		try {
 			getDevice(mainframe, devname).stop();
 			getDevice(mainframe, devname).setShape(wv, segment);
@@ -446,21 +454,7 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		StandardWaveForm wv;
-		// @formatter:off
-		switch (waveform.toLowerCase()) {
-		case "dc": wv = StandardWaveForm.DC; break;
-		case "ramp": wv = StandardWaveForm.RAMP; break;
-		case "sine": wv = StandardWaveForm.SINE; break;
-		case "square": wv = StandardWaveForm.SQUARE; break;
-		case "triangle": wv = StandardWaveForm.TRIANGLE; break;
-		case "usera": wv = StandardWaveForm.USERA; break;
-		case "userb": wv = StandardWaveForm.USERB; break;
-		case "userc": wv = StandardWaveForm.USERC; break;
-		case "userd": wv = StandardWaveForm.USERD; break;
-		default: wv = StandardWaveForm.SQUARE; break;
-		}
-		// @formatter:on
+		StandardWaveForm wv = toStandardWaveForm(waveform);
 		try {
 			getDevice(mainframe, devname).stop();
 			getDevice(mainframe, devname).setSweep(startFrequency,
@@ -474,7 +468,7 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 	}
 
 	/**
-	 * Set sweep.
+	 * Set marker.
 	 * 
 	 * @param uriInfo
 	 *            Injected uriInfo (injected by HK2/REST)
@@ -482,19 +476,10 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 	 *            Mainframe to use. Comes from vxiserver.properties, e.g. "mfb".
 	 * @param devname
 	 *            Device to use.
-	 * @param start
-	 *            Start frequency.
-	 * @param start
-	 *            Stop frequency.
-	 * @param points
-	 *            number of points in sweep.
-	 * @param duration
-	 *            sweep duration in seconds.
-	 * @param amplitude
-	 *            sweep amplitude in volts.
-	 * @param waveform
-	 *            Shape of waveform. Example "sine" or "haversine". See
-	 *            {HP1340.BuiltinWaveForm}.
+	 * @param source
+	 *            Marker source.
+	 * @param polarity
+	 *            Marker polarity.
 	 * @return
 	 */
 	@POST
@@ -545,6 +530,65 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		return Response.ok(mf.getValue()).build();
+	}
+
+	/**
+	 * Converts a string to a StandardWaveForm enum value.
+	 * 
+	 * @param waveform
+	 *            string to convert.
+	 * @return StandardWaveForm enum value.
+	 */
+	protected StandardWaveForm toStandardWaveForm(String waveform) {
+		StandardWaveForm wv;
+		// @formatter:off
+		switch (waveform.toLowerCase()) {
+		case "dc": wv = StandardWaveForm.DC; break;
+		case "ramp": wv = StandardWaveForm.RAMP; break;
+		case "sine": wv = StandardWaveForm.SINE; break;
+		case "square": wv = StandardWaveForm.SQUARE; break;
+		case "triangle": wv = StandardWaveForm.TRIANGLE; break;
+		case "usera": wv = StandardWaveForm.USERA; break;
+		case "userb": wv = StandardWaveForm.USERB; break;
+		case "userc": wv = StandardWaveForm.USERC; break;
+		case "userd": wv = StandardWaveForm.USERD; break;
+		default: wv = StandardWaveForm.SQUARE; break;
+		}
+		// @formatter:on
+		return wv;
+	}
+
+	/**
+	 * Converts a string to a BuiltinWaveForm enum value.
+	 * 
+	 * @param waveform
+	 *            string to convert.
+	 * @return BuiltinWaveForm enum value.
+	 */
+	protected BuiltinWaveForm toBuiltinWaveForm(String waveform) {
+		BuiltinWaveForm wv;
+		// @formatter:off
+		switch (waveform.toLowerCase()) {
+		case "harmonic": wv = BuiltinWaveForm.Harmonic_Chord_3rd_4th_5th; break;
+		case "haversine": wv = BuiltinWaveForm.Haversine; break;
+		case "ramp_falling": wv = BuiltinWaveForm.Ramp_Falling; break;
+		case "ramp_falling_first_20": wv = BuiltinWaveForm.Ramp_Falling_First_20; break;
+		case "ramp_rising": wv = BuiltinWaveForm.Ramp_Rising; break;
+		case "ramp_rising_first_20": wv = BuiltinWaveForm.Ramp_Rising_First_20; break;
+		case "sine": wv = BuiltinWaveForm.Sine; break;
+		case "sine_linear_rising_8_cycles": wv = BuiltinWaveForm.Sine_Linear_Rising_8_cycles; break;
+		case "sine_positive_half_cycle": wv = BuiltinWaveForm.Sine_Positive_Half_Cycle; break;
+		case "sinx_per_x": wv = BuiltinWaveForm.Sinx_per_x; break;
+		case "square": wv = BuiltinWaveForm.Square; break;
+		case "square_first_10": wv = BuiltinWaveForm.Square_First_10; break;
+		case "square_first_4": wv = BuiltinWaveForm.Square_First_4; break;
+		case "triangle": wv = BuiltinWaveForm.Triangle; break;
+		case "white_noise": wv = BuiltinWaveForm.White_Noise; break;
+		case "white_noise_modulated": wv = BuiltinWaveForm.White_Noise_Modulated; break;
+		default: wv = BuiltinWaveForm.Harmonic_Chord_3rd_4th_5th; break;
+		}
+		// @formatter:on
+		return wv;
 	}
 
 }

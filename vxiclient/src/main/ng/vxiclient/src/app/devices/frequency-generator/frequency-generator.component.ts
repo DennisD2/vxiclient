@@ -19,6 +19,8 @@ import { FrequencyGeneratorService } from '../../services/frequency-generator.se
 export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, Device {
   // Waveform amplitude
   amplitude: number;
+  // Waveform DC offset
+  offset: number;
   // Waveform frequency
   frequency: number;
   // Segment value
@@ -71,10 +73,12 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
   }
 
   reset() {
+    // Reset to default values of real device
     this.selectedSourceItem = this.allowedSources[0];
     this.selectedStandardWaveformItem = this.standardWaveforms[2];
     this.frequency = 1e4;
     this.amplitude = 0;
+    this.offset = 0;
     this.segment = 'A';
     this.sweeping = false;
     this.sweepStartFrequency = 0;
@@ -122,16 +126,25 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
       return self.generatorService.setAmplitude(self.mainframe, self.deviceName, self.amplitude);
     };
     this.mutexedCall(f);
- }
+  }
 
-  onFrequencyChange(event: any) {
+  onOffsetChange(event: any) {
+  console.log('onOffsetChange: ' + this.offset);
+  const self = this;
+  const f: Function = (): Observable<any> => {
+    return self.generatorService.setOffset(self.mainframe, self.deviceName, self.offset);
+  };
+  this.mutexedCall(f);
+}
+
+onFrequencyChange(event: any) {
     console.log('onFrequencyChange: ' + this.frequency);
     const self = this;
     const f: Function = (): Observable<any> => {
       return self.generatorService.setFrequency(self.mainframe, self.deviceName, self.frequency);
     };
     this.mutexedCall(f);
-  }
+}
 
   onShapeChange() {
     console.log('onShapeChange');

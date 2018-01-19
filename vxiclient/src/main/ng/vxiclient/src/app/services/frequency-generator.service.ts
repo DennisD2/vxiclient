@@ -55,7 +55,7 @@ export class FrequencyGeneratorService extends BaseService {
 
   public setAmplitude(mainframe: string, deviceName: string, amplitude: number): Observable<string> {
     const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
-    console.log('vxi.setShape:' + deviceName + ' with parameter ' + amplitude );
+    console.log('vxi.setAmplitude:' + deviceName + ' with parameter ' + amplitude );
 
     const dataUrl =  serviceUrl + 'setAmplitude/' + amplitude;
     console.log(dataUrl);
@@ -68,9 +68,24 @@ export class FrequencyGeneratorService extends BaseService {
       .catch(this.handleError);
   }
 
+  public setOffset(mainframe: string, deviceName: string, offset: number): Observable<string> {
+    const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
+    console.log('vxi.setOffset:' + deviceName + ' with parameter ' + offset );
+
+    const dataUrl =  serviceUrl + 'setOffset/' + offset;
+    console.log(dataUrl);
+
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
+
+    return this.http.post(dataUrl, null, options)
+      .map((response) => { console.log(response.text()); return response.text() as string; } )
+      .catch(this.handleError);
+  }
+
   public setFrequency(mainframe: string, deviceName: string, frequency: number): Observable<string> {
     const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
-    console.log('vxi.setShape:' + deviceName + ' with parameter ' + frequency );
+    console.log('vxi.setFrequency:' + deviceName + ' with parameter ' + frequency );
 
     const dataUrl =  serviceUrl + 'setFrequency/' + frequency;
     console.log(dataUrl);
@@ -85,43 +100,45 @@ export class FrequencyGeneratorService extends BaseService {
 
   public setSweep(mainframe: string, deviceName: string, start: number, stop: number,
     points: number, duration: number, amplitude: number, shape: string) {
-      const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
-      console.log('vxi.setSweep:' + deviceName + ' with parameters ' + start );
 
-      const dataUrl =  serviceUrl + 'setSweep'
-        + '/' + start
-        + '/' + stop
-        + '/' + points
-        + '/' + duration
-        + '/' + amplitude
-        + '/' + shape;
-      console.log(dataUrl);
-      const headers = new Headers({ 'Content-Type': 'application/json' });
-      const options = new RequestOptions({ headers: headers });
+    const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
+    console.log('vxi.setSweep:' + deviceName + ' with parameters ' + start );
 
-      return this.http.post(dataUrl, null, options)
-        .map((response) => { console.log(response.text()); return response.text() as string; } )
-        .catch(this.handleError);
-    }
+    const dataUrl =  serviceUrl + 'setSweep'
+      + '/' + start
+      + '/' + stop
+      + '/' + points
+      + '/' + duration
+      + '/' + amplitude
+      + '/' + shape;
+    console.log(dataUrl);
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
 
-    public setMarker(mainframe: string, deviceName: string, source: string, polarity: string) {
-        const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
-        console.log('vxi.setMarker:' + deviceName + ' with parameters ' + source );
+    return this.http.post(dataUrl, null, options)
+      .map((response) => { console.log(response.text()); return response.text() as string; } )
+      .catch(this.handleError);
+  }
 
-        source = this.convertSource(source);
-        polarity = (polarity === 'Inverse') ? 'inv' : 'norm';
-        const dataUrl =  serviceUrl + 'setMarker'
-          + '/' + source
-          + '/' + polarity;
-        console.log(dataUrl);
-        const headers = new Headers({ 'Content-Type': 'application/json' });
-        const options = new RequestOptions({ headers: headers });
+  public setMarker(mainframe: string, deviceName: string, source: string, polarity: string) {
+    const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
+    console.log('vxi.setMarker:' + deviceName + ' with parameters ' + source );
 
-        return this.http.post(dataUrl, null, options)
-          .map((response) => { console.log(response.text()); return response.text() as string; } )
-          .catch(this.handleError);
-      }
+    source = this.convertSource(source);
+    polarity = (polarity === 'Inverse') ? 'inv' : 'norm';
+    const dataUrl =  serviceUrl + 'setMarker'
+      + '/' + source
+      + '/' + polarity;
+    console.log(dataUrl);
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
 
+    return this.http.post(dataUrl, null, options)
+      .map((response) => { console.log(response.text()); return response.text() as string; } )
+      .catch(this.handleError);
+  }
+
+  /** Converts from menue value to REST parameter value */
   convertShape(shapeType: string, shape: string): string {
     if (shapeType === 'standard') {
       return shape;
@@ -148,6 +165,7 @@ export class FrequencyGeneratorService extends BaseService {
      return 'Square';
   }
 
+  /** Converts from menue value to REST parameter value */
   convertSource(source: string): string {
     switch (source) {
       case 'Output Zero': return 'outp_zero';
