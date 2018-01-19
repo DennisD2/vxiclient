@@ -7,7 +7,6 @@ Todos
   - HP1300Pacer boundary completion
   - HP1326 boundary completion
   - HP1330 boundary completion
-  - HP1340 boundary completion
  
 - Hp1330 test fails (get returns always true for bits)
 - Fix Definite Block Length code, See TODO
@@ -27,6 +26,7 @@ Done
 - HP1340: writeWaveformValues_DampedSine_DAC_ArbBlock does not compile
 - Fix issue with device type. See ConnectionManager TODO around line 75.
 - Extend REST code
-   - HP1333 boundary completion
+  - HP1333 boundary completion
+  - HP1340 boundary completion
  
  
