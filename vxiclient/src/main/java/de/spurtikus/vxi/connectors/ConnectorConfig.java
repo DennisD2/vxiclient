@@ -1,7 +1,6 @@
 package de.spurtikus.vxi.connectors;
 
 import java.util.List;
-import java.util.Map;
 
 import de.spurtikus.vxi.service.DeviceInfo;
 
