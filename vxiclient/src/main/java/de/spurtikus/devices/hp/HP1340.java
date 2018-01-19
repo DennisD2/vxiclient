@@ -732,9 +732,9 @@ public class HP1340 extends BaseHPDevice {
 			throws Exception {
 		// See page 167
 		// FeedType OUTP:ZERO, SEGM, SOUR:ROSC, SOUR:SWE
-		// polarityType INV/NORM
 		String cmd = "SOUR:MARK:FEED \"" + feed.getValue() + "\"";
 		vxiConnector.send(deviceLink, cmd);
+		// polarityType INV/NORM
 		cmd = "SOUR:MARK:POL " + polarity.getValue();
 		vxiConnector.send(deviceLink, cmd);
 	}

@@ -104,6 +104,24 @@ export class FrequencyGeneratorService extends BaseService {
         .catch(this.handleError);
     }
 
+    public setMarker(mainframe: string, deviceName: string, source: string, polarity: string) {
+        const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
+        console.log('vxi.setMarker:' + deviceName + ' with parameters ' + source );
+
+        source = this.convertSource(source);
+        polarity = (polarity === 'Inverse') ? 'inv' : 'norm';
+        const dataUrl =  serviceUrl + 'setMarker'
+          + '/' + source
+          + '/' + polarity;
+        console.log(dataUrl);
+        const headers = new Headers({ 'Content-Type': 'application/json' });
+        const options = new RequestOptions({ headers: headers });
+
+        return this.http.post(dataUrl, null, options)
+          .map((response) => { console.log(response.text()); return response.text() as string; } )
+          .catch(this.handleError);
+      }
+
   convertShape(shapeType: string, shape: string): string {
     if (shapeType === 'standard') {
       return shape;
@@ -128,5 +146,15 @@ export class FrequencyGeneratorService extends BaseService {
       case 'White Noise (Modulated)(cutie)' : return 'white_noise_modulated';
      }
      return 'Square';
+  }
+
+  convertSource(source: string): string {
+    switch (source) {
+      case 'Output Zero': return 'outp_zero';
+      case 'Segment': return 'segm';
+      case 'Source ROSC': return 'sour_rosc';
+      case 'Source Sweep': return 'sour_sweep';
+    }
+    return 'out_zero';
   }
 }

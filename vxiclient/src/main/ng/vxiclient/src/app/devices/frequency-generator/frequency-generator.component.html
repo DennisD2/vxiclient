@@ -84,12 +84,12 @@
     <!-- Markers -->
 
     <label for="afg_marker_feed">Marker Feed:</label>
-    <select name="afg_marker_feed" [(ngModel)]="selectedMarkerFeedItem" (ngModelChange)="onMarkerFeedChange($event)">
+    <select name="afg_marker_feed" [(ngModel)]="selectedMarkerFeedItem" (ngModelChange)="onMarkerChange($event)">
       <option *ngFor="let m of markerFeeds" [ngValue]="m">{{m.value}}</option>
     </select> 
 
     <label for="afg_marker_pol">Slope:</label>
-    <select name="afg_marker_pol" [(ngModel)]="selectedMarkerPolarityItem" (ngModelChange)="onMarkerPolarityChange($event)">
+    <select name="afg_marker_pol" [(ngModel)]="selectedMarkerPolarityItem" (ngModelChange)="onMarkerChange($event)">
       <option *ngFor="let m of markerPolarity" [ngValue]="m">{{m.value}}</option>
     </select> 
 

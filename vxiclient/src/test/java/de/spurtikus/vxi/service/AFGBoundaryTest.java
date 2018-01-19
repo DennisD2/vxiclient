@@ -30,7 +30,8 @@ public class AFGBoundaryTest {
 	public final String DEVICECLASS = Constants.URL_AFG;
 	public final String MAINFRAME = "mfb";
 	public final String DEVICENAME = "hp1340";
-	public final String URI = BASE_URI + "/" + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
+	public final String URI = BASE_URI + "/" + DEVICECLASS + "/" + MAINFRAME
+			+ "/" + DEVICENAME;
 
 	@Deployment
 	public static WebArchive createDeployment() {
@@ -48,7 +49,7 @@ public class AFGBoundaryTest {
 		return jar;
 	}
 
-	//@Ignore
+	// @Ignore
 	@Test
 	@RunAsClient
 	public void info(@ArquillianResource URL contextPath) {
@@ -57,13 +58,13 @@ public class AFGBoundaryTest {
 		System.out.println(contextPath + uri);
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.TEXT_PLAIN).get();
-		assertTrue(response.getStatus()<400);
+		assertTrue(response.getStatus() < 400);
 		String res = response.readEntity(String.class);
 		System.out.println(uri + " -> " + res);
 		assertEquals(Constants.URL_AFG, res);
 	}
 
-	//@Ignore
+	// @Ignore
 	@Test
 	@RunAsClient
 	public void idn(@ArquillianResource URL contextPath) {
@@ -72,7 +73,7 @@ public class AFGBoundaryTest {
 		System.out.println(contextPath + uri);
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.APPLICATION_JSON).post(null);
-		assertTrue(response.getStatus()<400);
+		assertTrue(response.getStatus() < 400);
 		String res = response.readEntity(String.class);
 		System.out.println(uri + " -> " + res);
 		assertEquals("HEWLETT-PACKARD,E1340A,0,A.01.02", res);
@@ -82,26 +83,26 @@ public class AFGBoundaryTest {
 	@RunAsClient
 	public void initialize(@ArquillianResource URL contextPath) {
 		String uri = URI + "/initialize";
-		
+
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call: " + contextPath + uri);
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.APPLICATION_JSON).post(null);
-		assertTrue(response.getStatus()<400);
+		assertTrue(response.getStatus() < 400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
 	}
-	
+
 	@Test
 	@RunAsClient
 	public void getConfiguration(@ArquillianResource URL contextPath) {
 		String uri = URI + "/getConfiguration";
-		
+
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call: " + contextPath + uri);
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.APPLICATION_JSON).post(null);
-		assertTrue(response.getStatus()<400);
+		assertTrue(response.getStatus() < 400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
 	}
@@ -112,12 +113,12 @@ public class AFGBoundaryTest {
 	public void shapeStandard(@ArquillianResource URL contextPath) {
 		String waveform = "sine";
 		String uri = URI + "/setShape/standard/" + waveform;
-		
+
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call: " + contextPath + uri);
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.APPLICATION_JSON).post(null);
-		assertTrue(response.getStatus()<400);
+		assertTrue(response.getStatus() < 400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
 		try {
@@ -126,7 +127,7 @@ public class AFGBoundaryTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// @Ignore
 	@Test
 	@RunAsClient
@@ -134,28 +135,27 @@ public class AFGBoundaryTest {
 		String waveform = "haversine";
 		char segment = 'A';
 		String uri = URI + "/setShape/builtin/" + waveform + "/" + segment;
-		
+
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call: " + contextPath + uri);
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.APPLICATION_JSON).post(null);
-		assertTrue(response.getStatus()<400);
+		assertTrue(response.getStatus() < 400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
 	}
 
-	
 	@Test
 	@RunAsClient
 	public void amplitude(@ArquillianResource URL contextPath) {
 		String amplitude = "5.0";
 		String uri = URI + "/setAmplitude/" + amplitude;
-		
+
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call: " + contextPath + uri);
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.APPLICATION_JSON).post(null);
-		assertTrue(response.getStatus()<400);
+		assertTrue(response.getStatus() < 400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
 	}
@@ -165,12 +165,12 @@ public class AFGBoundaryTest {
 	public void frequency(@ArquillianResource URL contextPath) {
 		String frequency = "5e5";
 		String uri = URI + "/setFrequency/" + frequency;
-		
+
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call: " + contextPath + uri);
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.APPLICATION_JSON).post(null);
-		assertTrue(response.getStatus()<400);
+		assertTrue(response.getStatus() < 400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
 	}
@@ -178,20 +178,20 @@ public class AFGBoundaryTest {
 	@Test
 	@RunAsClient
 	public void sweep(@ArquillianResource URL contextPath) {
-		//	@Path("{mainframe}/{devname}/setSweep/builtin/{start}/{stop}/{points}/{duration}/{amplitude}/{waveform}")
+		// @Path("{mainframe}/{devname}/setSweep/builtin/{start}/{stop}/{points}/{duration}/{amplitude}/{waveform}")
 		String startFreq = "5e3";
 		String endFreq = "5e5";
 		int points = 100;
 		int duration = 10;
 		String amplitude = "5";
 		String waveform = "sine";
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append(URI);
 		sb.append("/setSweep/");
 		sb.append(startFreq);
 		sb.append("/");
-		sb.append(endFreq );
+		sb.append(endFreq);
 		sb.append("/");
 		sb.append(points);
 		sb.append("/");
@@ -201,21 +201,46 @@ public class AFGBoundaryTest {
 		sb.append("/");
 		sb.append(waveform);
 		String uri = sb.toString();
-		
+
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call: " + contextPath + uri);
 		final Response response = client.target(contextPath + uri)
 				.request(MediaType.APPLICATION_JSON).post(null);
-		assertTrue(response.getStatus()<400);
+		assertTrue(response.getStatus() < 400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
-		/*try {
-			Thread.sleep(500000000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
+		/*
+		 * try { Thread.sleep(500000000); } catch (InterruptedException e) {
+		 * e.printStackTrace(); }
+		 */
 	}
 
+	@Test
+	@RunAsClient
+	public void marker(@ArquillianResource URL contextPath) {
+		// @Path("{mainframe}/{devname}/setMarker/{source}/{polarity}")
+		String source = "outp_zero";
+		String polarity = "inv";
 
+		StringBuilder sb = new StringBuilder();
+		sb.append(URI);
+		sb.append("/setMarker/");
+		sb.append(source);
+		sb.append("/");
+		sb.append(polarity);
+		String uri = sb.toString();
+
+		Client client = ClientBuilder.newClient();
+		System.out.println("Call: " + contextPath + uri);
+		final Response response = client.target(contextPath + uri)
+				.request(MediaType.APPLICATION_JSON).post(null);
+		assertTrue(response.getStatus() < 400);
+		String res = response.readEntity(String.class);
+		System.out.println("Call result: " + res);
+		/*
+		 * try { Thread.sleep(500000000); } catch (InterruptedException e) {
+		 * e.printStackTrace(); }
+		 */
+	}
 
 }

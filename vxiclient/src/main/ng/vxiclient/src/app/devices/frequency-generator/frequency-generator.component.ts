@@ -17,7 +17,7 @@ import { FrequencyGeneratorService } from '../../services/frequency-generator.se
   styleUrls: ['./frequency-generator.component.css']
 })
 export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, Device {
-  // Waveform aplitude
+  // Waveform amplitude
   amplitude: number;
   // Waveform frequency
   frequency: number;
@@ -26,14 +26,14 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
 
   // Sweeping
   sweeping: boolean;
-
+  // Sweep start frequency
   sweepStartFrequency: number;
-
+  // Sweep stop frequency
   sweepStopFrequency: number;
-
+  // number of points in sweep
   sweepPoints: number;
-
-  sweepTime: number;
+  // duration of sweep
+  sweepDuration: number;
 
   // Waveform sources
   allowedSources = [ {id: 0, value: 'Standard'}, {id: 1, value: 'Builtin'}, {id: 2, value: 'UserDefined'}];
@@ -80,7 +80,7 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
     this.sweepStartFrequency = 0;
     this.sweepStopFrequency = 15e6;
     this.sweepPoints = 1001;
-    this.sweepTime = 1.05;
+    this.sweepDuration = 1.05;
   }
 
   ngOnInit() {
@@ -142,7 +142,7 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
     const self = this;
     const f: Function = (): Observable<any> => {
       return self.generatorService.setSweep(self.mainframe, self.deviceName, self.sweepStartFrequency,
-        self.sweepStopFrequency, self.sweepPoints, self.sweepTime, self.amplitude,
+        self.sweepStopFrequency, self.sweepPoints, self.sweepDuration, self.amplitude,
         self.selectedStandardWaveformItem.value);
     };
     this.mutexedCall(f);
@@ -155,11 +155,14 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
     }
   }
 
-  onMarkerFeedChange(event: any) {
-    console.log('onMarkerFeedChange: ' + event.value);
+  onMarkerChange(event: any) {
+    console.log('onMarkerChange: ' + event.value);
+    const self = this;
+    const f: Function = (): Observable<any> => {
+      return self.generatorService.setMarker(self.mainframe, self.deviceName, self.selectedMarkerFeedItem.value,
+        self.selectedMarkerPolarityItem.value);
+    };
+    this.mutexedCall(f);
   }
 
-  onMarkerPolarityChange(event: any) {
-    console.log('onMarkerPolarityChange: ' + event.value);
-  }
 }

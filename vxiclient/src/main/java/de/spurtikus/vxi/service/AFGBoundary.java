@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 
 import de.spurtikus.devices.hp.HP1340;
 import de.spurtikus.devices.hp.HP1340.BuiltinWaveForm;
+import de.spurtikus.devices.hp.HP1340.MarkerFeedType;
+import de.spurtikus.devices.hp.HP1340.PolarityType;
 import de.spurtikus.devices.hp.HP1340.StandardWaveForm;
 import de.spurtikus.vxi.Constants;
 
@@ -469,6 +471,80 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		return Response.ok(wv.getValue()).build();
+	}
+
+	/**
+	 * Set sweep.
+	 * 
+	 * @param uriInfo
+	 *            Injected uriInfo (injected by HK2/REST)
+	 * @param mainframe
+	 *            Mainframe to use. Comes from vxiserver.properties, e.g. "mfb".
+	 * @param devname
+	 *            Device to use.
+	 * @param start
+	 *            Start frequency.
+	 * @param start
+	 *            Stop frequency.
+	 * @param points
+	 *            number of points in sweep.
+	 * @param duration
+	 *            sweep duration in seconds.
+	 * @param amplitude
+	 *            sweep amplitude in volts.
+	 * @param waveform
+	 *            Shape of waveform. Example "sine" or "haversine". See
+	 *            {HP1340.BuiltinWaveForm}.
+	 * @return
+	 */
+	@POST
+	@Path("{mainframe}/{devname}/setMarker/{source}/{polarity}")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response setMarker(@Context UriInfo uriInfo,
+			@PathParam("mainframe") String mainframe,
+			@PathParam("devname") String devname,
+			@PathParam("source") String source,
+			@PathParam("polarity") String polarity) {
+		logger.debug("Incoming URI : {}", uriInfo.getPath());
+		logger.debug("Mainframe: {}", mainframe);
+		logger.debug("Device name: {}", devname);
+		logger.debug("source: {}", source);
+		logger.debug("polarity: {}", polarity);
+
+		try {
+			connManager = ConnectionManager.getInstance(this.getClass(),
+					mainframe, devname);
+		} catch (Exception e) {
+			logger.error(MSG_NO_WRAPPER);
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		MarkerFeedType mf;
+		// @formatter:off
+		switch (source.toLowerCase()) {
+		case "outp_zero": mf = MarkerFeedType.OUTPUT_ZERO; break;
+		case "segm": mf = MarkerFeedType.SEGMENT; break;
+		case "sour_rosc": mf = MarkerFeedType.SOURCE_ROSC; break;
+		case "sour_sweep": mf = MarkerFeedType.SOURCE_SWEEP; break;
+		default: mf = MarkerFeedType.OUTPUT_ZERO; break;
+		}
+		PolarityType pol;
+		switch (polarity.toLowerCase()) {
+		case "norm": pol = PolarityType.NORM; break;
+		case "inv": pol = PolarityType.INV; break;
+		default: pol = PolarityType.NORM; break;		
+		}
+		// @formatter:on
+		try {
+			getDevice(mainframe, devname).stop();
+			getDevice(mainframe, devname).setMarker(mf, pol);
+			getDevice(mainframe, devname).start();
+		} catch (Exception e) {
+			logger.error("Error accessing device.");
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.ok(mf.getValue()).build();
 	}
 
 }
