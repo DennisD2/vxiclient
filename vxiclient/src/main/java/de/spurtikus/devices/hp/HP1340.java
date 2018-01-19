@@ -90,26 +90,11 @@ public class HP1340 extends BaseHPDevice {
 	 */
 	private boolean started;
 
-	/**
-	 * Waveform frequency
-	 */
-	private Double frequency;
-
-	/**
-	 * Waveform offset
-	 */
-	private Double offset;
-
-	/**
-	 * Waveform amplitude
-	 */
-	private Double amplitude;
-
-	/**
-	 * Waveform shape
-	 */
-	private StandardWaveForm shape;
-
+	public class config {
+		boolean cal_stat_ac;
+		String arb_dac_sour;
+	}
+	
 	/**
 	 * Standard waveforms
 	 * 
@@ -314,21 +299,33 @@ public class HP1340 extends BaseHPDevice {
 			logger.info("AFG not running.");
 		}
 	}
+	
+	// *RST; *EMC +0;:CAL:STAT:AC 1;:ARB:DAC:SOUR INT;:VOLT:AMPL:UNIT:VOLT V;:ROSC:FREQ:EXT +4.294967296E+007; :ROSC:SOUR INT; GATE:STAT 0;:FREQ:FIX +1.000000000E+004; FSK +1.000000000E+004,+1.500000000E+007; MODE FIX; STAR +0.000000000E+000; STOP +1.500000000E+007;:SWE:COUN +9.90000000E+037; POIN +1.001000000E+003; TIME +1.050000000E+000;:FUNC:SHAP SIN;:RAMP:POL NORM;:VOLT:AMPL +0.00000000E+000; OFFS +0.00000000E+000;:OUTP:LOAD +5.00000000E+001;:ARM:COUN +9.90000000E+037; LAY2:COUN +1.00000000E+000; SLOP POS; SOUR IMM;:MARK:FEED "SEGM"; POL NORM;:FUNC:USER NONE
+
+	public String getConfig()
+			throws Exception {
+		String cmd = "*LRN?";
+		String answer = vxiConnector.send_and_receive(deviceLink, cmd);
+		//System.out.println(answer);
+		
+		String configs[] = answer.split(";");
+		for (String c: configs) {
+			System.out.println(c);
+		}
+		return answer;
+	}
 
 	public void setFrequency(Double frequency) throws Exception {
-		this.frequency = frequency;
 		String cmd = "SOUR:FREQ:FIX " + Double.toString(frequency) + ";";
 		vxiConnector.send(deviceLink, cmd);
 	}
 
 	public void setOffset(Double offset) throws Exception {
-		this.offset = offset;
 		String cmd = "SOUR:VOLT:OFFS " + Double.toString(offset) + "V";
 		vxiConnector.send(deviceLink, cmd);
 	}
 
 	public void setAmplitude(Double amplitude) throws Exception {
-		this.amplitude = amplitude;
 		String cmd = "SOUR:VOLT:LEV:IMM:AMPL " + Double.toString(amplitude)
 				+ "V;";
 		vxiConnector.send(deviceLink, cmd);
@@ -342,8 +339,6 @@ public class HP1340 extends BaseHPDevice {
 	 * @throws Exception
 	 */
 	public void setShape(StandardWaveForm shape) throws Exception {
-		this.shape = shape;
-
 		switch (shape) {
 		case DC:
 		case SINE:
@@ -710,9 +705,8 @@ public class HP1340 extends BaseHPDevice {
 	 * @throws Exception
 	 */
 	public void setSweep(double startFrequency, double stopFrequency,
-			int numPoints, int time, double amplitude,
+			int numPoints, double time, double amplitude,
 			StandardWaveForm waveform) throws Exception {
-		this.amplitude = amplitude;
 		String shape = waveform.getValue();
 		String cmd = "SOUR:FREQ:MODE SWE;";
 		vxiConnector.send(deviceLink, cmd);
@@ -722,7 +716,7 @@ public class HP1340 extends BaseHPDevice {
 		vxiConnector.send(deviceLink, cmd);
 		cmd = ":SOUR:SWE:POIN " + numPoints + ";";
 		vxiConnector.send(deviceLink, cmd);
-		cmd = ":SOUR:SWE:TIME " + time + ";";
+		cmd = ":SOUR:SWE:TIME " + Double.toString(time) + ";";
 		vxiConnector.send(deviceLink, cmd);
 		cmd = ":SOUR:FUNC:SHAP " + shape + ";";
 		vxiConnector.send(deviceLink, cmd);
@@ -744,5 +738,5 @@ public class HP1340 extends BaseHPDevice {
 		cmd = "SOUR:MARK:POL " + polarity.getValue();
 		vxiConnector.send(deviceLink, cmd);
 	}
-	
+		
 }

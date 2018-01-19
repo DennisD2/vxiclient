@@ -14,7 +14,22 @@ export class FrequencyGeneratorService extends BaseService {
     super(http, configService);
   }
 
-  getMeasurement(mainframe: string, deviceName: string, channel: number): Observable<number> {
+  public initialize(mainframe: string, deviceName: string): Observable<string> {
+    const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
+    console.log('vxi.initialize:' + deviceName );
+
+    const dataUrl =  serviceUrl + 'initialize';
+    console.log(dataUrl);
+
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
+
+    return this.http.post(dataUrl, null, options)
+      .map((response) => { console.log(response.text()); return response.text() as string; } )
+      .catch(this.handleError);
+  }
+
+  public getMeasurement(mainframe: string, deviceName: string, channel: number): Observable<number> {
     return null;
   }
 

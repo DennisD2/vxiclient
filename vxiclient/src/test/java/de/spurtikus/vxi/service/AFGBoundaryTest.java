@@ -78,6 +78,34 @@ public class AFGBoundaryTest {
 		assertEquals("HEWLETT-PACKARD,E1340A,0,A.01.02", res);
 	}
 
+	@Test
+	@RunAsClient
+	public void initialize(@ArquillianResource URL contextPath) {
+		String uri = URI + "/initialize";
+		
+		Client client = ClientBuilder.newClient();
+		System.out.println("Call: " + contextPath + uri);
+		final Response response = client.target(contextPath + uri)
+				.request(MediaType.APPLICATION_JSON).post(null);
+		assertTrue(response.getStatus()<400);
+		String res = response.readEntity(String.class);
+		System.out.println("Call result: " + res);
+	}
+	
+	@Test
+	@RunAsClient
+	public void getConfiguration(@ArquillianResource URL contextPath) {
+		String uri = URI + "/getConfiguration";
+		
+		Client client = ClientBuilder.newClient();
+		System.out.println("Call: " + contextPath + uri);
+		final Response response = client.target(contextPath + uri)
+				.request(MediaType.APPLICATION_JSON).post(null);
+		assertTrue(response.getStatus()<400);
+		String res = response.readEntity(String.class);
+		System.out.println("Call result: " + res);
+	}
+
 	// @Ignore
 	@Test
 	@RunAsClient
@@ -92,11 +120,11 @@ public class AFGBoundaryTest {
 		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
-		/*try {
+		try {
 			Thread.sleep(500000000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 	
 	// @Ignore
@@ -145,11 +173,6 @@ public class AFGBoundaryTest {
 		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
-		try {
-			Thread.sleep(500000000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Test

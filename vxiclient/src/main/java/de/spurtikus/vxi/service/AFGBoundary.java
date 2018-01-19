@@ -34,6 +34,7 @@ import de.spurtikus.vxi.Constants;
  */
 @Path("/" + Constants.URL_AFG)
 public class AFGBoundary extends AbstractBoundary<HP1340> {
+	private static final String MSG_NO_WRAPPER = "Cannot get wrapper instance. This is usually an initialization problem.";
 	private Logger logger = LoggerFactory.getLogger(AFGBoundary.class);
 
 	public AFGBoundary() {
@@ -67,8 +68,7 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 			connManager = ConnectionManager.getInstance(this.getClass(),
 					mainframe, devname);
 		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
+			logger.error(MSG_NO_WRAPPER);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -86,6 +86,85 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 
 		return Response.ok(answer).build();
 	}
+
+	/**
+	 * Initialize device.
+	 * 
+	 * @param uriInfo
+	 *            Injected uriInfo (injected by HK2/REST)
+	 * @param mainframe
+	 *            Mainframe to use. Comes from vxiserver.properties, e.g. "mfb".
+	 * @param devname
+	 *            Device to use.
+	 * @return
+	 */
+	@POST
+	@Path("{mainframe}/{devname}/initialize")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response initialize(@Context UriInfo uriInfo,
+			@PathParam("mainframe") String mainframe,
+			@PathParam("devname") String devname) {
+		logger.debug("Incoming URI : {}", uriInfo.getPath());
+		logger.debug("Mainframe: {}", mainframe);
+		logger.debug("Device name: {}", devname);
+
+		try {
+			connManager = ConnectionManager.getInstance(this.getClass(),
+					mainframe, devname);
+		} catch (Exception e) {
+			logger.error(MSG_NO_WRAPPER);
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		try {
+			getDevice(mainframe, devname).initialize();
+		} catch (Exception e) {
+			logger.error("Error accessing device.");
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.ok("done").build();
+	}
+	
+	/**
+	 * getConfiguration.
+	 * 
+	 * @param uriInfo
+	 *            Injected uriInfo (injected by HK2/REST)
+	 * @param mainframe
+	 *            Mainframe to use. Comes from vxiserver.properties, e.g. "mfb".
+	 * @param devname
+	 *            Device to use.
+	 * @return
+	 */
+	@POST
+	@Path("{mainframe}/{devname}/getConfiguration")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getConfiguration(@Context UriInfo uriInfo,
+			@PathParam("mainframe") String mainframe,
+			@PathParam("devname") String devname) {
+		logger.debug("Incoming URI : {}", uriInfo.getPath());
+		logger.debug("Mainframe: {}", mainframe);
+		logger.debug("Device name: {}", devname);
+
+		try {
+			connManager = ConnectionManager.getInstance(this.getClass(),
+					mainframe, devname);
+		} catch (Exception e) {
+			logger.error(MSG_NO_WRAPPER);
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		String answer = "";
+		try {
+			answer = getDevice(mainframe, devname).getConfig();
+		} catch (Exception e) {
+			logger.error("Error accessing device.");
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.ok(answer).build();
+	}
+
 
 	/**
 	 * Set amplitude.
@@ -117,16 +196,13 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 			connManager = ConnectionManager.getInstance(this.getClass(),
 					mainframe, devname);
 		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
+			logger.error(MSG_NO_WRAPPER);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		try {
 			getDevice(mainframe, devname).stop();
-
 			getDevice(mainframe, devname).setAmplitude(amplitude);
-
 			getDevice(mainframe, devname).start();
 		} catch (Exception e) {
 			logger.error("Error accessing device.");
@@ -166,16 +242,13 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 			connManager = ConnectionManager.getInstance(this.getClass(),
 					mainframe, devname);
 		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
+			logger.error(MSG_NO_WRAPPER);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		try {
 			getDevice(mainframe, devname).stop();
-
 			getDevice(mainframe, devname).setFrequency(frequency);
-
 			getDevice(mainframe, devname).start();
 		} catch (Exception e) {
 			logger.error("Error accessing device.");
@@ -215,8 +288,7 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 			connManager = ConnectionManager.getInstance(this.getClass(),
 					mainframe, devname);
 		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
+			logger.error(MSG_NO_WRAPPER);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -237,9 +309,7 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 		// @formatter:on
 		try {
 			getDevice(mainframe, devname).stop();
-
 			getDevice(mainframe, devname).setShape(wv);
-
 			getDevice(mainframe, devname).start();
 		} catch (Exception e) {
 			logger.error("Error accessing device.");
@@ -261,8 +331,7 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 	 *            Shape of waveform. Example "sine" or "haversine". See
 	 *            {HP1340.BuiltinWaveForm}.
 	 * @param segment
-	 *            Target segment ('A'..'D').
-	 *            {HP1340.StandardWaveForm}.
+	 *            Target segment ('A'..'D'). {HP1340.StandardWaveForm}.
 	 * @return
 	 */
 	@POST
@@ -283,8 +352,7 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 			connManager = ConnectionManager.getInstance(this.getClass(),
 					mainframe, devname);
 		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
+			logger.error(MSG_NO_WRAPPER);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -312,9 +380,7 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 		// @formatter:on
 		try {
 			getDevice(mainframe, devname).stop();
-
 			getDevice(mainframe, devname).setShape(wv, segment);
-
 			getDevice(mainframe, devname).start();
 		} catch (Exception e) {
 			logger.error("Error accessing device.");
@@ -322,7 +388,7 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 		}
 		return Response.ok(wv.getValue()).build();
 	}
-	
+
 	/**
 	 * Set sweep.
 	 * 
@@ -333,15 +399,15 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 	 * @param devname
 	 *            Device to use.
 	 * @param start
-	 * 			  Start frequency.
+	 *            Start frequency.
 	 * @param start
-	 * 			  Stop frequency.
+	 *            Stop frequency.
 	 * @param points
-	 * 			  number of points in sweep.
+	 *            number of points in sweep.
 	 * @param duration
-	 * 			  sweep duration in seconds.
+	 *            sweep duration in seconds.
 	 * @param amplitude
-	 * 			  sweep amplitude in volts.
+	 *            sweep amplitude in volts.
 	 * @param waveform
 	 *            Shape of waveform. Example "sine" or "haversine". See
 	 *            {HP1340.BuiltinWaveForm}.
@@ -357,7 +423,7 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 			@PathParam("start") double startFrequency,
 			@PathParam("stop") double stopFrequency,
 			@PathParam("points") int points,
-			@PathParam("duration") int duration,
+			@PathParam("duration") double duration,
 			@PathParam("amplitude") double amplitude,
 			@PathParam("waveform") String waveform) {
 		logger.debug("Incoming URI : {}", uriInfo.getPath());
@@ -374,8 +440,7 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 			connManager = ConnectionManager.getInstance(this.getClass(),
 					mainframe, devname);
 		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
+			logger.error(MSG_NO_WRAPPER);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -396,9 +461,8 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 		// @formatter:on
 		try {
 			getDevice(mainframe, devname).stop();
-
-			getDevice(mainframe, devname).setSweep(startFrequency, stopFrequency, points, duration, amplitude, wv);
-
+			getDevice(mainframe, devname).setSweep(startFrequency,
+					stopFrequency, points, duration, amplitude, wv);
 			getDevice(mainframe, devname).start();
 		} catch (Exception e) {
 			logger.error("Error accessing device.");
@@ -406,6 +470,5 @@ public class AFGBoundary extends AbstractBoundary<HP1340> {
 		}
 		return Response.ok(wv.getValue()).build();
 	}
-
 
 }

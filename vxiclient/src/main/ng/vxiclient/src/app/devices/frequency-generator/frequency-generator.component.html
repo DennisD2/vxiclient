@@ -16,10 +16,19 @@
    <!-- config inputs -->
    <div id="config" *ngIf="active">
 
-    <label for="afg_waveform_source">Waveform source:</label>
-    <select name="afg_waveform_source" [(ngModel)]="selectedSourceItem">
-      <option *ngFor="let m of allowedSources" [ngValue]="m">{{m.value}}</option>
-    </select> 
+    <button (click)="onReset()" *ngIf="active">
+      <md-icon>update</md-icon>
+      <span>Reset</span>
+    </button>
+
+    <br>
+
+    <span *ngIf="!sweeping">
+      <label for="afg_waveform_source">Waveform source:</label>
+      <select name="afg_waveform_source" [(ngModel)]="selectedSourceItem">
+        <option *ngFor="let m of allowedSources" [ngValue]="m">{{m.value}}</option>
+      </select> 
+    </span>
 
     <div id="afg_std_waveform_div" style="display: inline;" *ngIf="selectedSourceItem.value=='Standard'">
       <label for="afg_std_waveform">Waveform:</label>
@@ -28,7 +37,7 @@
       </select> 
      </div>
 
-    <div id="afg_builtin_waveform_div" style="display: inline;" *ngIf="selectedSourceItem.value=='Builtin'">
+    <div id="afg_builtin_waveform_div" style="display: inline;" *ngIf="selectedSourceItem.value=='Builtin' && !sweeping">
       <label for="afg_builtin_waveform">Waveform:</label>
       <select name="afg_builtin_waveform" [(ngModel)]="selectedBuiltinWaveformItem" (ngModelChange)="onBuiltinShapeChange($event)">
         <option *ngFor="let m of builtinWaveforms" [ngValue]="m">{{m.value}}</option>
@@ -46,22 +55,22 @@
     <br> 
     <!-- Sweeping -->
     <label for="sweeponoff">Sweeping</label>
-    <input id="sweeponoff" type="checkbox" [(ngModel)]="sweeping">
+    <input id="sweeponoff" type="checkbox" [(ngModel)]="sweeping" (ngModelChange)="onSweepValueChange($event)">
 
     <div id="div_sweep" style="display: inline;" *ngIf="sweeping">
 
       <label for="afg_sweep_start_frequency">Start frequency:</label>
-      <input type="text" id="afg_sweep_start_frequency" [(ngModel)]="sweepStartFrequency" (ngModelChange)="onSweepStartFrequencyChange($event)"> 
+      <input type="text" id="afg_sweep_start_frequency" [(ngModel)]="sweepStartFrequency" (ngModelChange)="onSweepChange($event)"> 
       
       <label for="afg_sweep_start_frequency">Stop Frequency:</label>
-      <input type="text" id="afg_sweep_stop_frequency" [(ngModel)]="sweepStopFrequency" (ngModelChange)="onSweepStopFrequencyChange($event)">
+      <input type="text" id="afg_sweep_stop_frequency" [(ngModel)]="sweepStopFrequency" (ngModelChange)="onSweepChange($event)">
       
       <br> 
       <label for="afg_sweep_points">Points:</label>
-      <input type="text" id="afg_sweep_points"  [(ngModel)]="sweepPoints" (ngModelChange)="onSweepPointsChange($event)"> 
+      <input type="text" id="afg_sweep_points"  [(ngModel)]="sweepPoints" (ngModelChange)="onSweepChange($event)"> 
       
       <label for="afg_sweep_time">Time [s]:</label>
-      <input type="text" id="afg_sweep_time" value="10"  [(ngModel)]="sweepTime" (ngModelChange)="onSweepTimeChange($event)">
+      <input type="text" id="afg_sweep_time" value="10"  [(ngModel)]="sweepTime" (ngModelChange)="onSweepChange($event)">
 
       <button (click)="onSweepChange()">
         <md-icon>update</md-icon>

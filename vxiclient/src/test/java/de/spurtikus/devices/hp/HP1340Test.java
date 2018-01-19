@@ -91,6 +91,12 @@ public class HP1340Test {
 		assertEquals(4095, dac);
 	}
 
+	@Test
+	public void getConfiguration() throws Exception {
+		String answer = testee.getConfig();
+		System.out.println(answer);
+	}
+
 	@Ignore
 	@Test
 	public void standardWaveForms() throws Exception {
@@ -235,6 +241,8 @@ public class HP1340Test {
 
 		testee.start();
 	}
+	
+	
 
 	@Ignore
 	@Test
@@ -324,7 +332,7 @@ public class HP1340Test {
 		testee.stop();
 	}
 
-	//@Ignore
+	@Ignore
 	@Test
 	public void userDefinedWaveForms_ArbBlock() throws Exception {
 		double maxValue = 5.0; // maximum allowed y value (to prevent data

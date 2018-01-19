@@ -18,22 +18,22 @@ import { FrequencyGeneratorService } from '../../services/frequency-generator.se
 })
 export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, Device {
   // Waveform aplitude
-  amplitude = 1.0;
+  amplitude: number;
   // Waveform frequency
-  frequency = 1E3;
+  frequency: number;
   // Segment value
-  segment = 'A';
+  segment: string;
 
   // Sweeping
-  sweeping = false;
+  sweeping: boolean;
 
-  sweepStartFrequency = 1E3;
+  sweepStartFrequency: number;
 
-  sweepStopFrequency = 1E5;
+  sweepStopFrequency: number;
 
-  sweepPoints = 100;
+  sweepPoints: number;
 
-  sweepTime = 5;
+  sweepTime: number;
 
   // Waveform sources
   allowedSources = [ {id: 0, value: 'Standard'}, {id: 1, value: 'Builtin'}, {id: 2, value: 'UserDefined'}];
@@ -42,7 +42,7 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
   // Standard Waveform types
   standardWaveforms = [ {id: 0, value: 'Ramp'}, {id: 1, value: 'Square'}, {id: 2, value: 'Sine'},
     {id: 4, value: 'DC'}, {id: 5, value: 'Triangle'}];
-  selectedStandardWaveformItem = this.standardWaveforms[0];
+  selectedStandardWaveformItem = this.standardWaveforms[2];
 
   // Builtin Waveform types
   builtinWaveforms = [ {id: 0, value: 'Harmonic chord 3rd,4th,5th'}, {id: 1, value: 'Haversine'}, {id: 2, value: 'Ramp falling'},
@@ -67,14 +67,34 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
       private generatorService: FrequencyGeneratorService) {
       super(appRegistry);
       this.resultDataType = 'none';
+      this.reset();
+  }
+
+  reset() {
+    this.selectedSourceItem = this.allowedSources[0];
+    this.selectedStandardWaveformItem = this.standardWaveforms[2];
+    this.frequency = 1e4;
+    this.amplitude = 0;
+    this.segment = 'A';
+    this.sweeping = false;
+    this.sweepStartFrequency = 0;
+    this.sweepStopFrequency = 15e6;
+    this.sweepPoints = 1001;
+    this.sweepTime = 1.05;
   }
 
   ngOnInit() {
     this.start();
   }
 
-  restart() {
+  onReset() {
     console.log('restart');
+    this.reset();
+    const self = this;
+    const f: Function = (): Observable<any> => {
+      return self.generatorService.initialize(self.mainframe, self.deviceName);
+    };
+    this.mutexedCall(f);
   }
 
   onStdShapeChange(event: any) {
@@ -113,6 +133,10 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
     this.mutexedCall(f);
   }
 
+  onShapeChange() {
+    console.log('onShapeChange');
+  }
+
   onSweepChange() {
     console.log('onSweepChange');
     const self = this;
@@ -123,11 +147,12 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
     };
     this.mutexedCall(f);
   }
-  onSweepStartFrequencyChange(event: any) {
-    console.log('onSweepStartFrequencyChange: ' + event.value);
-  }
-  onSweepStopFrequencyChange(event: any) {
-    console.log('onSweepStopFrequencyChange: ' + event.value);
+
+  onSweepValueChange() {
+    // flag sweeping has changed, allow standard waveforms only.
+    if (this.sweeping) {
+      this.selectedSourceItem = this.allowedSources[0];
+    }
   }
 
   onMarkerFeedChange(event: any) {
