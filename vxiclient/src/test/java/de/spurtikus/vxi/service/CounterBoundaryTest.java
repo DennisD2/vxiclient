@@ -121,7 +121,7 @@ public class CounterBoundaryTest {
 	@Test
 	@RunAsClient
 	public void setLowPassFilter(@ArquillianResource URL contextPath) {
-		String onoff = "true";
+		String onoff = "false";
 		String uri = URI + "/lowPassFilter/" + onoff;
 
 		Client client = ClientBuilder.newClient();

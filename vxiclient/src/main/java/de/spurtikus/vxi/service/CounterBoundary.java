@@ -32,6 +32,7 @@ import de.spurtikus.vxi.Constants;
  */
 @Path("/" + Constants.URL_COUNTER)
 public class CounterBoundary extends AbstractBoundary<HP1333> {
+	private static final String MSG_NO_WRAPPER = "Cannot get wrapper instance. This is usually an initialization problem.";
 	private Logger logger = LoggerFactory.getLogger(CounterBoundary.class);
 
 	public CounterBoundary() {
@@ -65,8 +66,7 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 			connManager = ConnectionManager.getInstance(this.getClass(),
 					mainframe, devname);
 		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
+			logger.error(MSG_NO_WRAPPER);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -94,7 +94,8 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 	 * @param channel
 	 *            1,2 or 3.
 	 * @param mode
-	 *            See {CounterConfiguration}. Mode can be FREQ, NWID, PER, RAT, TINT, TOT.
+	 *            See {CounterConfiguration}. Mode can be FREQ, NWID, PER, RAT,
+	 *            TINT, TOT.
 	 * @return
 	 */
 	@POST
@@ -116,8 +117,7 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 			connManager = ConnectionManager.getInstance(this.getClass(),
 					mainframe, devname);
 		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
+			logger.error(MSG_NO_WRAPPER);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -148,7 +148,7 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 
 		try {
 			getDevice(mainframe, devname).initialize();
-			getDevice(mainframe, devname).configure(channel, c);
+			getDevice(mainframe, devname).configureSense(channel, c);
 		} catch (Exception e) {
 			logger.error("Error accessing device.");
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
@@ -185,8 +185,7 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 			connManager = ConnectionManager.getInstance(this.getClass(),
 					mainframe, devname);
 		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
+			logger.error(MSG_NO_WRAPPER);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -228,8 +227,7 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 			connManager = ConnectionManager.getInstance(this.getClass(),
 					mainframe, devname);
 		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
+			logger.error(MSG_NO_WRAPPER);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -241,7 +239,7 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 		}
 		return Response.ok("done").build();
 	}
-	
+
 	/**
 	 * Set impedance.
 	 * 
@@ -249,8 +247,9 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 	 * @param mainframe
 	 * @param devname
 	 * @param impedance
-	 *            "MIN" or "MAX". Device allows also a "DEF <number>" but the boundary does not
-	 *            implement that. MIN is often 50 Ohms, MAX is often >= 1MOhms.
+	 *            "MIN" or "MAX". Device allows also a "DEF <number>" but the
+	 *            boundary does not implement that. MIN is often 50 Ohms, MAX is
+	 *            often >= 1MOhms.
 	 * @return
 	 */
 	@POST
@@ -270,12 +269,12 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 			connManager = ConnectionManager.getInstance(this.getClass(),
 					mainframe, devname);
 		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
+			logger.error(MSG_NO_WRAPPER);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		Impedance i = (impedance.toLowerCase().equals("min"))? Impedance.MIN : Impedance.MAX;
+		Impedance i = (impedance.toLowerCase().equals("min")) ? Impedance.MIN
+				: Impedance.MAX;
 		try {
 			getDevice(mainframe, devname).setImpedance(i);
 		} catch (Exception e) {
@@ -316,8 +315,7 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 			connManager = ConnectionManager.getInstance(this.getClass(),
 					mainframe, devname);
 		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
+			logger.error(MSG_NO_WRAPPER);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -329,8 +327,7 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 		}
 		return Response.ok("done").build();
 	}
-	
-	
+
 	/**
 	 * Set attenuation.
 	 * 
@@ -338,8 +335,9 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 	 * @param mainframe
 	 * @param devname
 	 * @param atten
-	 *            "MIN" or "MAX". Device allows also a "DEF <number>" but the boundary does not
-	 *            implement that. MIN is no attenuation, MAX is 20dB.
+	 *            "MIN" or "MAX". Device allows also a "DEF <number>" but the
+	 *            boundary does not implement that. MIN is no attenuation, MAX
+	 *            is 20dB.
 	 * @return
 	 */
 	@POST
@@ -359,12 +357,12 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 			connManager = ConnectionManager.getInstance(this.getClass(),
 					mainframe, devname);
 		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
+			logger.error(MSG_NO_WRAPPER);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		Attenuation a = (atten.toLowerCase().equals("min"))? Attenuation.MIN : Attenuation.MAX;
+		Attenuation a = (atten.toLowerCase().equals("min")) ? Attenuation.MIN
+				: Attenuation.MAX;
 		try {
 			getDevice(mainframe, devname).setAttenuation(a);
 		} catch (Exception e) {
@@ -373,7 +371,6 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 		}
 		return Response.ok("done").build();
 	}
-
 
 	/**
 	 * Do a measurement.
@@ -402,8 +399,7 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 			connManager = ConnectionManager.getInstance(this.getClass(),
 					mainframe, devname);
 		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
+			logger.error(MSG_NO_WRAPPER);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 

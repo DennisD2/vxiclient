@@ -64,8 +64,8 @@ public class HP1333 extends BaseHPDevice {
 		POS, NEG
 	}
 
-	private Double apertures[] = { 65.536, 32.768, 16.384, 8.192, 4.096, 2.048, 1.024,
-			.512, .256, .128, .064, .032, .016, .008, .004, .002 };
+	private Double apertures[] = { 65.536, 32.768, 16.384, 8.192, 4.096, 2.048,
+			1.024, .512, .256, .128, .064, .032, .016, .008, .004, .002 };
 	/**
 	 * True if Counter is started.
 	 */
@@ -118,7 +118,7 @@ public class HP1333 extends BaseHPDevice {
 	 *            mode
 	 * @throws Exception
 	 */
-	public void configure(int channel, CounterConfiguration configuration)
+	public void configureSense(int channel, CounterConfiguration configuration)
 			throws Exception {
 		if (!validateChannel(channel, false)) {
 			throw new IOException("Invalid channel");
@@ -127,6 +127,28 @@ public class HP1333 extends BaseHPDevice {
 		vxiConnector.send(deviceLink,
 				"SENS" + channel + ":FUNC:" + configuration.toString());
 	}
+	
+	/**
+	 * Configures channel mode.
+	 * 
+	 * TODO: SENS or CONF ?
+	 * 
+	 * @param channel
+	 *            channel to control
+	 * @param configuration
+	 *            mode
+	 * @throws Exception
+	 */
+	public void configureConf(int channel, CounterConfiguration configuration)
+			throws Exception {
+		if (!validateChannel(channel, false)) {
+			throw new IOException("Invalid channel");
+		}
+		// SENS or CONF?
+		vxiConnector.send(deviceLink,
+				"SENS" + channel + ":FUNC:" + configuration.toString());
+	}
+
 
 	/**
 	 * Controls low pass filter. Affects channel 1&2.
@@ -304,13 +326,19 @@ public class HP1333 extends BaseHPDevice {
 	 * @return measured value.
 	 * @throws Exception
 	 */
-	/*
-	 * public double measure(int channel, CounterConfiguration configuration)
-	 * throws Exception { if (!validateChannel(channel, true)) { throw new
-	 * IOException("Invalid channel"); } // TODO: for the "PER" case, see page
-	 * user manual 31. there are additional args for // period and resolution.
-	 * String s = vxiConnector.send_and_receive(deviceLink, "MEAS" + channel +
-	 * ":" + configuration + "?"); double v = Double.parseDouble(s); return v; }
-	 */
+
+	public double measure(int channel, CounterConfiguration configuration)
+			throws Exception {
+		if (!validateChannel(channel, true)) {
+			throw new IOException("Invalid channel");
+		}
+		// TODO: for the "PER" case, see page
+		// user manual 31. there are additional args for // period and
+		// resolution.
+		String s = vxiConnector.send_and_receive(deviceLink,
+				"MEAS" + channel + ":" + configuration + "?");
+		double v = Double.parseDouble(s);
+		return v;
+	}
 
 }
