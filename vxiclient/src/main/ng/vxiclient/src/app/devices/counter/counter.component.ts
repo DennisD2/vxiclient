@@ -75,9 +75,9 @@ export class CounterComponent  extends BaseDevice implements OnInit, Device {
         });
         release();
     });
-    // Create Channel-line data
-    const channelName = '' + this.channel;
-    return {channelName: this.channelResult };
+    const channelName: string = '' + this.channel;
+    const cx = { [channelName]: this.channelResult };
+    return cx;
   }
 
   onChangeMode(event: any) {
