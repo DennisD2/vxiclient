@@ -127,7 +127,43 @@ public class HP1333Test {
 		
 		System.out.println(answer);
 	}
+	
+	@Test
+	public void ratioMeasurement() throws Exception {
+		testee.initialize();
+		int channel = 1;
+		int otherChannel = 2;
+		
+		CounterConfiguration configuration = CounterConfiguration.RAT;
+		testee.configureSense(channel, configuration);
 
+		double level = 1.0;
+		testee.setEventLevel(channel, level);
+		testee.setEventLevel(otherChannel, level);
+
+		Coupling coupling = Coupling.DC;
+		testee.setCoupling(coupling );
+				
+		double answer;
+		answer = testee.measureRatio(channel);
+		
+		System.out.println(answer);
+	}
+
+	@Test
+	public void periodAverageMeasurement() throws Exception {
+		// page 31
+	}
+	
+	@Test
+	public void pulseWidthMeasurement() throws Exception {
+		// page 32
+	}
+	
+	@Test
+	public void timeIntervalMeasurement() throws Exception {
+		// page 34
+	}
 
 	@Ignore
 	@Test

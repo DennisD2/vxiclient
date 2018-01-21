@@ -54,7 +54,6 @@ export class CounterComponent  extends BaseDevice implements OnInit, Device {
   }
 
   ngOnInit() {
-    this.start();
   }
 
   doMeasurementCallback(): any {

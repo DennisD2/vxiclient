@@ -64,7 +64,6 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
   }
 
   ngOnInit() {
-    this.start();
   }
 
   doMeasurementCallback(): any {

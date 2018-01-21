@@ -127,7 +127,7 @@ public class HP1333 extends BaseHPDevice {
 		vxiConnector.send(deviceLink,
 				"SENS" + channel + ":FUNC:" + configuration.toString());
 	}
-	
+
 	/**
 	 * Configures channel mode.
 	 * 
@@ -148,7 +148,6 @@ public class HP1333 extends BaseHPDevice {
 		vxiConnector.send(deviceLink,
 				"SENS" + channel + ":FUNC:" + configuration.toString());
 	}
-
 
 	/**
 	 * Controls low pass filter. Affects channel 1&2.
@@ -326,7 +325,6 @@ public class HP1333 extends BaseHPDevice {
 	 * @return measured value.
 	 * @throws Exception
 	 */
-
 	public double measure(int channel, CounterConfiguration configuration)
 			throws Exception {
 		if (!validateChannel(channel, true)) {
@@ -337,6 +335,24 @@ public class HP1333 extends BaseHPDevice {
 		// resolution.
 		String s = vxiConnector.send_and_receive(deviceLink,
 				"MEAS" + channel + ":" + configuration + "?");
+		double v = Double.parseDouble(s);
+		return v;
+	}
+
+	/**
+	 * Execute ratio measurement between two channels. 
+	 * 
+	 * @param numeratorChannel
+	 *            This channel will be used as the numerator in the ratio calculation.
+	 * @return ratio measured.
+	 * @throws Exception
+	 */
+	public double measureRatio(int numeratorChannel) throws Exception {
+		if (!validateChannel(numeratorChannel, true)) {
+			throw new IOException("Invalid channel");
+		}
+		String s = vxiConnector.send_and_receive(deviceLink,
+				"MEAS" + numeratorChannel + ":RAT?");
 		double v = Double.parseDouble(s);
 		return v;
 	}

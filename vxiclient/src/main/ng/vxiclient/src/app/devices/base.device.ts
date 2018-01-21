@@ -11,32 +11,40 @@ export class BaseDevice implements Device {
   @Input('deviceName') deviceName = 'no name';
   @Input('mainframe') mainframe = 'no mainframe';
 
-  active: boolean;
-  resultDataType = 'no type';
+  protected active: boolean;
+  protected resultDataType = 'no type';
 
   constructor(protected appRegistry: AppRegistry) { }
 
-  start() {
-    console.log('start');
-    this.appRegistry.subscribeDevice(this);
-    this.active = true;
+  public isActive(): boolean {
+    return this.active;
   }
 
-  stop() {
+  public setActive(active: boolean)  {
+    this.active = active;
+  }
+
+  public start() {
+    console.log('start');
+    this.appRegistry.subscribeDevice(this);
+    this.active = false;
+  }
+
+  public stop() {
     console.log('stop');
     this.appRegistry.unsubscribeDevice(this);
     this.active = false;
   }
 
-  getName() {
+  public getName() {
     return this.deviceName;
   }
 
-  getResultDataType() {
+  public getResultDataType() {
     return this.resultDataType;
   }
 
-  doMeasurementCallback(): any {
+  public doMeasurementCallback(): any {
     console.log('doMeasurement');
   }
 
@@ -45,7 +53,7 @@ export class BaseDevice implements Device {
    *
    * @param f method to surround with mutex and resolving aspect.
    */
-  mutexedCall( f: Function ) {
+  protected mutexedCall( f: Function ) {
     console.log('Mutex:enter');
 
     BaseDevice.mutex.acquire().then(function(release) {

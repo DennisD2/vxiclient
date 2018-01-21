@@ -34,7 +34,6 @@ export class DigitalIOComponent extends BaseDevice implements OnInit, Device {
       this.data2.push(false);
       this.data3.push(false);
     }
-    this.start();
   }
 
   onSwitchChange(byte: number, bit: number) {

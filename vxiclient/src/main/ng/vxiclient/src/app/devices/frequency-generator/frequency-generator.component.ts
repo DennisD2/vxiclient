@@ -88,7 +88,6 @@ export class FrequencyGeneratorComponent extends BaseDevice implements OnInit, D
   }
 
   ngOnInit() {
-    this.start();
   }
 
   onReset() {

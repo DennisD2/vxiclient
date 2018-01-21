@@ -99,6 +99,7 @@ export class AppRegistry {
    */
   roll() {
     this.devices.map((d) => {
+      if (d.isActive())
       console.log('measure device: ' + d.getName());
       const data = d.doMeasurementCallback();
       if (data !== undefined) {
