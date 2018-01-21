@@ -19,11 +19,11 @@ export class AppRegistry {
    */
   subscribeView( view: View ) {
     if (this.views.includes(view)) {
-      console.log('view already subscribed: ' +  view.getName());
+      console.log('View already subscribed: ' +  view.getName());
       return;
     }
     this.views.push(view);
-    console.log('view subscribed: ' +  view.getName());
+    console.log('View subscribed: ' +  view.getName());
   }
 
   /**
@@ -33,11 +33,11 @@ export class AppRegistry {
    */
   subscribeDevice( dev: Device ) {
     if (this.devices.includes(dev)) {
-      console.log('device already subscribed: ' +  dev.getName());
+      console.log('Device already subscribed: ' +  dev.getName());
       return;
     }
     this.devices.push(dev);
-    console.log('device subscribed: ' +  dev.getName());
+    console.log('Device subscribed: ' +  dev.getName());
   }
 
   /**
@@ -47,14 +47,14 @@ export class AppRegistry {
    */
   unsubscribeView( view: View ) {
     if (!this.views.includes(view)) {
-      console.log('view not subscribed: ' +  view.getName());
+      console.log('View not subscribed: ' +  view.getName());
       return;
     }
     const index = this.views.indexOf(view, 0);
     if (index > -1) {
       this.views.splice(index, 1);
     }
-    console.log('view unsubscribed: ' +  view.getName());
+    console.log('View unsubscribed: ' +  view.getName());
   }
 
   /**
@@ -64,14 +64,14 @@ export class AppRegistry {
    */
   unsubscribeDevice( dev: Device ) {
     if (!this.devices.includes(dev)) {
-      console.log('device not subscribed: ' +  dev.getName());
+      console.log('Device not subscribed: ' +  dev.getName());
       return;
     }
     const index = this.devices.indexOf(dev, 0);
     if (index > -1) {
       this.devices.splice(index, 1);
     }
-    console.log('device unsubscribed: ' +  dev.getName());
+    console.log('Device unsubscribed: ' +  dev.getName());
   }
 
   /**
@@ -84,7 +84,7 @@ export class AppRegistry {
     let published = 0;
     this.views.map((v) => {
       if (v.getAcceptedDataType() === dataType || v.getAcceptedDataType() === 'any') {
-        console.log('publish data type: ' + dataType + ' to view: ' + v.getName());
+        console.log('Publish data type: ' + dataType + ' to view: ' + v.getName());
         v.newSampleCallback(data);
         published++;
       }
@@ -98,14 +98,14 @@ export class AppRegistry {
    * Do a device measurement and publish to all subscribers.
    */
   roll() {
-    let data: any;
     this.devices.map((d) => {
-       if (d.isActive()) {
-        console.log('measure device: ' + d.getName());
+      let data: any;
+      if (d.isActive()) {
+        console.log('Measure device: ' + d.getName());
         data = d.doMeasurementCallback();
       }
       if (data !== undefined) {
-        console.log('measured: ' + JSON.stringify(data));
+        console.log('Measured: ' + JSON.stringify(data));
         this.publish(d.getResultDataType(), data);
       }
     });

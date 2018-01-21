@@ -16,7 +16,7 @@ export class FrequencyGeneratorService extends BaseService {
 
   public initialize(mainframe: string, deviceName: string): Observable<string> {
     const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
-    console.log('vxi.initialize:' + deviceName );
+    console.log('initialize:' + deviceName );
 
     const dataUrl =  serviceUrl + 'initialize';
     console.log(dataUrl);
@@ -35,7 +35,7 @@ export class FrequencyGeneratorService extends BaseService {
 
   public setShape(mainframe: string, deviceName: string, shapeType: string, shape: string, segment: string): Observable<string> {
     const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
-    console.log('vxi.setShape:' + deviceName + ' with parameter ' + shape );
+    console.log('setShape:' + deviceName + ' with parameter ' + shape );
 
     shape = this.convertShape(shapeType, shape);
 
@@ -55,7 +55,7 @@ export class FrequencyGeneratorService extends BaseService {
 
   public setAmplitude(mainframe: string, deviceName: string, amplitude: number): Observable<string> {
     const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
-    console.log('vxi.setAmplitude:' + deviceName + ' with parameter ' + amplitude );
+    console.log('setAmplitude:' + deviceName + ' with parameter ' + amplitude );
 
     const dataUrl =  serviceUrl + 'setAmplitude/' + amplitude;
     console.log(dataUrl);
@@ -70,7 +70,7 @@ export class FrequencyGeneratorService extends BaseService {
 
   public setOffset(mainframe: string, deviceName: string, offset: number): Observable<string> {
     const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
-    console.log('vxi.setOffset:' + deviceName + ' with parameter ' + offset );
+    console.log('setOffset:' + deviceName + ' with parameter ' + offset );
 
     const dataUrl =  serviceUrl + 'setOffset/' + offset;
     console.log(dataUrl);
@@ -85,7 +85,7 @@ export class FrequencyGeneratorService extends BaseService {
 
   public setFrequency(mainframe: string, deviceName: string, frequency: number): Observable<string> {
     const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
-    console.log('vxi.setFrequency:' + deviceName + ' with parameter ' + frequency );
+    console.log('setFrequency:' + deviceName + ' with parameter ' + frequency );
 
     const dataUrl =  serviceUrl + 'setFrequency/' + frequency;
     console.log(dataUrl);
@@ -102,7 +102,7 @@ export class FrequencyGeneratorService extends BaseService {
     points: number, duration: number, amplitude: number, shape: string) {
 
     const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
-    console.log('vxi.setSweep:' + deviceName + ' with parameters ' + start );
+    console.log('setSweep:' + deviceName + ' with parameters ' + start );
 
     const dataUrl =  serviceUrl + 'setSweep'
       + '/' + start
@@ -122,7 +122,7 @@ export class FrequencyGeneratorService extends BaseService {
 
   public setMarker(mainframe: string, deviceName: string, source: string, polarity: string) {
     const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
-    console.log('vxi.setMarker:' + deviceName + ' with parameters ' + source );
+    console.log('setMarker:' + deviceName + ' with parameters ' + source );
 
     source = this.convertSource(source);
     polarity = (polarity === 'Inverse') ? 'inv' : 'norm';
