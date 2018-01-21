@@ -81,15 +81,15 @@ export class AppRegistry {
    * @param data data to publish
    */
   publish(dataType: string, data: any) {
-    let published = false;
+    let published = 0;
     this.views.map((v) => {
       if (v.getAcceptedDataType() === dataType || v.getAcceptedDataType() === 'any') {
         console.log('publish data type: ' + dataType + ' to view: ' + v.getName());
         v.newSampleCallback(data);
-        published = true;
+        published++;
       }
     });
-    if (!published) {
+    if (published ===  1) {
       console.log('No consumer for data type: ' + dataType );
     }
   }
@@ -98,13 +98,15 @@ export class AppRegistry {
    * Do a device measurement and publish to all subscribers.
    */
   roll() {
+    let data: any;
     this.devices.map((d) => {
-      if (d.isActive())
-      console.log('measure device: ' + d.getName());
-      const data = d.doMeasurementCallback();
+       if (d.isActive()) {
+        console.log('measure device: ' + d.getName());
+        data = d.doMeasurementCallback();
+      }
       if (data !== undefined) {
         console.log('measured: ' + JSON.stringify(data));
-       this.publish(d.getResultDataType(), data);
+        this.publish(d.getResultDataType(), data);
       }
     });
   }

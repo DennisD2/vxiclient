@@ -25,10 +25,7 @@
         <span>Stop</span>
       </button>
       
-      <button onclick="start_counter_loop('E1333')">Start counter loop</button>
-
-      <button onclick="stop_counter_loop('E1333')">Stop counter loop</button>
-    </p>
+     </p>
 
     <label for="m_mode">Mode:</label>
     <select name="m_mode" [(ngModel)]="selectedModeItem" (ngModelChange)="onChangeMode($event)">
@@ -65,12 +62,12 @@
     <br>
 
     <label for="m_eslope">Event Slope:</label>
-    <select name="m_eslope" [(ngModel)]="selectedSlopeItem" (ngModelChange)="onChangeSlope($event)">
+    <select name="m_eslope" [(ngModel)]="selectedSlopeItem" (ngModelChange)="onChangeEventSlope()">
       <option *ngFor="let m of allowedSlopes" [ngValue]="m">{{m.value}}</option>
     </select> 
 
-    <label for="m_elevel">Event Level:</label>
-    <span>TBD</span>
+    <label for="m_elevel">Event Level [V]:</label>
+    <input type="text" id="m_elevel" [(ngModel)]="eventLevel" (ngModelChange)="onChangeEventLevel()" size=10>
 
   </div>
 </div>

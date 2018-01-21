@@ -50,7 +50,9 @@ export class CounterComponent  extends BaseDevice implements OnInit, Device {
   constructor(protected appRegistry: AppRegistry,
     private counterService: CounterService) {
       super(appRegistry);
-      this.resultDataType = 'none';
+      this.resultDataType = 'number';
+      this.channel = 1;
+      this.eventLevel = 0;
   }
 
   ngOnInit() {
@@ -100,5 +102,12 @@ export class CounterComponent  extends BaseDevice implements OnInit, Device {
     console.log('onChangeLowpass: ' + event.value);
   }
 
+  onChangeEventLevel() {
+    console.log('onChangeEventLevel');
+  }
+
+  onChangeEventSlope() {
+    console.log('onChangeEventSlope');
+  }
 
 }

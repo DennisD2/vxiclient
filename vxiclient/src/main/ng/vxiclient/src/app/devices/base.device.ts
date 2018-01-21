@@ -29,7 +29,7 @@ export class BaseDevice implements Device {
   public start() {
     console.log('start');
     this.appRegistry.subscribeDevice(this);
-    this.active = false;
+    this.active = true;
   }
 
   public stop() {
