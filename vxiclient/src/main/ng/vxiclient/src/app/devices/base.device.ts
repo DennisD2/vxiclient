@@ -12,6 +12,8 @@ export class BaseDevice implements Device {
   @Input('mainframe') mainframe = 'no mainframe';
 
   protected active: boolean;
+  protected visible: boolean;
+
   protected resultDataType = 'no type';
 
   constructor(protected appRegistry: AppRegistry) { }
@@ -35,6 +37,17 @@ export class BaseDevice implements Device {
     this.appRegistry.unsubscribeDevice(this);
     this.active = false;
   }
+
+  public display() {
+    console.log('display');
+    this.visible = true;
+  }
+
+  public hide() {
+    console.log('hide');
+    this.visible = false;
+  }
+
 
   public getName() {
     return this.deviceName;

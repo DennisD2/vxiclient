@@ -2,17 +2,29 @@
 	<h3>{{deviceName}} (Digital I/O in {{mainframe}})</h3>
 	<p>
 		<!-- action buttons -->
-		<button (click)="start()">
+		<button (click)="display()" *ngIf="!visible">
 			<md-icon>settings_power</md-icon>
-			<span>Start</span>
+			<span>Display</span>
 		</button>
-		<button (click)="stop()">
+		<button (click)="hide()" *ngIf="visible">
 			<md-icon>settings_power</md-icon>
-			<span>Stop</span>
+			<span>Hide</span>
 		</button>
 	</p>
-	
-	<div id="digconfig" *ngIf="active">
+
+	<div id="digconfig" *ngIf="visible">
+		<!-- action buttons -->
+		<p>
+			<button (click)="start()">
+				<md-icon>settings_power</md-icon>
+				<span>Start</span>
+			</button>
+			<button (click)="stop()">
+				<md-icon>settings_power</md-icon>
+				<span>Stop</span>
+			</button>
+		</p>
+				
 		<div id="digconfig_polarity" style="border:1px solid black; width: 12%;; padding-top: 3px; padding-left: 3px;">
 			Polarity<br>
 			DATA0:

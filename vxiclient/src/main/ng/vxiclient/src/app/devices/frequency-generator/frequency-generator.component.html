@@ -1,19 +1,19 @@
 <div id="afg" class="device_div">
   <h3>{{deviceName}} (Arbitrary Function Generator in {{mainframe}})</h3>
   <p>
-      <!-- action buttons -->
-      <button (click)="start()" *ngIf="!active">
-        <md-icon>settings_power</md-icon>
-        <span>Display</span>
-      </button>
-      <button (click)="stop()" *ngIf="active">
-        <md-icon>settings_power</md-icon>
-        <span>Hide</span>
-      </button>
+    <!-- action buttons -->
+    <button (click)="display()" *ngIf="!visible">
+      <md-icon>settings_power</md-icon>
+      <span>Display</span>
+    </button>
+    <button (click)="hide()" *ngIf="visible">
+      <md-icon>settings_power</md-icon>
+      <span>Hide</span>
+    </button>
   </p>
 
    <!-- config inputs -->
-   <div id="config" *ngIf="active">
+   <div id="config" *ngIf="visible">
 
     <button (click)="onReset()" *ngIf="active">
       <md-icon>update</md-icon>

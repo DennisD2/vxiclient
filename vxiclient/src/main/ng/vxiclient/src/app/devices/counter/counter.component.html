@@ -2,19 +2,31 @@
   <h3>{{deviceName}} (a Counter in mainframe {{mainframe}})</h3>
   <p>
     <!-- action buttons -->
-    <button (click)="start()">
+    <button (click)="display()" *ngIf="!visible">
       <md-icon>settings_power</md-icon>
-      <span>Start</span>
+      <span>Display</span>
     </button>
-    <button (click)="stop()">
+    <button (click)="hide()" *ngIf="visible">
       <md-icon>settings_power</md-icon>
-      <span>Stop</span>
+      <span>Hide</span>
     </button>
-  </p>
+   </p>
   
-  <div id="config" *ngIf="active"class="device_section_div">
+  <div id="config" *ngIf="visible" class="device_section_div">
+
     <p>
+      <!-- action buttons -->
+      <button (click)="start()">
+        <md-icon>settings_power</md-icon>
+        <span>Start</span>
+      </button>
+      <button (click)="stop()">
+        <md-icon>settings_power</md-icon>
+        <span>Stop</span>
+      </button>
+      
       <button onclick="start_counter_loop('E1333')">Start counter loop</button>
+
       <button onclick="stop_counter_loop('E1333')">Stop counter loop</button>
     </p>
 
