@@ -4,6 +4,7 @@ import { Device } from '../../types/Device';
 
 import { AppRegistry } from '../../app.registry';
 import { CounterService } from '../../services/counter.service';
+import { Channel } from '../../types/Channel';
 
 @Component({
   selector: 'app-counter',
@@ -50,7 +51,7 @@ export class CounterComponent  extends BaseDevice implements OnInit, Device {
   constructor(protected appRegistry: AppRegistry,
     private counterService: CounterService) {
       super(appRegistry);
-      this.resultDataType = 'number';
+      this.resultDataType = 'Sample';
       this.channel = 1;
       this.eventLevel = 0;
   }
@@ -74,7 +75,9 @@ export class CounterComponent  extends BaseDevice implements OnInit, Device {
         });
         release();
     });
-    return this.channelResult;
+    // Create Channel-line data
+    const channelName = '' + this.channel;
+    return {channelName: this.channelResult };
   }
 
   onChangeMode(event: any) {

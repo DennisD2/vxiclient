@@ -89,7 +89,7 @@ export class AppRegistry {
         published++;
       }
     });
-    if (published ===  1) {
+    if (published === 1) {
       console.log('No consumer for data type: ' + dataType );
     }
   }

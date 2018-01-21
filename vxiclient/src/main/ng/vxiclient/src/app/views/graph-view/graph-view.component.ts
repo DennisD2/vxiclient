@@ -35,7 +35,7 @@ export class GraphViewComponent extends BaseView implements OnInit {
   }
 
   newSampleCallback(data: any) {
-    // console.log('new sample: ' + JSON.stringify(data));
+    console.log('new sample: ' + JSON.stringify(data));
     this.channels = data;
     this.addData();
   }

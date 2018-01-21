@@ -17,7 +17,7 @@ export class MultimeterService extends BaseService {
 
   getMeasurement(mainframe: string, deviceName: string, channelsToScan: string[]): Observable<Channel[]> {
     const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
-    // console.log("to scan: " + JSON.stringify(channelsToScan))
+    console.log('to scan: ' + JSON.stringify(channelsToScan));
     const dataUrl = serviceUrl + 'read' + '/7.27';
 
     const headers = new Headers({ 'Content-Type': 'application/json' });
