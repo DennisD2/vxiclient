@@ -16,11 +16,11 @@
 
     <p>
       <!-- action buttons -->
-      <button (click)="start()">
+      <button (click)="start()" *ngIf="!active">
         <md-icon>settings_power</md-icon>
         <span>Start</span>
       </button>
-      <button (click)="stop()">
+      <button (click)="stop()" *ngIf="active">
         <md-icon>settings_power</md-icon>
         <span>Stop</span>
       </button>
