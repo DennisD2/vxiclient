@@ -2,11 +2,16 @@ package de.spurtikus.vxi.connectors.serial;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 
 public class GPIBSerialConnector extends SerialConnector {
+	Logger logger = LoggerFactory.getLogger(SerialConnector.class);
+
 	public static final int ADAPTER_SERIAL_DIRECT = 0;
 	public static final int ADAPTER_SERIAL_GPIB = 1;
 	public static final int ADAPTER_PROLOGIX = 2;
@@ -77,7 +82,7 @@ public class GPIBSerialConnector extends SerialConnector {
 
 		int primary = getPrimaryAddressFrom(deviceId);
 		int secondary = getSecondaryAddressFrom(deviceId);
-		// Select device
+		// Select device if not yet selected.
 		selectDevice(l, primary, secondary);
 
 		// Put new link to deviceLink map
@@ -159,7 +164,8 @@ public class GPIBSerialConnector extends SerialConnector {
 
 	/**
 	 * 
-	 * Selects a device by its primary/secondary GPIB address.
+	 * Selects a device by its primary/secondary GPIB address. Does nothing if
+	 * device is already selected.
 	 * 
 	 * @param link
 	 * @param primary
@@ -200,6 +206,7 @@ public class GPIBSerialConnector extends SerialConnector {
 	private boolean isSelected(int primary, int secondary) {
 		return selectedSecondary == secondary && selectedPrimary == primary;
 	}
+
 	/**
 	 * Initialization of communication interface in HP1300B.
 	 * 
