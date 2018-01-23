@@ -6,6 +6,7 @@ import { MObject } from './MObject';
 export interface Device extends MObject {
     isActive(): boolean;
     setActive(active: boolean);
-    doMeasurementCallback(): any;
+    doMeasurementCallback(func: any);
     getResultDataType(): string;
+    getResult(): any;
 }

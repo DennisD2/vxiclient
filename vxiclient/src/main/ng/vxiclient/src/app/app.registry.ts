@@ -10,6 +10,8 @@ export class AppRegistry {
   views: View[] = new Array();
   devices: Device[] = new Array();
 
+  devs: Device[] = new Array();
+
   constructor() { }
 
   /**
@@ -77,7 +79,7 @@ export class AppRegistry {
   /**
    * Publish data to all subscribers (views).
    *
-   * @param datTypea type of data to publish
+   * @param datType type of data to publish
    * @param data data to publish
    */
   publish(dataType: string, data: any) {
@@ -95,20 +97,44 @@ export class AppRegistry {
   }
 
   /**
-   * Do a device measurement and publish to all subscribers.
+   * Do all device measurements and publish to all subscribers.
    */
   roll() {
-    this.devices.map((d) => {
-      let data: any;
-      if (d.isActive()) {
-        console.log('Measure device: ' + d.getName());
-        data = d.doMeasurementCallback();
-      }
+    // Do chained measurement calls
+    this.devs = this.devices.filter(d => d.isActive());
+    this.chainedRoll(this);
+
+    // Distribute result to all interested views
+    this.devices.filter(d => d.isActive()).map((d) => {
+      const data = d.getResult();
       if (data !== undefined) {
-        console.log('Measured: ' + JSON.stringify(data));
+        console.log('Result: ' + JSON.stringify(data));
         this.publish(d.getResultDataType(), data);
       }
     });
   }
+
+  /**
+   * Sequential call of all measurements by chaining.
+   *
+   * @param registry the registry.
+   */
+  chainedRoll(registry: AppRegistry) {
+    // handle head of chain and forward to tail of chain
+    const dev = registry.devs[0];
+    if (dev === undefined) {
+     // end of chain
+     console.log('End of chain reached (2)');
+     return;
+    }
+    // remove head from array
+    const index = 0;
+    if (index > -1) {
+      registry.devs.splice(index, 1);
+    }
+
+    console.log('Measure device: ' + dev.getName());
+    dev.doMeasurementCallback(registry.chainedRoll);
+ }
 
 }

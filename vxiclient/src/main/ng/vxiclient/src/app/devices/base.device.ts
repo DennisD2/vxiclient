@@ -14,7 +14,10 @@ export class BaseDevice implements Device {
   protected active: boolean;
   protected visible: boolean;
 
+  // Result data type, e.g. 'Sample'
   protected resultDataType = 'no type';
+  // Result data reference
+  protected result: any;
 
   constructor(protected appRegistry: AppRegistry) { }
 
@@ -57,8 +60,18 @@ export class BaseDevice implements Device {
     return this.resultDataType;
   }
 
-  public doMeasurementCallback(): any {
+  public getResult(): any {
+    return this.result;
+  }
+
+  /**
+   * Do a measurement.
+   *
+   * @param chain Function chain() that forwards to rest of measurement devices to do their measurement.
+   */
+  public doMeasurementCallback(chain: any): any {
     console.log('doMeasurement');
+    chain(this.appRegistry);
   }
 
   /**

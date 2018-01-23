@@ -14,8 +14,6 @@ import { Channel } from '../../types/Channel';
 export class CounterComponent  extends BaseDevice implements OnInit, Device {
   // Channel to scan
   channel: number;
-  // Scan result
-  channelResult: number;
 
    // Counter modes
    allowedModes = [ {id: 0, value: 'Totalizer'}, {id: 1, value: 'Counter'}, {id: 2, value: 'RAT'},
@@ -59,25 +57,26 @@ export class CounterComponent  extends BaseDevice implements OnInit, Device {
   ngOnInit() {
   }
 
-  doMeasurementCallback(): any {
+  doMeasurementCallback(chain: any): any {
     // console.log('doMeasurement');
     const vxi = this.counterService;
     const self = this;
 
-    // const channelToScan: string[] = this.channels.map(c => c.name);
-    BaseDevice.mutex.acquire().then( function(release) {
+     BaseDevice.mutex.acquire().then( function(release) {
       vxi.getMeasurement(self.mainframe, self.deviceName, self.channel)
         .subscribe(c => {
-          self.channelResult = c as number;
-          // console.log(JSON.stringify(self.channels))
-         }, c => {
+          self.result = c as number;
+          const channelName: string = '' + self.channel;
+          const cx = { [channelName]: self.result };
+          console.log(JSON.stringify(cx));
+          self.result = cx;
+          }, c => {
           console.log('An error occured, releasing mutex');
         });
         release();
     });
-    const channelName: string = '' + this.channel;
-    const cx = { [channelName]: this.channelResult };
-    return cx;
+    // forward to rest of chain
+    chain(this.appRegistry);
   }
 
   onChangeMode(event: any) {

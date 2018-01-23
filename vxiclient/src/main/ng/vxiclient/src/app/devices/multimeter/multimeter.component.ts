@@ -26,9 +26,7 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
 
   // Channels to scan
   channels: Channel[] = [ {name: '100', value: 0}, {name: '101', value: 0}, {name: '200', value: 0} ];
-  // Scan result
-  channelResult: Channel[];
-
+ 
   // Meter modes
   allowedModes = [ {id: 0, value: 'U'}, {id: 1, value: 'I'}, {id: 2, value: 'R'}];
   selectedModeItem = this.allowedModes[0];
@@ -66,7 +64,7 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
   ngOnInit() {
   }
 
-  doMeasurementCallback(): any {
+  doMeasurementCallback(chain: any): any {
     // console.log('doMeasurement');
     const vxi = this.multimeterService;
     const self = this;
@@ -75,14 +73,15 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
     BaseDevice.mutex.acquire().then( function(release) {
       vxi.getMeasurement(self.mainframe, self.deviceName, channelsToScan)
         .subscribe(c => {
-          self.channelResult = c as Channel[];
-          // console.log(JSON.stringify(self.channels))
+          self.result = c as Channel[];
+          // console.log(JSON.stringify(self.result))
          }, c => {
           console.log('An error occured, releasing mutex');
         });
         release();
     });
-    return this.channelResult;
+    // forward to rest of chain
+    chain(this.appRegistry);
   }
 
   record(onoff: String) {
