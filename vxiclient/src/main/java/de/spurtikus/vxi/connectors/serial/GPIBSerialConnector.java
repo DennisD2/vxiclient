@@ -7,10 +7,11 @@ import org.slf4j.LoggerFactory;
 
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
+import de.spurtikus.vxi.connectors.GPIBDeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 
 public class GPIBSerialConnector extends SerialConnector {
-	Logger logger = LoggerFactory.getLogger(SerialConnector.class);
+	Logger logger = LoggerFactory.getLogger(GPIBSerialConnector.class);
 
 	public static final int ADAPTER_SERIAL_DIRECT = 0;
 	public static final int ADAPTER_SERIAL_GPIB = 1;
@@ -49,10 +50,14 @@ public class GPIBSerialConnector extends SerialConnector {
 		}
 		logger.debug("Creating new device link for: " + deviceId);
 
-		/** Create new device link */
-		DeviceLink l = super.initialize(config, deviceId);
-
+		super.initialize(config, deviceId);
+		/** Create new device link for GPIB */
 		GPIBSerialConnectorConfig c = getConfig();
+		GPIBDeviceLink glink = new GPIBDeviceLink();
+		glink.config = c;
+		glink.primary = getPrimaryAddressFrom(deviceId);
+		glink.secondary = getSecondaryAddressFrom(deviceId);
+		DeviceLink l = new DeviceLink(glink);
 
 		if (!initialized) {
 			initializeCommunication(l);
@@ -80,16 +85,34 @@ public class GPIBSerialConnector extends SerialConnector {
 			initialized = true;
 		}
 
-		int primary = getPrimaryAddressFrom(deviceId);
-		int secondary = getSecondaryAddressFrom(deviceId);
 		// Select device if not yet selected.
-		selectDevice(l, primary, secondary);
+		selectDevice(l, glink.primary, glink.secondary);
 
 		// Put new link to deviceLink map
 		deviceLinks.put(deviceId, l);
 		return l;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void send(DeviceLink link, String message) throws Exception {
+		GPIBDeviceLink glink = (GPIBDeviceLink) link.getWrapped();
+		selectDevice(link, glink.primary, glink.secondary);
+		super.send(link, message);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String receive(DeviceLink link) throws Exception {
+		GPIBDeviceLink glink = (GPIBDeviceLink) link.getWrapped();
+		selectDevice(link, glink.primary, glink.secondary);
+		return super.receive(link);
+	}
+	
 	private int getPrimaryAddressFrom(String deviceId) {
 		String[] p = deviceId.split(",");
 		int r = Integer.parseInt(p[0]);
@@ -190,7 +213,7 @@ public class GPIBSerialConnector extends SerialConnector {
 				.getAdapterType() == SerialConnectorConfig.ADAPTER_PROLOGIX) {
 			// Prologix wants for secondary adress: gpib-adress+96
 			int realAdr = secondary + 96;
-			send(link, "++addr " + primary + " " + realAdr);
+			super.send(link, "++addr " + primary + " " + realAdr);
 		}
 		selectedPrimary = primary;
 		selectedSecondary = secondary;

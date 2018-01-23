@@ -193,6 +193,11 @@ public class CounterBoundaryTest {
 		assertTrue(response.getStatus() < 400);
 		String res = response.readEntity(String.class);
 		System.out.println("Call result: " + res);
+		try {
+			Thread.sleep(5000000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

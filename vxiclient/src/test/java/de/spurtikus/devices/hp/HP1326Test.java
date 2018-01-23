@@ -16,11 +16,11 @@ import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
-import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
+import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
 import de.spurtikus.vxi.service.Configuration;
 
 public class HP1326Test {
-	final String TEST_DEVICE_NAME = "hp1326/hp1411";
+	final String TEST_DEVICE_NAME = "hp1326";
 	
 	ConnectorConfig config;
 	DeviceLink theLid = null;
@@ -31,10 +31,10 @@ public class HP1326Test {
 		// Load configuration
 		Configuration.load();
 		// We assume usable config at some index
-		config = Configuration.findConfigById(Constants.RPC_CONFIG);
+		config = Configuration.findConfigById(Constants.SERIAL_CONFIG);
 		assertNotNull(config);
 		// We like to test a net GPIBSerial
-		assertThat(config.getClass(), IsEqual.equalTo(RPCConnectorConfig.class));
+		assertThat(config.getClass(), IsEqual.equalTo(GPIBSerialConnectorConfig.class));
 		System.out.println(config);
 		
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);

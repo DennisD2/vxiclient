@@ -56,14 +56,7 @@ public class HP1333Test {
 		assertNotNull(deviceid);
 		theLid = vxiConnector.initialize(config, deviceid);
 		testee = new HP1333(vxiConnector, theLid);
-
-		// TODO: do we really need next 6 lines?
-		if (((GPIBSerialConnectorConfig) config)
-				.getAdapterType() == ((GPIBSerialConnectorConfig) config).ADAPTER_SERIAL_DIRECT) {
-			((GPIBSerialConnector) vxiConnector).selectDevice(theLid, "Counter");
-		} else {
-			((GPIBSerialConnector) vxiConnector).selectDevice(theLid, 9, 6);
-		}
+ 
 		testee.initialize();
 		
 		String answer = vxiConnector.send_and_receive(theLid, "*IDN?");
@@ -100,6 +93,7 @@ public class HP1333Test {
 		System.out.println(answer);
 	}
 	
+	@Ignore
 	@Test
 	public void totalizerMeasurement() throws Exception {
 		testee.initialize();
@@ -128,6 +122,7 @@ public class HP1333Test {
 		System.out.println(answer);
 	}
 	
+	@Ignore
 	@Test
 	public void ratioMeasurement() throws Exception {
 		testee.initialize();
@@ -150,16 +145,19 @@ public class HP1333Test {
 		System.out.println(answer);
 	}
 
+	@Ignore
 	@Test
 	public void periodAverageMeasurement() throws Exception {
 		// page 31
 	}
 	
+	@Ignore
 	@Test
 	public void pulseWidthMeasurement() throws Exception {
 		// page 32
 	}
 	
+	@Ignore
 	@Test
 	public void timeIntervalMeasurement() throws Exception {
 		// page 34

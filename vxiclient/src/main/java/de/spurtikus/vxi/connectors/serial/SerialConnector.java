@@ -71,6 +71,9 @@ public class SerialConnector extends AbstractConnector implements VXIConnector {
 		return INSTANCE;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public DeviceLink initialize(ConnectorConfig config, String deviceId) throws Exception {
 		theConfig = (SerialConnectorConfig) config;
@@ -86,13 +89,7 @@ public class SerialConnector extends AbstractConnector implements VXIConnector {
 	}
 
 	/**
-	 * Write string to port
-	 * 
-	 * String is written to port.
-	 * 
-	 * @param c
-	 *            char to be written
-	 * @throws IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void send(DeviceLink link, String message) throws Exception {
@@ -120,6 +117,9 @@ public class SerialConnector extends AbstractConnector implements VXIConnector {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String receive(DeviceLink link) throws Exception {
 		// wait for complete answer (EOL)
@@ -130,6 +130,9 @@ public class SerialConnector extends AbstractConnector implements VXIConnector {
 		return serialReader.readAndClearBuffer("");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String send_and_receive(DeviceLink link, String message)
 			throws Exception {
