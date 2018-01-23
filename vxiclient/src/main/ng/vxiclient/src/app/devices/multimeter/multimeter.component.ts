@@ -74,14 +74,14 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
       vxi.getMeasurement(self.mainframe, self.deviceName, channelsToScan)
         .subscribe(c => {
           self.result = c as Channel[];
-          // console.log(JSON.stringify(self.result))
-         }, c => {
+          // forward to rest of chain
+          chain(self.appRegistry);
+    }, c => {
           console.log('An error occured, releasing mutex');
+          chain(self.appRegistry);
         });
         release();
     });
-    // forward to rest of chain
-    chain(this.appRegistry);
   }
 
   record(onoff: String) {

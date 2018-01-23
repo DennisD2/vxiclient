@@ -198,7 +198,7 @@ public class GPIBSerialConnector extends SerialConnector {
 	public void selectDevice(DeviceLink link, int primary, int secondary)
 			throws Exception {
 		if (isSelected(primary, secondary)) {
-			logger.debug("Device already selected");
+			//logger.debug("Device already selected");
 			return;
 		}
 		logger.debug("Select device: " + primary + "," + secondary);

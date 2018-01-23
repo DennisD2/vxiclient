@@ -70,14 +70,15 @@ export class CounterComponent  extends BaseDevice implements OnInit, Device {
           const cx = { [channelName]: self.result };
           console.log(JSON.stringify(cx));
           self.result = cx;
+          // forward to rest of chain
+          chain(self.appRegistry);
           }, c => {
           console.log('An error occured, releasing mutex');
+          chain(self.appRegistry);
         });
         release();
     });
-    // forward to rest of chain
-    chain(this.appRegistry);
-  }
+   }
 
   onChangeMode(event: any) {
     // Is called with the Item as event

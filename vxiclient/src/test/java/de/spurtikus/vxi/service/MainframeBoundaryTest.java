@@ -77,11 +77,11 @@ public class MainframeBoundaryTest {
 		System.out.println(result);
 		assertTrue(response.getStatus() < 400);
 		assertEquals("HEWLETT-PACKARD,E1301A,0,A.07.00", result);
-		/*try {
+		try {
 			Thread.sleep(5000000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 
 	//@Ignore

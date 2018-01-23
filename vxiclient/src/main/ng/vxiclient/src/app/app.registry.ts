@@ -124,7 +124,7 @@ export class AppRegistry {
     const dev = registry.devs[0];
     if (dev === undefined) {
      // end of chain
-     console.log('End of chain reached (2)');
+     console.log('End of chain reached');
      return;
     }
     // remove head from array
