@@ -105,11 +105,29 @@ export class AppRegistry {
     this.chainedRoll(this);
 
     // Distribute result to all interested views
+    // Multimeter: {"100":-0.01082838,"101":0.001919866,"200":0.1154747} , from Hashmap
+    // Counter: {"1":1}
+    const allResults: Channel[] = [];
     this.devices.filter(d => d.isActive()).map((d) => {
-      const data = d.getResult();
-      if (data !== undefined) {
-        console.log('Result: ' + JSON.stringify(data));
-        this.publish(d.getResultDataType(), data);
+      const res = d.getResult();
+      console.log( JSON.stringify(res));
+
+       for (const key in res) {
+        if (res.hasOwnProperty(key)) {
+          console.log('key:' + key + ' -> ' + res[key]);
+          const c: Channel = { name: key, value: res[key]};
+          allResults.push(c);
+        }
+      }
+      /* allResults = 
+      [{"name":"1","value":18734.375},
+       {"name":"100","value":-0.01353788},
+       {"name":"101","value":-0.007313728},
+       {"name":"200","value":0.0793767}]
+      */
+      if (allResults !== []) {
+        console.log('Result: ' + JSON.stringify(allResults));
+        this.publish(d.getResultDataType(), allResults);
       }
     });
   }
@@ -135,6 +153,6 @@ export class AppRegistry {
 
     console.log('Measure device: ' + dev.getName());
     dev.doMeasurementCallback(registry.chainedRoll);
- }
+  }
 
 }

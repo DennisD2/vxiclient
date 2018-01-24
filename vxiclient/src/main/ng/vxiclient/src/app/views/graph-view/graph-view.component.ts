@@ -43,7 +43,6 @@ export class GraphViewComponent extends BaseView implements OnInit {
   addData() {
     const initRequired = !this.initialized;
     const reInitRequired = !initRequired && this.indices.length !== Object.keys(this.channels).length;
-    // console.log('Number of channels changed, reinitializing indices...' + reInitRequired);
     if (initRequired || reInitRequired) {
       console.log('(Re)initializing graph, channels: ' + JSON.stringify(this.channels));
       // Create layout data for graph
@@ -51,8 +50,8 @@ export class GraphViewComponent extends BaseView implements OnInit {
       this.indices = new Array();
       let i = 0;
       Object.keys(this.channels).map(c => {
-        console.log('key: ' + c);
-        const cl = { y: [], mode: 'lines', /*line: {color: '#80CAF6'},*/ name: c };
+        console.log('key: ' + this.channels[c].name);
+        const cl = { y: [], mode: 'lines', /*line: {color: '#80CAF6'},*/ name: this.channels[c].name };
         data.push(cl);
         this.indices.push(i);
         i++;
@@ -64,8 +63,8 @@ export class GraphViewComponent extends BaseView implements OnInit {
     // Create y value array
     const yvalues: any[]  = new Array();
     Object.keys(this.channels).map(c => {
-      console.log('Channel ' + this.channels[c]);
-      yvalues.push([this.channels[c]]);
+      console.log('Channel ' + this.channels[c].name);
+      yvalues.push([this.channels[c].value]);
     });
     Plotly.extendTraces('plotlyGraph', { y: yvalues }, this.indices);
   }

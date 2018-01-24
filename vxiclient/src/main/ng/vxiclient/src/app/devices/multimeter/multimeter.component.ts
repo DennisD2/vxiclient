@@ -26,7 +26,7 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
 
   // Channels to scan
   channels: Channel[] = [ {name: '100', value: 0}, {name: '101', value: 0}, {name: '200', value: 0} ];
- 
+
   // Meter modes
   allowedModes = [ {id: 0, value: 'U'}, {id: 1, value: 'I'}, {id: 2, value: 'R'}];
   selectedModeItem = this.allowedModes[0];
