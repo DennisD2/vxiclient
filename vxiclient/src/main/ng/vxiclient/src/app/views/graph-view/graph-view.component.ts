@@ -23,11 +23,13 @@ export class GraphViewComponent extends BaseView implements OnInit {
   private graph; any;
   // Indices of traces (plotly)
   indices: number[];
+  numIndices: number;
 
   constructor(protected appRegistry: AppRegistry) {
     super(appRegistry);
     this.name = 'GraphView';
     this.dataType = 'Sample';
+    this.numIndices = 0;
     this.start();
   }
 
@@ -42,20 +44,24 @@ export class GraphViewComponent extends BaseView implements OnInit {
 
   addData() {
     const initRequired = !this.initialized;
-    const reInitRequired = !initRequired && this.indices.length !== Object.keys(this.channels).length;
+    // console.log('len ' + Object.keys(this.channels).length + ' vs ' + this.numIndices);
+    const reInitRequired = !initRequired && this.numIndices !== Object.keys(this.channels).length;
     if (initRequired || reInitRequired) {
       console.log('(Re)initializing graph, channels: ' + JSON.stringify(this.channels));
       // Create layout data for graph
       const data: any[] = new Array();
       this.indices = new Array();
+      this.numIndices = 0;
       let i = 0;
       Object.keys(this.channels).map(c => {
-        console.log('key: ' + this.channels[c].name);
+        // console.log('key: ' + this.channels[c].name);
         const cl = { y: [], mode: 'lines', /*line: {color: '#80CAF6'},*/ name: this.channels[c].name };
         data.push(cl);
         this.indices.push(i);
         i++;
       });
+      // console.log('i: ' + i);
+      this.numIndices = i;
       // Create graph
       Plotly.newPlot('plotlyGraph', data);
       this.initialized = true;

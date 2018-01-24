@@ -108,28 +108,28 @@ export class AppRegistry {
     // Multimeter: {"100":-0.01082838,"101":0.001919866,"200":0.1154747} , from Hashmap
     // Counter: {"1":1}
     const allResults: Channel[] = [];
-    this.devices.filter(d => d.isActive()).map((d) => {
+    this.devices.filter(d => d.isActive() && d.getResultDataType() === 'Sample').map((d) => {
       const res = d.getResult();
       console.log( JSON.stringify(res));
 
        for (const key in res) {
         if (res.hasOwnProperty(key)) {
-          console.log('key:' + key + ' -> ' + res[key]);
+          // console.log('key:' + key + ' -> ' + res[key]);
           const c: Channel = { name: key, value: res[key]};
           allResults.push(c);
         }
       }
-      /* allResults = 
-      [{"name":"1","value":18734.375},
-       {"name":"100","value":-0.01353788},
-       {"name":"101","value":-0.007313728},
-       {"name":"200","value":0.0793767}]
-      */
-      if (allResults !== []) {
-        console.log('Result: ' + JSON.stringify(allResults));
-        this.publish(d.getResultDataType(), allResults);
-      }
     });
+    /* allResults =
+    [{"name":"1","value":18734.375},
+      {"name":"100","value":-0.01353788},
+      {"name":"101","value":-0.007313728},
+      {"name":"200","value":0.0793767}]
+    */
+    if (allResults !== []) {
+      // console.log('Result: ' + JSON.stringify(allResults));
+      this.publish('Sample', allResults);
+    }
   }
 
   /**
