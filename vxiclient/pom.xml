@@ -123,6 +123,46 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.17</version>
 			</plugin>
+
+			<!-- Create production build from Angular sources -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<executable>ng</executable>
+					<workingDirectory>${project.basedir}/src/main/ng/vxiclient</workingDirectory>
+					<arguments>
+						<argument>build</argument>
+						<argument>-dev</argument>
+						<argument>-basedir</argument>
+						<argument>/vxiclient-0.0.1-SNAPSHOT/</argument>
+						
+					</arguments>
+				</configuration>
+			</plugin>
+
+			<!-- Add Angular build -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<webResources>
+						<resource>
+							<directory>${project.basedir}/src/main/ng/vxiclient/dist</directory>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
 		</plugins>
 
 	</build>
@@ -230,7 +270,7 @@
 			<artifactId>arquillian-protocol-servlet</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- REST client testing -->
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
@@ -253,7 +293,7 @@
 			<artifactId>jersey-client</artifactId>
 			<version>${jersey.version}</version>
 		</dependency>
-		
+
 	</dependencies>
 
 	<dependencyManagement>

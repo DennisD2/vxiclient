@@ -55,7 +55,7 @@ export class GraphViewComponent extends BaseView implements OnInit {
       let i = 0;
       Object.keys(this.channels).map(c => {
         // console.log('key: ' + this.channels[c].name);
-        const cl = { y: [], mode: 'lines', /*line: {color: '#80CAF6'},*/ name: this.channels[c].name };
+        const cl = { y: [], mode: 'lines', /*line: {color: '#80CAF6'},*/ name: this.channels[c].name,  line: {shape: 'spline'}, };
         data.push(cl);
         this.indices.push(i);
         i++;

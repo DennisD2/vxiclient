@@ -1,6 +1,9 @@
 
 Todos
 -----
+- Fix URL issue in POM 
+ - production build should define correct basedir
+ - Make 'deployment' to external tomcat reliable (WAR file name versus context root)
 - Add all missing methods to Boundaries not yet implemented (see Device code)
  This means real testing and real measurements. DO this one by one device:
   - HP1300 boundary completion
@@ -28,5 +31,6 @@ Done
 - Extend REST code
   - HP1333 boundary completion
   - HP1340 boundary completion
- 
+ - Extended POM to create valid WAR file
+ - Made production build for ng part in POM
  
