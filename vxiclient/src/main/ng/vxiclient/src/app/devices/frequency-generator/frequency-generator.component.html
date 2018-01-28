@@ -2,11 +2,11 @@
   <h3>{{deviceName}} (Arbitrary Function Generator in {{mainframe}})</h3>
   <p>
     <!-- action buttons -->
-    <button (click)="display()" *ngIf="!visible">
+    <button (click)="display()" *ngIf="!visible" class="btn btn-primary">
       <md-icon>settings_power</md-icon>
       <span>Display</span>
     </button>
-    <button (click)="hide()" *ngIf="visible">
+    <button (click)="hide()" *ngIf="visible" class="btn btn-primary">
       <md-icon>settings_power</md-icon>
       <span>Hide</span>
     </button>
@@ -15,7 +15,7 @@
    <!-- config inputs -->
    <div id="config" *ngIf="visible">
 
-    <button (click)="onReset()" *ngIf="active">
+    <button (click)="onReset()" *ngIf="active" class="btn btn-primary">
       <md-icon>update</md-icon>
       <span>Reset</span>
     </button>
@@ -78,7 +78,7 @@
         <label for="afg_sweep_time">Time [s]:</label>
         <input type="text" id="afg_sweep_time" value="10"  [(ngModel)]="sweepDuration" (ngModelChange)="onSweepChange($event)">
 
-        <button (click)="onSweepChange()">
+        <button (click)="onSweepChange()" class="btn btn-primary">
           <md-icon>update</md-icon>
           <span>Update Sweep</span>
         </button>

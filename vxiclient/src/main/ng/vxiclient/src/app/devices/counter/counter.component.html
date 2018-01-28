@@ -2,11 +2,11 @@
   <h3>{{deviceName}} (a Counter in mainframe {{mainframe}})</h3>
   <p>
     <!-- action buttons -->
-    <button (click)="display()" *ngIf="!visible">
+    <button type="button" (click)="display()" *ngIf="!visible" class="btn btn-primary" tooltip="Display UI for this device">
       <md-icon>settings_power</md-icon>
       <span>Display</span>
     </button>
-    <button (click)="hide()" *ngIf="visible">
+    <button type="button" (click)="hide()" *ngIf="visible" class="btn btn-primary">
       <md-icon>settings_power</md-icon>
       <span>Hide</span>
     </button>
@@ -16,11 +16,11 @@
 
     <p>
       <!-- action buttons -->
-      <button (click)="start()" *ngIf="!active">
+      <button type="button" (click)="start()" *ngIf="!active" class="btn btn-primary">
         <md-icon>settings_power</md-icon>
         <span>Start</span>
       </button>
-      <button (click)="stop()" *ngIf="active">
+      <button type="button" (click)="stop()" *ngIf="active" class="btn btn-primary">
         <md-icon>settings_power</md-icon>
         <span>Stop</span>
       </button>
