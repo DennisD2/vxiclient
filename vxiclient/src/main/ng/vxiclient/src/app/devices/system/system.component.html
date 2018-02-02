@@ -14,6 +14,7 @@
 </ul>
 
 <h3>Counters</h3>
+<app-counter deviceName="sample" mainframe="mainframe"></app-counter>
 <ul *ngFor="let dev of getDevices()">
   <li *ngIf="dev.type==='counter'">
     A {{dev.type}} named {{dev.name}} in {{dev.mainframe}} with service URL {{dev.URL}}
@@ -22,6 +23,7 @@
 </ul>
 
 <h3>Multimeters</h3>
+<app-multimeter deviceName="sample" mainframe="mainframe"></app-multimeter>
 <ul *ngFor="let dev of getDevices()">
   <li *ngIf="dev.type==='multimeter'">
     A {{dev.type}} named {{dev.name}} in {{dev.mainframe}} with service URL {{dev.URL}}
@@ -38,6 +40,7 @@
 </ul>
 
 <h3>Frequency Generators</h3>
+<app-frequency-generator deviceName="sample" mainframe="mainframe"></app-frequency-generator>
 <ul *ngFor="let dev of getDevices()">
   <li *ngIf="dev.type==='afg'">
     An {{dev.type}} named {{dev.name}} in {{dev.mainframe}} with service URL {{dev.URL}}
@@ -46,6 +49,7 @@
 </ul>
 
 <h3>Digital IO</h3>
+<app-digital-io deviceName="sample" mainframe="mainframe"></app-digital-io>
 <ul *ngFor="let dev of getDevices()">
   <li *ngIf="dev.type==='digitalIO'">
     A {{dev.type}} named {{dev.name}} in {{dev.mainframe}} with service URL {{dev.URL}}

@@ -25,6 +25,7 @@ import { CounterComponent } from './devices/counter/counter.component';
 import { FrequencyGeneratorComponent } from './devices/frequency-generator/frequency-generator.component';
 import { DigitalIOComponent } from './devices/digital-io/digital-io.component';
 import { SystemComponent } from './devices/system/system.component';
+import { StyleComponent } from './examples/style/style.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { SystemComponent } from './devices/system/system.component';
     FrequencyGeneratorComponent,
     DigitalIOComponent,
     EventLogComponent,
-    SystemComponent
+    SystemComponent,
+    StyleComponent
   ],
   imports: [
     BrowserModule,

@@ -1,76 +1,78 @@
-<div id="multimeter" class="device_div">
-  <h3>{{deviceName}} (Multimeter in {{mainframe}})</h3>
-  <p>
-    <!-- action buttons -->
-    <button (click)="display()" *ngIf="!visible" class="btn btn-primary">
-      <md-icon>settings_power</md-icon>
-      <span>Display</span>
-    </button>
-    <button (click)="hide()" *ngIf="visible" class="btn btn-primary">
-      <md-icon>settings_power</md-icon>
-      <span>Hide</span>
-    </button>
-  </p>
+<div id="multimeter">
+  <div class="card text-white bg-secondary mb-3">
+    <div class="card-header">{{deviceName}} (Multimeter in {{mainframe}})</div>
+    <div class="card-body">
+      <p>
+        <!-- action buttons -->
+        <button (click)="display()" *ngIf="!visible" class="btn btn-primary">
+          <md-icon>settings_power</md-icon>
+          <span>Display</span>
+        </button>
+        <button (click)="hide()" *ngIf="visible" class="btn btn-primary">
+          <md-icon>settings_power</md-icon>
+          <span>Hide</span>
+        </button>
+      </p>
+        
+      <!-- config inputs -->
+      <div id="mconfig" *ngIf="visible" class="device_section_div">
+
+        <!-- action buttons -->
+        <p>
+          <button (click)="start()" *ngIf="!active" class="btn btn-primary">
+            <md-icon>settings_power</md-icon>
+            <span>Start</span>
+          </button>
+          <button (click)="stop()" *ngIf="active" class="btn btn-primary">
+            <md-icon>settings_power</md-icon>
+            <span>Stop</span>
+          </button>
+        </p>
+
+        <label for="m_mode">Mode:</label>
+        <select name="m_mode" [(ngModel)]="selectedModeItem" (ngModelChange)="onChangeMode($event)">
+          <option *ngFor="let m of allowedModes" [ngValue]="m">{{m.value}}</option>
+        </select> 
       
-  <!-- config inputs -->
-  <div id="mconfig" *ngIf="visible" class="device_section_div">
+        <span *ngIf="selectedModeItem.value != 'R'">
+          <label for="m_u_acdc">AC/DC:</label>
+          <select name="m_u_acdc" [(ngModel)]="selectedACDCItem" (ngModelChange)="onChangeACDC($event)">
+            <option *ngFor="let m of allowedACDC" [ngValue]="m">{{m.value}}</option>
+          </select> 
+        </span>
 
-    <!-- action buttons -->
-    <p>
-      <button (click)="start()" *ngIf="!active" class="btn btn-primary">
-        <md-icon>settings_power</md-icon>
-        <span>Start</span>
-      </button>
-      <button (click)="stop()" *ngIf="active" class="btn btn-primary">
-        <md-icon>settings_power</md-icon>
-        <span>Stop</span>
-      </button>
-    </p>
+        <span id="m_u_range_dc_div" *ngIf="selectedModeItem.value != 'R' && selectedACDCItem.value == 'DC'">
+          <label for="m_u_range_dc">DC Volts Range:</label>
+          <select name="m_u_range_dc" [(ngModel)]="selectedDCRange" (ngModelChange)="onRangeChange('dc', $event)">
+            <option *ngFor="let m of allowedDCRanges" [ngValue]="m">{{m.value}}</option>
+          </select> 
+        </span>
 
-    <label for="m_mode">Mode:</label>
-    <select name="m_mode" [(ngModel)]="selectedModeItem" (ngModelChange)="onChangeMode($event)">
-      <option *ngFor="let m of allowedModes" [ngValue]="m">{{m.value}}</option>
-    </select> 
-  
-    <span *ngIf="selectedModeItem.value != 'R'">
-      <label for="m_u_acdc">AC/DC:</label>
-      <select name="m_u_acdc" [(ngModel)]="selectedACDCItem" (ngModelChange)="onChangeACDC($event)">
-        <option *ngFor="let m of allowedACDC" [ngValue]="m">{{m.value}}</option>
-      </select> 
-    </span>
+        <span id="m_u_range_dc_div" *ngIf="selectedModeItem.value != 'R' && selectedACDCItem.value == 'AC'">
+          <label for="m_u_range_ac">AC Volts Range:</label>
+          <select name="m_u_range_ac" [(ngModel)]="selectedACRange" (ngModelChange)="onRangeChange('ac', $event)">
+            <option *ngFor="let m of allowedACRanges" [ngValue]="m">{{m.value}}</option>
+          </select> 
+        </span>
+      
+        <span *ngIf="selectedModeItem.value != 'R'">
+          <label for="m_u_mode_auto"> Auto:</label>
+          <select name="m_u_mode_auto" [(ngModel)]="selectedAuto" (ngModelChange)="onAutoChange($event)">
+            <option *ngFor="let m of allowedAuto" [ngValue]="m">{{m.value}}</option>
+          </select> 
+        </span>
 
-    <span id="m_u_range_dc_div" *ngIf="selectedModeItem.value != 'R' && selectedACDCItem.value == 'DC'">
-      <label for="m_u_range_dc">DC Volts Range:</label>
-      <select name="m_u_range_dc" [(ngModel)]="selectedDCRange" (ngModelChange)="onRangeChange('dc', $event)">
-        <option *ngFor="let m of allowedDCRanges" [ngValue]="m">{{m.value}}</option>
-      </select> 
-    </span>
+        <span id="m_u_range_dc_div" *ngIf="selectedModeItem.value == 'R'">
+          <label for="m_r_mode">Ohms mode:</label>
+          <select name="m_r_mode" [(ngModel)]="selectedOhmsMode" (ngModelChange)="onAutoChange($event)">
+            <option *ngFor="let m of allowedOhmsMode" [ngValue]="m">{{m.value}}</option>
+          </select>
+        </span>
 
-    <span id="m_u_range_dc_div" *ngIf="selectedModeItem.value != 'R' && selectedACDCItem.value == 'AC'">
-      <label for="m_u_range_ac">AC Volts Range:</label>
-      <select name="m_u_range_ac" [(ngModel)]="selectedACRange" (ngModelChange)="onRangeChange('ac', $event)">
-        <option *ngFor="let m of allowedACRanges" [ngValue]="m">{{m.value}}</option>
-      </select> 
-    </span>
-  
-    <span *ngIf="selectedModeItem.value != 'R'">
-      <label for="m_u_mode_auto"> Auto:</label>
-      <select name="m_u_mode_auto" [(ngModel)]="selectedAuto" (ngModelChange)="onAutoChange($event)">
-        <option *ngFor="let m of allowedAuto" [ngValue]="m">{{m.value}}</option>
-      </select> 
-    </span>
+        <!-- switch connected to voltmeter has own control --> 
+        <app-switch [switch0]="switch0" [switch1]="switch1" (onSwitchChanged)="handleSwitchChange($event)"></app-switch>
 
-    <span id="m_u_range_dc_div" *ngIf="selectedModeItem.value == 'R'">
-      <label for="m_r_mode">Ohms mode:</label>
-      <select name="m_r_mode" [(ngModel)]="selectedOhmsMode" (ngModelChange)="onAutoChange($event)">
-        <option *ngFor="let m of allowedOhmsMode" [ngValue]="m">{{m.value}}</option>
-      </select>
-    </span>
-
-    <!-- switch connected to voltmeter has own control --> 
-    <app-switch [switch0]="switch0" [switch1]="switch1" (onSwitchChanged)="handleSwitchChange($event)"></app-switch>
-
+      </div>
+    </div>
   </div>
-
-
 </div>

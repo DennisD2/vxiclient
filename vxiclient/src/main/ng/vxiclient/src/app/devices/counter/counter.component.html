@@ -1,74 +1,81 @@
-<div id="counter" class="device_div">
-  <h3>{{deviceName}} (a Counter in mainframe {{mainframe}})</h3>
-  <p>
-    <!-- action buttons -->
-    <button type="button" (click)="display()" *ngIf="!visible" class="btn btn-primary" tooltip="Display UI for this device">
-      <md-icon>settings_power</md-icon>
-      <span>Display</span>
-    </button>
-    <button type="button" (click)="hide()" *ngIf="visible" class="btn btn-primary">
-      <md-icon>settings_power</md-icon>
-      <span>Hide</span>
-    </button>
-   </p>
-  
-  <div id="config" *ngIf="visible" class="device_section_div">
-
-    <p>
-      <!-- action buttons -->
-      <button type="button" (click)="start()" *ngIf="!active" class="btn btn-primary">
-        <md-icon>settings_power</md-icon>
-        <span>Start</span>
-      </button>
-      <button type="button" (click)="stop()" *ngIf="active" class="btn btn-primary">
-        <md-icon>settings_power</md-icon>
-        <span>Stop</span>
-      </button>
+<div id="counter">
+  <div class="card text-white bg-secondary mb-3">
+    <div class="card-header">{{deviceName}} (a Counter in mainframe {{mainframe}})</div>
+    <div class="card-body">
+      <p>
+        <!-- action buttons -->
+        <button type="button" (click)="display()" *ngIf="!visible" class="btn btn-primary" tooltip="Display UI for this device">
+          <md-icon>settings_power</md-icon>
+          <span>Display</span>
+        </button>
+        <button type="button" (click)="hide()" *ngIf="visible" class="btn btn-primary">
+          <md-icon>settings_power</md-icon>
+          <span>Hide</span>
+        </button>
+      </p>
       
-     </p>
+      <div id="config" *ngIf="visible" class="device_section_div">
 
-    <label for="m_mode">Mode:</label>
-    <select name="m_mode" [(ngModel)]="selectedModeItem" (ngModelChange)="onChangeMode($event)">
-      <option *ngFor="let m of allowedModes" [ngValue]="m">{{m.value}}</option>
-    </select> 
+        <p>
+          <!-- action buttons -->
+          <button type="button" (click)="start()" *ngIf="!active" class="btn btn-primary">
+            <md-icon>settings_power</md-icon>
+            <span>Start</span>
+          </button>
+          <button type="button" (click)="stop()" *ngIf="active" class="btn btn-primary">
+            <md-icon>settings_power</md-icon>
+            <span>Stop</span>
+          </button>
+        </p>
 
-    <label for="m_channel">Channel:</label>
-    <select name="m_channel" [(ngModel)]="selectedChannelItem" (ngModelChange)="onChangeChannel($event)">
-      <option *ngFor="let m of allowedChannel" [ngValue]="m">{{m.value}}</option>
-    </select> 
+        <div class="input-group">
+          <span class="input-group-addon" id="m_mode_addon">Mode:</span>
+          <select name="m_mode" [(ngModel)]="selectedModeItem" (ngModelChange)="onChangeMode($event)" class="form-control" aria-describedby="m_mode_addon">
+            <option *ngFor="let m of allowedModes" [ngValue]="m">{{m.value}}</option>
+          </select> 
+    
+          <span class="input-group-addon" id="m_channel_addon">Channel:</span>
+          <select name="m_channel" [(ngModel)]="selectedChannelItem" (ngModelChange)="onChangeChannel($event)" class="form-control" aria-describedby="m_channel_addon">
+            <option *ngFor="let m of allowedChannel" [ngValue]="m">{{m.value}}</option>
+          </select> 
+        </div>
+        <br>
 
-    <br>
+        <div class="input-group">
+          <label for="m_coupling">Coupling:</label>
+          <select name="m_coupling" [(ngModel)]="selectedCouplingItem" (ngModelChange)="onChangeCoupling($event)">
+            <option *ngFor="let m of allowedCouplings" [ngValue]="m">{{m.value}}</option>
+          </select> 
 
-    <label for="m_coupling">Coupling:</label>
-    <select name="m_coupling" [(ngModel)]="selectedCouplingItem" (ngModelChange)="onChangeCoupling($event)">
-      <option *ngFor="let m of allowedCouplings" [ngValue]="m">{{m.value}}</option>
-    </select> 
+          <label for="m_attenuation">Attenuation:</label>
+          <select name="m_attenuation" [(ngModel)]="selectedAttenuationItem" (ngModelChange)="onChangeAttenuation($event)">
+            <option *ngFor="let m of allowedAttenuations" [ngValue]="m">{{m.value}}</option>
+          </select> 
 
-    <label for="m_attenuation">Attenuation:</label>
-    <select name="m_attenuation" [(ngModel)]="selectedAttenuationItem" (ngModelChange)="onChangeAttenuation($event)">
-      <option *ngFor="let m of allowedAttenuations" [ngValue]="m">{{m.value}}</option>
-    </select> 
+          <label for="m_impedance">Impedance:</label>
+          <select name="m_impedance" [(ngModel)]="selectedImpedanceItem" (ngModelChange)="onChangeImpedance($event)">
+            <option *ngFor="let m of allowedImpedances" [ngValue]="m">{{m.value}}</option>
+          </select> 
 
-    <label for="m_impedance">Impedance:</label>
-    <select name="m_impedance" [(ngModel)]="selectedImpedanceItem" (ngModelChange)="onChangeImpedance($event)">
-      <option *ngFor="let m of allowedImpedances" [ngValue]="m">{{m.value}}</option>
-    </select> 
+          <label for="m_lowpass">Lowpass:</label>
+          <select name="m_lowpass" [(ngModel)]="selectedLowpassItem" (ngModelChange)="onChangeLowpass($event)">
+            <option *ngFor="let m of allowedLowpass" [ngValue]="m">{{m.value}}</option>
+          </select> 
+        </div>
+        <br>
 
-    <label for="m_lowpass">Lowpass:</label>
-    <select name="m_lowpass" [(ngModel)]="selectedLowpassItem" (ngModelChange)="onChangeLowpass($event)">
-      <option *ngFor="let m of allowedLowpass" [ngValue]="m">{{m.value}}</option>
-    </select> 
+        <div class="input-group">
+          <label for="m_eslope">Event Slope:</label>
+          <select name="m_eslope" [(ngModel)]="selectedSlopeItem" (ngModelChange)="onChangeEventSlope()">
+            <option *ngFor="let m of allowedSlopes" [ngValue]="m">{{m.value}}</option>
+          </select> 
 
-    <br>
+          <label for="m_elevel">Event Level [V]:</label>
+          <input type="text" id="m_elevel" [(ngModel)]="eventLevel" (ngModelChange)="onChangeEventLevel()" size=10>
+        </div>
 
-    <label for="m_eslope">Event Slope:</label>
-    <select name="m_eslope" [(ngModel)]="selectedSlopeItem" (ngModelChange)="onChangeEventSlope()">
-      <option *ngFor="let m of allowedSlopes" [ngValue]="m">{{m.value}}</option>
-    </select> 
-
-    <label for="m_elevel">Event Level [V]:</label>
-    <input type="text" id="m_elevel" [(ngModel)]="eventLevel" (ngModelChange)="onChangeEventLevel()" size=10>
-
+      </div>
+    </div>
   </div>
 </div>
 

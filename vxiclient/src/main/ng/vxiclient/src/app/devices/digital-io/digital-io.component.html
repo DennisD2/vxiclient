@@ -1,99 +1,103 @@
-<div id="dio" class="device_div">
-	<h3>{{deviceName}} (Digital I/O in {{mainframe}})</h3>
-	<p>
-		<!-- action buttons -->
-		<button (click)="display()" *ngIf="!visible">
-			<md-icon>settings_power</md-icon>
-			<span>Display</span>
-		</button>
-		<button (click)="hide()" *ngIf="visible">
-			<md-icon>settings_power</md-icon>
-			<span>Hide</span>
-		</button>
-	</p>
-
-	<div id="digconfig" *ngIf="visible">
-		<!-- action buttons -->
+<div id="dio">
+	<div class="card text-white bg-secondary mb-3">
+		<div class="card-header">{{deviceName}} (Digital I/O in {{mainframe}})</div>
+		<div class="card-body">
 		<p>
-			<button (click)="start()" *ngIf="!active">
+			<!-- action buttons -->
+			<button type="button" (click)="display()" *ngIf="!visible" class="btn btn-primary" tooltip="Display UI for this device">
 				<md-icon>settings_power</md-icon>
-				<span>Start</span>
+				<span>Display</span>
 			</button>
-			<button (click)="stop()" *ngIf="active">
+			<button type="button" (click)="hide()" *ngIf="visible" class="btn btn-primary">
 				<md-icon>settings_power</md-icon>
-				<span>Stop</span>
-			</button>
+				<span>Hide</span>
+			</button>		  
 		</p>
+
+		<div id="digconfig" *ngIf="visible">
+			<!-- action buttons -->
+			<p>
+				<!-- action buttons -->
+				<button type="button" (click)="start()" *ngIf="!active" class="btn btn-primary">
+					<md-icon>settings_power</md-icon>
+					<span>Start</span>
+				</button>
+				<button type="button" (click)="stop()" *ngIf="active" class="btn btn-primary">
+					<md-icon>settings_power</md-icon>
+					<span>Stop</span>
+				</button>
+			</p>
 				
-		<div id="digconfig_polarity" style="border:1px solid black; width: 12%;; padding-top: 3px; padding-left: 3px;">
-			Polarity<br>
-			DATA0:
-			<input type="radio" name="polarity_0" value="pos" checked [(ngModel)]="polarity0" (change)="onPolarityChange(0,true)">pos
-			<input type="radio" name="polarity_0" value="neg"         [(ngModel)]="polarity0" (change)="onPolarityChange(0,false)">neg<br>
-			DATA1:
-			<input type="radio" name="polarity_1" value="pos" checked [(ngModel)]="polarity1" (change)="onPolarityChange(1,true)">pos
-			<input type="radio" name="polarity_1" value="neg"         [(ngModel)]="polarity1" (change)="onPolarityChange(1,false)">neg<br>
-			DATA2:
-			<input type="radio" name="polarity_2" value="pos" checked [(ngModel)]="polarity2" (change)="onPolarityChange(2,true)">pos
-			<input type="radio" name="polarity_2" value="neg"         [(ngModel)]="polarity2" (change)="onPolarityChange(2,false)">neg<br>
-			DATA3:
-			<input type="radio" name="polarity_3" value="pos" checked [(ngModel)]="polarity3" (change)="onPolarityChange(3,true)">pos
-			<input type="radio" name="polarity_3" value="neg"         [(ngModel)]="polarity3" (change)="onPolarityChange(3,false)">neg
-		</div>
-		Data<br>
-		<div id="data0_config" style="border:1px solid black;width: 25%; display: inline; background: #ffff00; padding-top: 3px; padding-left: 3px;">
-			DATA0:
-			<div id="data0" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;" >
-				7 <input type="checkbox" name="bit7" value="false" [(ngModel)]="data0[7]" (change)="onSwitchChange(0,7)">
-				6 <input type="checkbox" name="bit6" value="false" [(ngModel)]="data0[6]" (change)="onSwitchChange(0,6)">
-				5 <input type="checkbox" name="bit5" value="false" [(ngModel)]="data0[5]" (change)="onSwitchChange(0,5)">
-				4 <input type="checkbox" name="bit4" value="false" [(ngModel)]="data0[4]" (change)="onSwitchChange(0,4)">
-				3 <input type="checkbox" name="bit3" value="false" [(ngModel)]="data0[3]" (change)="onSwitchChange(0,3)">
-				2 <input type="checkbox" name="bit2" value="false" [(ngModel)]="data0[3]" (change)="onSwitchChange(0,2)">
-				1 <input type="checkbox" name="bit1" value="false" [(ngModel)]="data0[1]" (change)="onSwitchChange(0,1)">
-				0 <input type="checkbox" name="bit0" value="false" [(ngModel)]="data0[0]" (change)="onSwitchChange(0,0)">
+			<div id="digconfig_polarity" style="border:1px solid black; width: 12%;; padding-top: 3px; padding-left: 3px;">
+				Polarity<br>
+				DATA0:
+				<input type="radio" name="polarity_0" value="pos" checked [(ngModel)]="polarity0" (change)="onPolarityChange(0,true)">pos
+				<input type="radio" name="polarity_0" value="neg"         [(ngModel)]="polarity0" (change)="onPolarityChange(0,false)">neg<br>
+				DATA1:
+				<input type="radio" name="polarity_1" value="pos" checked [(ngModel)]="polarity1" (change)="onPolarityChange(1,true)">pos
+				<input type="radio" name="polarity_1" value="neg"         [(ngModel)]="polarity1" (change)="onPolarityChange(1,false)">neg<br>
+				DATA2:
+				<input type="radio" name="polarity_2" value="pos" checked [(ngModel)]="polarity2" (change)="onPolarityChange(2,true)">pos
+				<input type="radio" name="polarity_2" value="neg"         [(ngModel)]="polarity2" (change)="onPolarityChange(2,false)">neg<br>
+				DATA3:
+				<input type="radio" name="polarity_3" value="pos" checked [(ngModel)]="polarity3" (change)="onPolarityChange(3,true)">pos
+				<input type="radio" name="polarity_3" value="neg"         [(ngModel)]="polarity3" (change)="onPolarityChange(3,false)">neg
 			</div>
-		</div>
-		<div id="data1_config" style="border:1px solid black;width: 25%; display: inline; background: #ffffff; padding-top: 3px; padding-left: 3px;">
-			DATA1:
-			<div id="data1" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;">
-				7 <input type="checkbox" name="bit7" value="false" [(ngModel)]="data1[7]" (change)="onSwitchChange(1,7)">
-				6 <input type="checkbox" name="bit6" value="false" [(ngModel)]="data1[6]" (change)="onSwitchChange(1,6)">
-				5 <input type="checkbox" name="bit5" value="false" [(ngModel)]="data1[5]" (change)="onSwitchChange(1,5)">
-				4 <input type="checkbox" name="bit4" value="false" [(ngModel)]="data1[4]" (change)="onSwitchChange(1,4)">
-				3 <input type="checkbox" name="bit3" value="false" [(ngModel)]="data1[3]" (change)="onSwitchChange(1,3)">
-				2 <input type="checkbox" name="bit2" value="false" [(ngModel)]="data1[3]" (change)="onSwitchChange(1,2)">
-				1 <input type="checkbox" name="bit1" value="false" [(ngModel)]="data1[1]" (change)="onSwitchChange(1,1)">
-				0 <input type="checkbox" name="bit0" value="false" [(ngModel)]="data1[0]" (change)="onSwitchChange(1,0)">
+			Data<br>
+			<div id="data0_config" style="border:1px solid black;width: 25%; display: inline; background: #ffff00; padding-top: 3px; padding-left: 3px;">
+				DATA0:
+				<div id="data0" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;" >
+					7 <input type="checkbox" name="bit7" value="false" [(ngModel)]="data0[7]" (change)="onSwitchChange(0,7)">
+					6 <input type="checkbox" name="bit6" value="false" [(ngModel)]="data0[6]" (change)="onSwitchChange(0,6)">
+					5 <input type="checkbox" name="bit5" value="false" [(ngModel)]="data0[5]" (change)="onSwitchChange(0,5)">
+					4 <input type="checkbox" name="bit4" value="false" [(ngModel)]="data0[4]" (change)="onSwitchChange(0,4)">
+					3 <input type="checkbox" name="bit3" value="false" [(ngModel)]="data0[3]" (change)="onSwitchChange(0,3)">
+					2 <input type="checkbox" name="bit2" value="false" [(ngModel)]="data0[3]" (change)="onSwitchChange(0,2)">
+					1 <input type="checkbox" name="bit1" value="false" [(ngModel)]="data0[1]" (change)="onSwitchChange(0,1)">
+					0 <input type="checkbox" name="bit0" value="false" [(ngModel)]="data0[0]" (change)="onSwitchChange(0,0)">
+				</div>
 			</div>
-		</div>
+			<div id="data1_config" style="border:1px solid black;width: 25%; display: inline; background: #ffffff; padding-top: 3px; padding-left: 3px;">
+				DATA1:
+				<div id="data1" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;">
+					7 <input type="checkbox" name="bit7" value="false" [(ngModel)]="data1[7]" (change)="onSwitchChange(1,7)">
+					6 <input type="checkbox" name="bit6" value="false" [(ngModel)]="data1[6]" (change)="onSwitchChange(1,6)">
+					5 <input type="checkbox" name="bit5" value="false" [(ngModel)]="data1[5]" (change)="onSwitchChange(1,5)">
+					4 <input type="checkbox" name="bit4" value="false" [(ngModel)]="data1[4]" (change)="onSwitchChange(1,4)">
+					3 <input type="checkbox" name="bit3" value="false" [(ngModel)]="data1[3]" (change)="onSwitchChange(1,3)">
+					2 <input type="checkbox" name="bit2" value="false" [(ngModel)]="data1[3]" (change)="onSwitchChange(1,2)">
+					1 <input type="checkbox" name="bit1" value="false" [(ngModel)]="data1[1]" (change)="onSwitchChange(1,1)">
+					0 <input type="checkbox" name="bit0" value="false" [(ngModel)]="data1[0]" (change)="onSwitchChange(1,0)">
+				</div>
+			</div>
 
-		<br>
+			<br>
 
-		<div id="data2_config" style="border:1px solid black;width: 25%; display: inline; background: #ffff00; padding-top: 3px; padding-left: 3px;">
-			DATA2:
-			<div id="data2" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;">
-				7 <input type="checkbox" name="bit7" value="false" [(ngModel)]="data2[7]" (change)="onSwitchChange(2,7)">
-				6 <input type="checkbox" name="bit6" value="false" [(ngModel)]="data2[6]" (change)="onSwitchChange(2,6)">
-				5 <input type="checkbox" name="bit5" value="false" [(ngModel)]="data2[5]" (change)="onSwitchChange(2,5)">
-				4 <input type="checkbox" name="bit4" value="false" [(ngModel)]="data2[4]" (change)="onSwitchChange(2,4)">
-				3 <input type="checkbox" name="bit3" value="false" [(ngModel)]="data2[3]" (change)="onSwitchChange(2,3)">
-				2 <input type="checkbox" name="bit2" value="false" [(ngModel)]="data2[3]" (change)="onSwitchChange(2,2)">
-				1 <input type="checkbox" name="bit1" value="false" [(ngModel)]="data2[1]" (change)="onSwitchChange(2,1)">
-				0 <input type="checkbox" name="bit0" value="false" [(ngModel)]="data2[0]" (change)="onSwitchChange(2,0)">
+			<div id="data2_config" style="border:1px solid black;width: 25%; display: inline; background: #ffff00; padding-top: 3px; padding-left: 3px;">
+				DATA2:
+				<div id="data2" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;">
+					7 <input type="checkbox" name="bit7" value="false" [(ngModel)]="data2[7]" (change)="onSwitchChange(2,7)">
+					6 <input type="checkbox" name="bit6" value="false" [(ngModel)]="data2[6]" (change)="onSwitchChange(2,6)">
+					5 <input type="checkbox" name="bit5" value="false" [(ngModel)]="data2[5]" (change)="onSwitchChange(2,5)">
+					4 <input type="checkbox" name="bit4" value="false" [(ngModel)]="data2[4]" (change)="onSwitchChange(2,4)">
+					3 <input type="checkbox" name="bit3" value="false" [(ngModel)]="data2[3]" (change)="onSwitchChange(2,3)">
+					2 <input type="checkbox" name="bit2" value="false" [(ngModel)]="data2[3]" (change)="onSwitchChange(2,2)">
+					1 <input type="checkbox" name="bit1" value="false" [(ngModel)]="data2[1]" (change)="onSwitchChange(2,1)">
+					0 <input type="checkbox" name="bit0" value="false" [(ngModel)]="data2[0]" (change)="onSwitchChange(2,0)">
+				</div>
 			</div>
-		</div>
-		<div id="data3_config" style="border:1px solid black;width: 25%; display: inline; background: #ffffff; padding-top: 3px; padding-left: 3px;">
-			DATA3:
-			<div id="data3" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;">
-				7 <input type="checkbox" name="bit7" value="false" [(ngModel)]="data3[7]" (change)="onSwitchChange(3,7)">
-				6 <input type="checkbox" name="bit6" value="false" [(ngModel)]="data3[6]" (change)="onSwitchChange(3,6)">
-				5 <input type="checkbox" name="bit5" value="false" [(ngModel)]="data3[5]" (change)="onSwitchChange(3,5)">
-				4 <input type="checkbox" name="bit4" value="false" [(ngModel)]="data3[4]" (change)="onSwitchChange(3,4)">
-				3 <input type="checkbox" name="bit3" value="false" [(ngModel)]="data3[3]" (change)="onSwitchChange(3,3)">
-				2 <input type="checkbox" name="bit2" value="false" [(ngModel)]="data3[3]" (change)="onSwitchChange(3,2)">
-				1 <input type="checkbox" name="bit1" value="false" [(ngModel)]="data3[1]" (change)="onSwitchChange(3,1)">
-				0 <input type="checkbox" name="bit0" value="false" [(ngModel)]="data3[0]" (change)="onSwitchChange(3,0)">
+			<div id="data3_config" style="border:1px solid black;width: 25%; display: inline; background: #ffffff; padding-top: 3px; padding-left: 3px;">
+				DATA3:
+				<div id="data3" style="border:1px solid black;width: 25%; display: inline; padding-top: 3px;">
+					7 <input type="checkbox" name="bit7" value="false" [(ngModel)]="data3[7]" (change)="onSwitchChange(3,7)">
+					6 <input type="checkbox" name="bit6" value="false" [(ngModel)]="data3[6]" (change)="onSwitchChange(3,6)">
+					5 <input type="checkbox" name="bit5" value="false" [(ngModel)]="data3[5]" (change)="onSwitchChange(3,5)">
+					4 <input type="checkbox" name="bit4" value="false" [(ngModel)]="data3[4]" (change)="onSwitchChange(3,4)">
+					3 <input type="checkbox" name="bit3" value="false" [(ngModel)]="data3[3]" (change)="onSwitchChange(3,3)">
+					2 <input type="checkbox" name="bit2" value="false" [(ngModel)]="data3[3]" (change)="onSwitchChange(3,2)">
+					1 <input type="checkbox" name="bit1" value="false" [(ngModel)]="data3[1]" (change)="onSwitchChange(3,1)">
+					0 <input type="checkbox" name="bit0" value="false" [(ngModel)]="data3[0]" (change)="onSwitchChange(3,0)">
+				</div>
 			</div>
 		</div>
 	</div>
