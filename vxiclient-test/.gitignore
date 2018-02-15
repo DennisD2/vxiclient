@@ -1,5 +1,0 @@
-/target/**
-.bzr/
-**/.bzr/**
-.jsdtscope
-**/node_modules/**
