@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.spurtikus</groupId>
 	<artifactId>vxiclient</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>VXIClient</name>
 	<description>VXI client implementation</description>
 	<packaging>jar</packaging>
@@ -58,6 +58,42 @@
 
 			</dependencies>
 		</profile>
+
+		<!-- if rpc needs to be (re-)generated, use "mvn -P rpcgen clean install" -->
+		<profile>
+			<id>rpcgen</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.acplt.remotetea</groupId>
+						<artifactId>remotetea-maven-plugin</artifactId>
+						<version>${remotetea.version}</version>
+						<executions>
+							<execution>
+								<id>jrpcgen</id>
+								<goals>
+									<goal>clientandserver</goal>
+								</goals>
+								<configuration>
+									<xFile>src/main/rpcgen/vxi11.x</xFile>
+									<destDir>src/gen/java</destDir>
+									<packageName>de.spurtikus.rpcgen</packageName>
+									<!-- Force the creation of the destination directory if it does 
+										not already exist at generation time. -->
+									<createDir>true</createDir>
+									<!-- Uncomment the following line to create an RPC server listening 
+										only on TCP. -->
+									<!-- <serverTcpOnly>true</serverTcpOnly> -->
+									<!-- Uncomment the following line to create an RPC server listening 
+										only on UDP. -->
+									<!-- <serverUdpOnly>true</serverUdpOnly> -->
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
 	<build>
@@ -73,33 +109,6 @@
 				</configuration>
 			</plugin>
 
-			<plugin>
-				<groupId>org.acplt.remotetea</groupId>
-				<artifactId>remotetea-maven-plugin</artifactId>
-				<version>${remotetea.version}</version>
-				<executions>
-					<execution>
-						<id>jrpcgen</id>
-						<goals>
-							<goal>clientandserver</goal>
-						</goals>
-						<configuration>
-							<xFile>src/main/rpcgen/vxi11.x</xFile>
-							<destDir>src/gen/java</destDir>
-							<packageName>de.spurtikus.rpcgen</packageName>
-							<!-- Force the creation of the destination directory if it does not 
-								already exist at generation time. -->
-							<createDir>true</createDir>
-							<!-- Uncomment the following line to create an RPC server listening 
-								only on TCP. -->
-							<!-- <serverTcpOnly>true</serverTcpOnly> -->
-							<!-- Uncomment the following line to create an RPC server listening 
-								only on UDP. -->
-							<!-- <serverUdpOnly>true</serverUdpOnly> -->
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -150,7 +159,7 @@
 						<argument>build</argument>
 						<argument>-dev</argument>
 						<argument>-basedir</argument>
-						<argument>/vxiclient-0.0.1-SNAPSHOT/</argument>						
+						<argument>/vxiclient-0.0.1-SNAPSHOT/</argument>
 					</arguments>
 				</configuration>
 			</plugin>
