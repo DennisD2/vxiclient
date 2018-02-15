@@ -12,53 +12,9 @@
 		<remotetea.version>1.1.3</remotetea.version>
 		<jersey.version>2.25.1</jersey.version>
 		<logback.version>1.2.3</logback.version>
-
-		<!-- Testing -->
-		<arquillian.tomcat.version>8.5.23</arquillian.tomcat.version>
 	</properties>
 
 	<profiles>
-		<!-- Tomcat Embedded -->
-		<profile>
-			<id>arquillian-tomcat-embedded</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.arquillian.container</groupId>
-					<artifactId>arquillian-tomcat-embedded-8</artifactId>
-					<version>1.0.0</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.tomcat.embed</groupId>
-					<artifactId>tomcat-embed-core</artifactId>
-					<version>${arquillian.tomcat.version}</version>
-					<scope>provided</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.tomcat.embed</groupId>
-					<artifactId>tomcat-embed-jasper</artifactId>
-					<version>${arquillian.tomcat.version}</version>
-					<scope>provided</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.tomcat.embed</groupId>
-					<artifactId>tomcat-embed-logging-juli</artifactId>
-					<version>8.5.2</version>
-					<scope>provided</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.eclipse.jdt.core.compiler</groupId>
-					<artifactId>ecj</artifactId>
-					<version>3.7</version>
-					<scope>provided</scope>
-				</dependency>
-
-			</dependencies>
-		</profile>
-
 		<!-- if rpc needs to be (re-)generated, use "mvn -P rpcgen clean install" -->
 		<profile>
 			<id>rpcgen</id>
@@ -98,7 +54,6 @@
 
 	<build>
 		<plugins>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -108,7 +63,6 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-
 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -215,12 +169,12 @@
 		</dependency>
 
 		<!-- Server part -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
@@ -245,7 +199,7 @@
 			<artifactId>javax.ws.rs-api</artifactId>
 			<version>2.0.1</version>
 			<scope>compile</scope>
-		</dependency>
+		</dependency> 
 
 		<!-- Logging -->
 		<dependency>
@@ -268,7 +222,7 @@
 		</dependency>
 
 		<!-- Arquillian -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
 			<artifactId>arquillian-junit-container</artifactId>
 			<scope>test</scope>
@@ -277,10 +231,10 @@
 			<groupId>org.jboss.arquillian.protocol</groupId>
 			<artifactId>arquillian-protocol-servlet</artifactId>
 			<scope>test</scope>
-		</dependency>
+		</dependency> -->
 
 		<!-- REST client testing -->
-		<dependency>
+		<!--  <dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
 			<artifactId>arquillian-junit-container</artifactId>
 			<scope>test</scope>
@@ -294,17 +248,17 @@
 			<groupId>org.jboss.shrinkwrap.resolver</groupId>
 			<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
 			<scope>test</scope>
-		</dependency>
+		</dependency> -->
 		<!-- REST client support -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
 			<version>${jersey.version}</version>
-		</dependency>
+		</dependency> -->
 
 	</dependencies>
 
-	<dependencyManagement>
+	<!-- <dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>org.jboss.arquillian</groupId>
@@ -314,5 +268,5 @@
 				<type>pom</type>
 			</dependency>
 		</dependencies>
-	</dependencyManagement>
+	</dependencyManagement> -->
 </project>
