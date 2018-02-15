@@ -10,6 +10,7 @@ Todos
   - HP1300Pacer boundary completion
   - HP1326 boundary completion
   - HP1330 boundary completion
+  
  
 - Hp1330 test fails (get returns always true for bits)
 - Fix Definite Block Length code, See TODO
