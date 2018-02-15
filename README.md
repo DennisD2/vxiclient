@@ -3,20 +3,26 @@ Code to access VXI devices via serial, serial GPIB and LAN connections
 
 The idea of this project is to offer control of VXI devices via GPIB or LAN. The code has four major layers:
 
-* Basic access level (serial, GPIB over serial, LAN using ONC/RPC)
+* vxiclient-core: Basic access and device level. Basic access is via:
+	* serial, 
+	* GPIB over serial
+	* LAN using ONC/RPC)
+  Device level supports for now only HP devices
+  	* HP E1326 Voltmeter 
+  	* HP E1333 Counter
+  	* HP E1340 Arbitrary Frequency Generator
+   and several other devices.
 
-* Device Level (for now only HP devices like HP E1326 Voltmeter and several other devices)
+  REST API to access the devices using simple REST calls
 
-* REST API to access the devices using simple REST calls
-
-* Frontend application written in JavaScript accessing devices via REST API 
+* vxiclient-web: Frontend application written in JavaScript accessing devices via REST API 
 
 All code together is compiled into a simple WAR file that can be deployed and run on e.g. Tomcat.
 
 NOTE: this is work in progress; Basic level and Device level are usable. Boundaries are work in progress and the frontend layer is like a PoC. 
 
 
-# Basic access layer
+# Basic access layer (vxiclient-core)
 
 A file vxiserver.properties contains information about devices. The following lines describe two mainframes, one accessible via GPIB over Serial connector, the other one accessible via LAN.
 
