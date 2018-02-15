@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.spurtikus</groupId>
-	<artifactId>vxiclient</artifactId>
+	<artifactId>vxiclient-core</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 	<name>VXIClient</name>
 	<description>VXI client implementation</description>
@@ -83,15 +83,6 @@
 				</executions>
 			</plugin>
 
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.17</version>
-			</plugin>
-
-			<plugin>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.17</version>
-			</plugin>
 
 			<!-- Create production build from Angular sources -->
 			<plugin>
@@ -221,52 +212,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Arquillian -->
-		<!-- <dependency>
-			<groupId>org.jboss.arquillian.junit</groupId>
-			<artifactId>arquillian-junit-container</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.protocol</groupId>
-			<artifactId>arquillian-protocol-servlet</artifactId>
-			<scope>test</scope>
-		</dependency> -->
-
-		<!-- REST client testing -->
-		<!--  <dependency>
-			<groupId>org.jboss.arquillian.junit</groupId>
-			<artifactId>arquillian-junit-container</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.extension</groupId>
-			<artifactId>arquillian-rest-client-impl-jersey</artifactId>
-			<version>1.0.0.Alpha4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.shrinkwrap.resolver</groupId>
-			<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-			<scope>test</scope>
-		</dependency> -->
-		<!-- REST client support -->
-		<!-- <dependency>
-			<groupId>org.glassfish.jersey.core</groupId>
-			<artifactId>jersey-client</artifactId>
-			<version>${jersey.version}</version>
-		</dependency> -->
-
 	</dependencies>
 
-	<!-- <dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.jboss.arquillian</groupId>
-				<artifactId>arquillian-bom</artifactId>
-				<version>1.1.11.Final</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-		</dependencies>
-	</dependencyManagement> -->
 </project>
