@@ -1,10 +1,10 @@
-# vxiclient-core
+# vxiclient
 Code to access VXI devices via serial, serial GPIB and LAN connections
 
 The idea of this project is to offer control of VXI devices via GPIB or LAN. The code has four major layers:
 
 * vxiclient-core: Basic access and device level. Basic access is via:
-	* serial, 
+	* Serial, 
 	* GPIB over serial
 	* LAN using ONC/RPC)
 	
