@@ -1,7 +1,6 @@
 package de.spurtikus.vxi.service;
 
 import de.spurtikus.devices.hp.BaseHPDevice;
-import de.spurtikus.devices.hp.HP1340;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
