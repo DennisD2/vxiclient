@@ -26,7 +26,7 @@ public class Constants {
 	public static final byte ESC = 0x1b;
 	
 	//public static final String CONTEXT_ROOT = "/vxi";
-	public static final String SERVICE_ROOT = "api/rest";
+	public static final String SERVICE_ROOT = "api/rest/";
 	
 	public static final String URL_SYSTEM = "system";
 	public static final String URL_MAINFRAME = "mainframe";
