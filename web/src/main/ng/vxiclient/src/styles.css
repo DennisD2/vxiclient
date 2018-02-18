@@ -1,0 +1,33 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+.spacer {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+}
+
+.device_div {
+    border:1px solid black; 
+    width: 100%;
+    padding-top: 3px; 
+    padding-left: 3px;
+    background-color: darkseagreen
+}
+
+.device_section_div {
+    border:1px solid black; 
+    width: 100%;
+    padding-top: 3px; 
+    padding-left: 3px;
+    background-color: darkseagreen
+}
+
+.view_div {
+    border:1px solid black; 
+    width: 100%;
+    padding-top: 3px; 
+    padding-left: 3px;
+    background-color:teal
+}
