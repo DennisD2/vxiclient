@@ -20,7 +20,6 @@ import de.spurtikus.devices.hp.HP1333.Attenuation;
 import de.spurtikus.devices.hp.HP1333.CounterConfiguration;
 import de.spurtikus.devices.hp.HP1333.Coupling;
 import de.spurtikus.devices.hp.HP1333.Impedance;
-import de.spurtikus.vxi.Constants;
 
 /**
  * Boundary for counters.

@@ -24,17 +24,4 @@ public class Constants {
 	public static final char XON = 0x11;
 	public static final char XOFF = 0x13;
 	public static final byte ESC = 0x1b;
-	
-	//public static final String CONTEXT_ROOT = "/vxi";
-	public static final String SERVICE_ROOT = "api/rest/";
-	
-	public static final String URL_SYSTEM = "system";
-	public static final String URL_MAINFRAME = "mainframe";
-	public static final String URL_PACER = "pacer";
-	public static final String URL_COUNTER = "counter";
-	public static final String URL_SWITCH = "switch";
-	public static final String URL_AFG = "afg";
-	public static final String URL_DIGITALIO = "dio";
-	public static final String URL_MULTIMETER = "multimeter";
-
 }

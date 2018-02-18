@@ -20,7 +20,6 @@ import de.spurtikus.devices.hp.HP1340.BuiltinWaveForm;
 import de.spurtikus.devices.hp.HP1340.MarkerFeedType;
 import de.spurtikus.devices.hp.HP1340.PolarityType;
 import de.spurtikus.devices.hp.HP1340.StandardWaveForm;
-import de.spurtikus.vxi.Constants;
 
 /**
  * Boundary for Arbitrary Frequency Generators (AFGs).

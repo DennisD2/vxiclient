@@ -20,7 +20,6 @@ import de.spurtikus.devices.hp.DigitalIO.Bit;
 import de.spurtikus.devices.hp.DigitalIO.Polarity;
 import de.spurtikus.devices.hp.DigitalIO.Port;
 import de.spurtikus.devices.hp.DigitalIO.PortDescription;
-import de.spurtikus.vxi.Constants;
 
 /**
  * Boundary for Digital I/O cards.

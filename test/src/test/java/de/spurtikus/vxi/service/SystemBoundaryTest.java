@@ -16,8 +16,6 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.spurtikus.vxi.Constants;
-
 @RunWith(Arquillian.class)
 public class SystemBoundaryTest extends BaseBoundaryTest {
 	public final String DEVICECLASS = Constants.URL_SYSTEM;

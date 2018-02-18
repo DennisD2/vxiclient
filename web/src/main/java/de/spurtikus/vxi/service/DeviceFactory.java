@@ -11,7 +11,6 @@ import de.spurtikus.devices.hp.HP1326;
 import de.spurtikus.devices.hp.HP1333;
 import de.spurtikus.devices.hp.HP1340;
 import de.spurtikus.devices.hp.HP1351;
-import de.spurtikus.vxi.Constants;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 

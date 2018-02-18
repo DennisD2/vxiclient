@@ -52,3 +52,15 @@ vxi.connector.2.devices=[{"name":"hp1411","type":"multimeter","address":"iscpi,8
 # Web application (vxiclient-web)
 
 All code together is compiled into a simple WAR file that can be deployed and run on e.g. Tomcat.
+
+# Test project (vxiclient-test)
+
+This project just contain tests. The tests run against the configuration defined in file resources/vxiserver.properties. Adapt that file to your local configuration.
+
+# Building vxiclient
+
+Clone or download the complete repository. Compile the web application with the command
+
+ mvn clean install -DskipTests
+ 
+

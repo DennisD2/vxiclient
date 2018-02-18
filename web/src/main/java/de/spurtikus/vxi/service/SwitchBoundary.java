@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.spurtikus.devices.hp.HP1351;
-import de.spurtikus.vxi.Constants;
 
 /**
  * Boundary for FET switches.

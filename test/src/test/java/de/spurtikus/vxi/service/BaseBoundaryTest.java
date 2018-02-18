@@ -10,7 +10,6 @@ import org.jboss.shrinkwrap.resolver.api.maven.PackagingType;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
-import de.spurtikus.vxi.Constants;
 
 public class BaseBoundaryTest {
 	public final String BASE_URI = Constants.SERVICE_ROOT;

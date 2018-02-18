@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.spurtikus.devices.hp.HP1300b;
-import de.spurtikus.vxi.Constants;
 import de.spurtikus.vxi.mainframes.hp1300b.VXIDevice;
 
 /**
