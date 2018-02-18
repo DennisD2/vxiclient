@@ -7,11 +7,6 @@ package de.spurtikus.vxi;
  *
  */
 public class Constants {
-	/** Config file relative path in classpath */
-	public static final String CONFIGFILE_LOCATION = "vxiserver.properties";
-	/** Prefix for all vxiclient properties */
-	public static final String CONFIGVAL_PREFIX = "vxi.connector.";
-
 	/** Serial configuration */
 	public static final int SERIAL_CONFIG = 1;
 	/** Network configuration */

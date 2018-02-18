@@ -17,7 +17,6 @@ import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
 import de.spurtikus.vxi.mainframes.hp1300b.VXIDevice;
 import de.spurtikus.vxi.service.Configuration;
-import de.spurtikus.vxi.service.DeviceInfo;
 
 public class HP1300bTest {
 	static final String TEST_DEVICE_NAME = "hp1301";

@@ -16,6 +16,7 @@ import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
+
 import de.spurtikus.vxi.service.Configuration;
 
 public class ErrorTest {

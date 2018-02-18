@@ -1,12 +1,17 @@
 package de.spurtikus.vxi.service;
 
 /**
- * Global constants.
+ * Global service constants.
  * 
  * @author dennis
  *
  */
 public class Constants {
+	/** Config file relative path in classpath */
+	public static final String CONFIGFILE_LOCATION = "vxiserver.properties";
+	/** Prefix for all vxiclient properties */
+	public static final String CONFIGVAL_PREFIX = "vxi.connector.";
+
 	public static final String SERVICE_ROOT = "api/rest/";
 	
 	public static final String URL_SYSTEM = "system";
