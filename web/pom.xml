@@ -41,7 +41,7 @@
 						<argument>build</argument>
 						<argument>-dev</argument>
 						<argument>-basedir</argument>
-						<argument>/vxiclient-0.0.1-SNAPSHOT/</argument>
+						<argument>.</argument>
 					</arguments>
 				</configuration>
 			</plugin>

@@ -39,6 +39,12 @@ public class SystemBoundary {
 		className = Constants.URL_SYSTEM.replace("/", "");
 	}
 
+	/*
+	 * TODO: the Path("/") produces tomcat startup warning: 
+	 * The following warnings have been detected: WARNING: 
+	 * The (sub)resource method defaultAnswer in de.spurtikus.vxi.service.SystemBoundary 
+	 * contains empty path annotation.
+	 */
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/")
