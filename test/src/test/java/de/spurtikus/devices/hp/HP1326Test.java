@@ -1,67 +1,42 @@
 package de.spurtikus.devices.hp;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spurtikus.vxi.Constants;
-import de.spurtikus.vxi.connectors.AbstractConnectorConfig;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
-import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
-import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
-import de.spurtikus.vxi.service.Configuration;
 
-public class HP1326Test {
-	String test_Serial_or_RPC = "RPC"; // "RPC" or "serial"
-	
-	String TEST_DEVICE_NAME = "hp1326";
-	
-	ConnectorConfig config;
-	DeviceLink theLid = null;
+public class HP1326Test extends DeviceBaseTest {
 	HP1326 testee = null;
 
 	@Before
 	public void before() throws Exception {
-		int confId ;
-		Class<?> targetClass;
+		final String test_Serial_or_RPC = "RPC"; // "RPC" or "Serial"
+		final String TEST_DEVICE_NAME;
 		
 		// Load configuration
-		Configuration.load();
-		if (test_Serial_or_RPC.equals("RPC")) {
-			// Access multimeter via RPC in LAN-capable mainframe
-			TEST_DEVICE_NAME = "hp1411";
-			confId = Constants.RPC_CONFIG;
-			targetClass = RPCConnectorConfig.class;
-		} else {
-			// Access multimeter via GPIB over Serial 
-			TEST_DEVICE_NAME = "hp1326";
-			confId = Constants.SERIAL_CONFIG;
-			targetClass = GPIBSerialConnectorConfig.class;
-		}
-		// We assume usable config at some index
-		config = Configuration.findConfigById(confId);
-		assertNotNull(config);
-		// We like to test a RPC connection
-		assertThat(config.getClass(), IsEqual.equalTo(targetClass));
-		
+		 ConnectorConfig config = loadConfig(test_Serial_or_RPC);
 		System.out.println(config);
+		
+		if (test_Serial_or_RPC.equals("RPC")) {
+			TEST_DEVICE_NAME = "hp1411";
+		} else {
+			TEST_DEVICE_NAME = "hp1326";
+		}
 		
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
 		
 		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
 		assertNotNull(deviceid);
-		theLid = vxiConnector.initialize(config, deviceid);
-		
+		DeviceLink theLid = vxiConnector.initialize(config, deviceid);
 		testee = new HP1326(vxiConnector, theLid);
 	}
 	

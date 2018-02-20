@@ -1,45 +1,34 @@
 package de.spurtikus.devices.hp;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
-import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import de.spurtikus.devices.hp.DigitalIO.PortDescription;
-import de.spurtikus.vxi.Constants;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
-import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
-import de.spurtikus.vxi.service.Configuration;
 
-public class HP1330Test {
-	static final String TEST_DEVICE_NAME = "hp1330";
-	ConnectorConfig config;
-	DeviceLink theLid = null;
+public class HP1330Test extends DeviceBaseTest {
 	DigitalIO testee = null;
 
 	@Before
 	public void before() throws Exception {
+		final String test_Serial_or_RPC = "Serial"; // "RPC" or "Serial"
+		final String TEST_DEVICE_NAME = "hp1330";
+		
 		// Load configuration
-		 Configuration.load();
-		// We assume usable config at some index
-		config = Configuration.findConfigById(Constants.RPC_CONFIG);
-		assertNotNull(config);
-		// We like to test a net GPIBSerial
-		assertThat(config.getClass(), IsEqual.equalTo(RPCConnectorConfig.class));
+		ConnectorConfig config = loadConfig(test_Serial_or_RPC);
 		System.out.println(config);
 		
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
 		
 		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
 		assertNotNull(deviceid);
-		theLid = vxiConnector.initialize(config, deviceid);
-		
+		DeviceLink theLid = vxiConnector.initialize(config, deviceid);
 		testee = new DigitalIO(vxiConnector, theLid);
 	}
 	

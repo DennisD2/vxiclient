@@ -1,39 +1,32 @@
 package de.spurtikus.devices.hp;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
-import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spurtikus.vxi.Constants;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
-import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
 import de.spurtikus.vxi.mainframes.hp1300b.VXIDevice;
-import de.spurtikus.vxi.service.Configuration;
 
-public class HP1300bTest {
-	static final String TEST_DEVICE_NAME = "hp1301";
-
+public class HP1300bTest extends DeviceBaseTest {
+	HP1300b mainframe = null;
+	
 	ConnectorConfig config;
-	VXIConnector vxiConnector = null;
-	DeviceLink theLid = null;
-
+	VXIConnector vxiConnector;
+	DeviceLink theLid;
+	
 	@Before
 	public void beforeTest() throws Exception {
+		final String test_Serial_or_RPC = "Serial"; // "RPC" or "Serial"
+		final String TEST_DEVICE_NAME = "hp1301";
+
 		// Load configuration
-		Configuration.load();
-		// We assume usable config at some index
-		config = Configuration.findConfigById(Constants.SERIAL_CONFIG);
-		assertNotNull(config);
-		// We like to test a net GPIBSerial
-		assertThat(config.getClass(),IsEqual.equalTo(GPIBSerialConnectorConfig.class));
+		config = loadConfig(test_Serial_or_RPC);
 		System.out.println(config);
 
 		vxiConnector = VXIConnectorFactory.getConnector(config);
@@ -41,13 +34,14 @@ public class HP1300bTest {
 		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
 		assertNotNull(deviceid);
 		theLid = vxiConnector.initialize(config, deviceid);
+		
+		mainframe = new HP1300b(vxiConnector, theLid);
 	}
 
 	@Test
 	public void testListDevices() throws Exception {
 		System.out.println("Start...");
 
-		HP1300b mainframe = new HP1300b(vxiConnector, theLid);
 		List<VXIDevice> devs = mainframe.listDevices(false);
 
 		for (VXIDevice dev : devs) {

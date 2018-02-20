@@ -2,21 +2,17 @@ package de.spurtikus.devices.hp;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
-import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.spurtikus.vxi.Constants;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnector;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
-import de.spurtikus.vxi.service.Configuration;
 import de.spurtikus.waveform.Waveforms;
 
 /**
@@ -25,33 +21,25 @@ import de.spurtikus.waveform.Waveforms;
  * @author dennis
  *
  */
-public class HP1340Test {
-	private final String TEST_DEVICE_NAME = "hp1340";
-
-	private ConnectorConfig config;
-	private DeviceLink theLid = null;
-	private HP1340 testee;
-	private VXIConnector vxiConnector;
+public class HP1340Test extends DeviceBaseTest {
+	HP1340 testee = null;
 
 	@Before
 	public void before() throws Exception {
+		final String test_Serial_or_RPC = "Serial"; // "RPC" or "Serial"
+		final String TEST_DEVICE_NAME = "hp1340";
+
 		System.out.println("Start...");
 
 		// Load configuration
-		Configuration.load();
-		// We assume usable config at some index
-		config = Configuration.findConfigById(Constants.SERIAL_CONFIG);
-		assertNotNull(config);
-		// We like to test a net GPIBSerial
-		assertThat(config.getClass(),
-				IsEqual.equalTo(GPIBSerialConnectorConfig.class));
+		ConnectorConfig config = loadConfig(test_Serial_or_RPC);
 		System.out.println(config);
 
-		vxiConnector = VXIConnectorFactory.getConnector(config);
+		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
 
 		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
 		assertNotNull(deviceid);
-		theLid = vxiConnector.initialize(config, deviceid);
+		DeviceLink theLid = vxiConnector.initialize(config, deviceid);
 		testee = new HP1340(vxiConnector, theLid);
 
 		// TODO: do we really need next 6 lines?
@@ -62,7 +50,7 @@ public class HP1340Test {
 			((GPIBSerialConnector) vxiConnector).selectDevice(theLid, 9, 10);
 		}
 		testee.initialize();
-		
+
 		String answer = vxiConnector.send_and_receive(theLid, "*IDN?");
 		System.out.println(answer);
 	}
@@ -241,8 +229,6 @@ public class HP1340Test {
 
 		testee.start();
 	}
-	
-	
 
 	@Ignore
 	@Test
@@ -269,28 +255,33 @@ public class HP1340Test {
 
 		testee.setFrequency(3E3);
 		testee.setAmplitude(maxValue);
-	
-		testee.setUserDefinedWaveform(Waveforms.waveformValues_Ramp(), maxValue);
+
+		testee.setUserDefinedWaveform(Waveforms.waveformValues_Ramp(),
+				maxValue);
 		testee.start();
 		Thread.sleep(5000);
 		testee.stop();
 
-		testee.setUserDefinedWaveform(Waveforms.waveformValues_DampedSine(), maxValue);
+		testee.setUserDefinedWaveform(Waveforms.waveformValues_DampedSine(),
+				maxValue);
 		testee.start();
 		Thread.sleep(5000);
 		testee.stop();
 
-		testee.setUserDefinedWaveform(Waveforms.waveformValues_ChargeDischarge(), maxValue);
+		testee.setUserDefinedWaveform(
+				Waveforms.waveformValues_ChargeDischarge(), maxValue);
 		testee.start();
 		Thread.sleep(5000);
 		testee.stop();
 
-		testee.setUserDefinedWaveform(Waveforms.waveformValues_HalfRectifiedSine(), maxValue);
+		testee.setUserDefinedWaveform(
+				Waveforms.waveformValues_HalfRectifiedSine(), maxValue);
 		testee.start();
 		Thread.sleep(5000);
 		testee.stop();
 
-		testee.setUserDefinedWaveform(Waveforms.waveformValues_SpikedSine(), maxValue);
+		testee.setUserDefinedWaveform(Waveforms.waveformValues_SpikedSine(),
+				maxValue);
 		testee.start();
 		Thread.sleep(5000);
 		testee.stop();
@@ -311,22 +302,26 @@ public class HP1340Test {
 		Thread.sleep(5000);
 		testee.stop();
 
-		testee.setUserDefinedWaveform(Waveforms.waveformValues_DampedSine_DAC());
+		testee.setUserDefinedWaveform(
+				Waveforms.waveformValues_DampedSine_DAC());
 		testee.start();
 		Thread.sleep(5000);
 		testee.stop();
 
-		testee.setUserDefinedWaveform(Waveforms.waveformValues_ChargeDischarge_DAC());
+		testee.setUserDefinedWaveform(
+				Waveforms.waveformValues_ChargeDischarge_DAC());
 		testee.start();
 		Thread.sleep(5000);
 		testee.stop();
 
-		testee.setUserDefinedWaveform(Waveforms.waveformValues_HalfRectifiedSine_DAC());
+		testee.setUserDefinedWaveform(
+				Waveforms.waveformValues_HalfRectifiedSine_DAC());
 		testee.start();
 		Thread.sleep(5000);
 		testee.stop();
 
-		testee.setUserDefinedWaveform(Waveforms.waveformValues_SpikedSine_DAC());
+		testee.setUserDefinedWaveform(
+				Waveforms.waveformValues_SpikedSine_DAC());
 		testee.start();
 		Thread.sleep(5000);
 		testee.stop();
@@ -344,7 +339,7 @@ public class HP1340Test {
 		testee.setUserDefinedWaveformBlk(Waveforms.waveformValues_Ramp_Short());
 		testee.start();
 		Thread.sleep(5000);
-		//testee.stop();
+		// testee.stop();
 	}
 
 }

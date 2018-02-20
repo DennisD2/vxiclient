@@ -1,9 +1,7 @@
 package de.spurtikus.devices.hp;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
-import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,13 +11,10 @@ import de.spurtikus.devices.hp.HP1333.CounterConfiguration;
 import de.spurtikus.devices.hp.HP1333.Coupling;
 import de.spurtikus.devices.hp.HP1333.Impedance;
 import de.spurtikus.devices.hp.HP1333.Slope;
-import de.spurtikus.vxi.Constants;
 import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
-import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
-import de.spurtikus.vxi.service.Configuration;
 
 /**
  * HP1333 Counter tests.
@@ -27,33 +22,25 @@ import de.spurtikus.vxi.service.Configuration;
  * @author dennis
  *
  */
-public class HP1333Test {
-	private final String TEST_DEVICE_NAME = "hp1333";
-
-	private ConnectorConfig config;
-	private DeviceLink theLid = null;
-	private HP1333 testee;
-	private VXIConnector vxiConnector;
+public class HP1333Test extends DeviceBaseTest {
+	private HP1333 testee = null;
 
 	@Before
 	public void before() throws Exception {
+		final String test_Serial_or_RPC = "Serial"; // "RPC" or "Serial"
+		final String TEST_DEVICE_NAME = "hp1333";
+		
 		System.out.println("Start...");
 
 		// Load configuration
-		Configuration.load();
-		// We assume usable config at some index
-		config = Configuration.findConfigById(Constants.SERIAL_CONFIG);
-		assertNotNull(config);
-		// We like to test a net GPIBSerial
-		assertThat(config.getClass(),
-				IsEqual.equalTo(GPIBSerialConnectorConfig.class));
+		ConnectorConfig config = loadConfig(test_Serial_or_RPC);
 		System.out.println(config);
 
-		vxiConnector = VXIConnectorFactory.getConnector(config);
+		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
 
 		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
 		assertNotNull(deviceid);
-		theLid = vxiConnector.initialize(config, deviceid);
+		DeviceLink theLid = vxiConnector.initialize(config, deviceid);
 		testee = new HP1333(vxiConnector, theLid);
  
 		testee.initialize();
