@@ -13,6 +13,12 @@ import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 
+/**
+ * Error handling tests.
+ * 
+ * @author dennis
+ *
+ */
 public class ErrorTest extends DeviceBaseTest {
 	private HP1300b testee = null;
 
@@ -33,7 +39,7 @@ public class ErrorTest extends DeviceBaseTest {
 		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
 		assertNotNull(deviceid);
 		theLid = vxiConnector.initialize(config, deviceid);
-		
+
 		testee = new HP1300b(vxiConnector, theLid);
 	}
 
@@ -47,7 +53,7 @@ public class ErrorTest extends DeviceBaseTest {
 		List<String> errors = testee.checkErrors();
 		errors.forEach(e -> System.out.println(e));
 		assertEquals(errors.size(), 2);
-		
+
 		System.out.println("...done");
 	}
 

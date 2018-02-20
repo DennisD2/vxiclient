@@ -11,27 +11,43 @@ import de.spurtikus.vxi.connectors.rpc.RPCConnectorConfig;
 import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
 import de.spurtikus.vxi.service.Configuration;
 
+/**
+ * Base class for device tests.
+ * 
+ * @author dennis
+ *
+ */
 public class DeviceBaseTest {
 
+	/**
+	 * Load connector configuration
+	 * 
+	 * @param configType
+	 *            configuration type to load. This is a string. To access device
+	 *            via RPC in LAN-capable mainframe use configType="RPC". To
+	 *            access device via GPIB over Serial use configType="Serial"
+	 * @return usable connector configuration or null.
+	 * @throws Exception
+	 */
 	protected ConnectorConfig loadConfig(String configType) throws Exception {
-		final Class<?> targetClass;
-		final int confId ;
+		final Class<?> expectedClass;
+		final int configId;
 		// Load configuration
 		Configuration.load();
 		if (configType.equals("RPC")) {
-			// Access device via RPC in LAN-capable mainframe
-			confId = Constants.RPC_CONFIG;
-			targetClass = RPCConnectorConfig.class;
+			// RPC access
+			configId = Constants.RPC_CONFIG;
+			expectedClass = RPCConnectorConfig.class;
 		} else {
-			// Access device via GPIB over Serial 
-			confId = Constants.SERIAL_CONFIG;
-			targetClass = GPIBSerialConnectorConfig.class;
+			// GPIB over Serial access
+			configId = Constants.SERIAL_CONFIG;
+			expectedClass = GPIBSerialConnectorConfig.class;
 		}
-		// We assume usable config at some index
-		ConnectorConfig config = Configuration.findConfigById(confId);
+		ConnectorConfig config = Configuration.findConfigById(configId);
 		assertNotNull(config);
-		// We like to test a RPC connection
-		assertThat(config.getClass(), IsEqual.equalTo(targetClass));
+		// Ensure that we've got the correct configuration (by checking the
+		// objects class)
+		assertThat(config.getClass(), IsEqual.equalTo(expectedClass));
 		return config;
 	}
 

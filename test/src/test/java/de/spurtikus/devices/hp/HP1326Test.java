@@ -14,6 +14,12 @@ import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 
+/**
+ * Multimeter tests.
+ * 
+ * @author dennis
+ *
+ */
 public class HP1326Test extends DeviceBaseTest {
 	HP1326 testee = null;
 
@@ -21,25 +27,25 @@ public class HP1326Test extends DeviceBaseTest {
 	public void before() throws Exception {
 		final String test_Serial_or_RPC = "RPC"; // "RPC" or "Serial"
 		final String TEST_DEVICE_NAME;
-		
+
 		// Load configuration
-		 ConnectorConfig config = loadConfig(test_Serial_or_RPC);
+		ConnectorConfig config = loadConfig(test_Serial_or_RPC);
 		System.out.println(config);
-		
+
 		if (test_Serial_or_RPC.equals("RPC")) {
 			TEST_DEVICE_NAME = "hp1411";
 		} else {
 			TEST_DEVICE_NAME = "hp1326";
 		}
-		
+
 		VXIConnector vxiConnector = VXIConnectorFactory.getConnector(config);
-		
+
 		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
 		assertNotNull(deviceid);
 		DeviceLink theLid = vxiConnector.initialize(config, deviceid);
 		testee = new HP1326(vxiConnector, theLid);
 	}
-	
+
 	@Test
 	public void testMeasureSingle() throws Exception {
 		System.out.println("Start...");
@@ -51,12 +57,13 @@ public class HP1326Test extends DeviceBaseTest {
 		System.out.println("... End");
 	}
 
-	@Test 
+	@Test
 	public void HP1326_DMM_Test() throws Exception {
-		System.out.println("Tests using channels require DVM+Switch configuration!");
+		System.out.println(
+				"Tests using channels require DVM+Switch configuration!");
 		System.out.println("Start...");
 		List<Integer> channels = generateChannels();
-		
+
 		testee.initializeVoltageMeasurement(7.27, channels);
 		Map<Integer, Double> m = testee.measureChannels(channels);
 
@@ -85,17 +92,18 @@ public class HP1326Test extends DeviceBaseTest {
 		return channels;
 	}
 
-	//@Test
+	// @Test
 	public void testMeasureChannelsLoop() throws Exception {
-		System.out.println("Tests using channels require DVM+Switch configuration!");
+		System.out.println(
+				"Tests using channels require DVM+Switch configuration!");
 		// MEAS:VOLT:DC? (@100,101,102,103,104,105,106)
 		testee.initialize();
 
 		List<Integer> channels = generateChannels();
 		testee.initializeVoltageMeasurement(7.27, channels);
-		
+
 		long start = System.currentTimeMillis();
-		int max=100;
+		int max = 100;
 		for (int i = 0; i < max; i++) {
 			Map<Integer, Double> m = testee.measureChannels(channels);
 			for (int channel : m.keySet()) {
@@ -103,8 +111,8 @@ public class HP1326Test extends DeviceBaseTest {
 			}
 		}
 		long time = System.currentTimeMillis() - start;
-		System.out.println("Need " + new Double(time)/1000 +  " seconds for " + max + " measureements.");
+		System.out.println("Need " + new Double(time) / 1000 + " seconds for "
+				+ max + " measureements.");
 	}
-
 
 }

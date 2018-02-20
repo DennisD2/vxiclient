@@ -17,7 +17,7 @@ import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 
 /**
- * HP1333 Counter tests.
+ * Counter tests.
  * 
  * @author dennis
  *
@@ -29,7 +29,7 @@ public class HP1333Test extends DeviceBaseTest {
 	public void before() throws Exception {
 		final String test_Serial_or_RPC = "Serial"; // "RPC" or "Serial"
 		final String TEST_DEVICE_NAME = "hp1333";
-		
+
 		System.out.println("Start...");
 
 		// Load configuration
@@ -42,9 +42,9 @@ public class HP1333Test extends DeviceBaseTest {
 		assertNotNull(deviceid);
 		DeviceLink theLid = vxiConnector.initialize(config, deviceid);
 		testee = new HP1333(vxiConnector, theLid);
- 
+
 		testee.initialize();
-		
+
 		String answer = vxiConnector.send_and_receive(theLid, "*IDN?");
 		System.out.println(answer);
 	}
@@ -53,19 +53,19 @@ public class HP1333Test extends DeviceBaseTest {
 	public void frequencyMeasurement() throws Exception {
 		testee.initialize();
 		int channel = 1;
-		
+
 		CounterConfiguration configuration = CounterConfiguration.FREQ;
 		testee.configureSense(channel, configuration);
-		
+
 		double aperture = 0.128;
 		testee.setAperture(channel, aperture);
-	
+
 		Attenuation attenuation = Attenuation.MIN;
 		testee.setAttenuation(attenuation);
 
 		Coupling coupling = Coupling.DC;
-		testee.setCoupling(coupling );
-		
+		testee.setCoupling(coupling);
+
 		Impedance impedance = Impedance.MIN;
 		testee.setImpedance(impedance);
 
@@ -73,20 +73,20 @@ public class HP1333Test extends DeviceBaseTest {
 
 		double answer;
 		answer = testee.measure(channel);
-		//answer = testee.measure(2);
-		//answer = testee.measure(3);
-		
+		// answer = testee.measure(2);
+		// answer = testee.measure(3);
+
 		System.out.println(answer);
 	}
-	
+
 	@Ignore
 	@Test
 	public void totalizerMeasurement() throws Exception {
 		testee.initialize();
 		int channel = 1;
-		
+
 		int milliseconds = 100;
-		
+
 		CounterConfiguration configuration = CounterConfiguration.TOT;
 		testee.configureConf(channel, configuration);
 
@@ -96,25 +96,25 @@ public class HP1333Test extends DeviceBaseTest {
 		testee.setLowPassFilter(true);
 
 		Coupling coupling = Coupling.DC;
-		testee.setCoupling(coupling );
-		
+		testee.setCoupling(coupling);
+
 		testee.start(channel);
-		// Count all events during 1000ms 
+		// Count all events during 1000ms
 		Thread.sleep(milliseconds);
-		
+
 		double answer;
 		answer = testee.fetch(channel);
-		
+
 		System.out.println(answer);
 	}
-	
+
 	@Ignore
 	@Test
 	public void ratioMeasurement() throws Exception {
 		testee.initialize();
 		int channel = 1;
 		int otherChannel = 2;
-		
+
 		CounterConfiguration configuration = CounterConfiguration.RAT;
 		testee.configureSense(channel, configuration);
 
@@ -123,11 +123,11 @@ public class HP1333Test extends DeviceBaseTest {
 		testee.setEventLevel(otherChannel, level);
 
 		Coupling coupling = Coupling.DC;
-		testee.setCoupling(coupling );
-				
+		testee.setCoupling(coupling);
+
 		double answer;
 		answer = testee.measureRatio(channel);
-		
+
 		System.out.println(answer);
 	}
 
@@ -136,13 +136,13 @@ public class HP1333Test extends DeviceBaseTest {
 	public void periodAverageMeasurement() throws Exception {
 		// page 31
 	}
-	
+
 	@Ignore
 	@Test
 	public void pulseWidthMeasurement() throws Exception {
 		// page 32
 	}
-	
+
 	@Ignore
 	@Test
 	public void timeIntervalMeasurement() throws Exception {
@@ -155,10 +155,9 @@ public class HP1333Test extends DeviceBaseTest {
 		int channel = 1;
 
 		Slope slope = Slope.POS;
-		testee.setEventSlope(channel, slope );
-		
-		//System.out.println(answer);
-	}
+		testee.setEventSlope(channel, slope);
 
+		// System.out.println(answer);
+	}
 
 }

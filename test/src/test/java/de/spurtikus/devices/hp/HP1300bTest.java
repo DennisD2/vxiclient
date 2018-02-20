@@ -13,13 +13,19 @@ import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
 import de.spurtikus.vxi.mainframes.hp1300b.VXIDevice;
 
+/**
+ * Mainframe tests for HP1300 type mainframes.
+ * 
+ * @author dennis
+ *
+ */
 public class HP1300bTest extends DeviceBaseTest {
 	HP1300b mainframe = null;
-	
+
 	ConnectorConfig config;
 	VXIConnector vxiConnector;
 	DeviceLink theLid;
-	
+
 	@Before
 	public void beforeTest() throws Exception {
 		final String test_Serial_or_RPC = "Serial"; // "RPC" or "Serial"
@@ -34,7 +40,7 @@ public class HP1300bTest extends DeviceBaseTest {
 		String deviceid = config.getDeviceIdByName(TEST_DEVICE_NAME);
 		assertNotNull(deviceid);
 		theLid = vxiConnector.initialize(config, deviceid);
-		
+
 		mainframe = new HP1300b(vxiConnector, theLid);
 	}
 
@@ -56,7 +62,7 @@ public class HP1300bTest extends DeviceBaseTest {
 		}
 		System.out.println("...done");
 	}
-	
+
 	@Test
 	public void test_ListDevice() throws Exception {
 		System.out.println("Start...");
@@ -79,24 +85,19 @@ public class HP1300bTest extends DeviceBaseTest {
 	public void test_ListDevices() throws Exception {
 		System.out.println("Start...");
 
-		/*for (DeviceInfo d: config.getDevices()) {
-			String deviceid = d.
-			assertNotNull(deviceid);
-			if (deviceid.equals("9,10")) {
-				// this is a device with no driver installed, this would fail the test
-				System.err.println("Ignoring device: "+deviceid);
-				continue;
-			}
-			theLid = vxiConnector.initialize(config, deviceid);
-			String cmd = "*IDN?";
-			System.out.println("Command: " + cmd);
-			vxiConnector.send(theLid, cmd);
-	
-			// Receive answer
-			String answer = vxiConnector.receive(theLid);
-			System.out.println("Answer: " + answer);
-		}*/
-	
+		/*
+		 * for (DeviceInfo d: config.getDevices()) { String deviceid = d.
+		 * assertNotNull(deviceid); if (deviceid.equals("9,10")) { // this is a
+		 * device with no driver installed, this would fail the test
+		 * System.err.println("Ignoring device: "+deviceid); continue; } theLid
+		 * = vxiConnector.initialize(config, deviceid); String cmd = "*IDN?";
+		 * System.out.println("Command: " + cmd); vxiConnector.send(theLid,
+		 * cmd);
+		 * 
+		 * // Receive answer String answer = vxiConnector.receive(theLid);
+		 * System.out.println("Answer: " + answer); }
+		 */
+
 		System.out.println("...done");
 	}
 
