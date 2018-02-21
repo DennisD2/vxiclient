@@ -53,6 +53,32 @@ public class MultimeterBoundary extends AbstractBoundary<HP1326> {
 		logger.debug("Device name: {}", devname);
 		return Response.ok(getClassName()).build();
 	}
+	
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("{mainframe}/{devname}/init")
+	public Response init(@Context UriInfo uriInfo,
+			@PathParam("mainframe") String mainframe,
+			@PathParam("devname") String devname) {
+		logger.debug("Incoming URI : {}", uriInfo.getPath());
+		logger.debug("Mainframe: {}", mainframe);
+		logger.debug("Device name: {}", devname);
+		
+		try {
+			connManager = ConnectionManager.getInstance(this.getClass(), mainframe, devname);
+		} catch (Exception e) {
+			logger.error(
+					"Cannot get wrapper instance. This is usually an initialization problem.");
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		try {
+			getDevice(mainframe, devname).initialize();
+		} catch (Exception e) {
+			logger.error("Error in initialize().");
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.ok("initialized").build();
+	}
 
 	@POST
 	@Path("{mainframe}/{devname}/idn")
