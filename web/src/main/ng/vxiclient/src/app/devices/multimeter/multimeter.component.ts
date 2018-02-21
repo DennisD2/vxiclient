@@ -64,6 +64,17 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
   ngOnInit() {
   }
 
+  init() {
+    const vxi = this.multimeterService;
+    const self = this;
+    let result: string;
+    BaseDevice.mutex.acquire().then(function(release) {
+      self.multimeterService.init(self.mainframe, self.deviceName).subscribe(value => result = value);
+      console.log('init returned ' + result );
+      release();
+    });
+  }
+
   doMeasurementCallback(chain: any): any {
     // console.log('doMeasurement');
     const vxi = this.multimeterService;

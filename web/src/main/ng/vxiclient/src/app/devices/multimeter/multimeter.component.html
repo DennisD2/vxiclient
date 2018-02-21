@@ -19,6 +19,10 @@
 
         <!-- action buttons -->
         <p>
+          <button (click)="init()" class="btn btn-primary">
+            <md-icon>settings_backup_restore</md-icon>
+            <span>Init</span>
+          </button>
           <button (click)="start()" *ngIf="!active" class="btn btn-primary">
             <md-icon>settings_power</md-icon>
             <span>Start</span>

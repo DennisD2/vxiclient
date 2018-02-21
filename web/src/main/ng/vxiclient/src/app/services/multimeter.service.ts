@@ -29,6 +29,18 @@ export class MultimeterService extends BaseService {
       .catch(this.handleError);
   }
 
+  init(mainframe: string, deviceName: string): Observable<string> {
+    const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
+
+    console.log('vxi.init:' + deviceName );
+    const dataUrl =  serviceUrl + 'init';
+    console.log(dataUrl);
+
+    return this.http.get(dataUrl)
+      .map((response) => { console.log(response.text()); return response.text() as string; } )
+      .catch(this.handleError);
+  }
+
   setVoltageRange(mainframe: string, deviceName: string, channelsToScan: string[],
       acdc: string, mode: string): Observable<string> {
     const serviceUrl = this.configService.getURL(mainframe, deviceName) + '/' + this.configService.fake();
