@@ -18,5 +18,10 @@ public class GPIBSerialConnectorConfig extends SerialConnectorConfig {
 	public int getSecondaryAddress(String deviceId) {
 		return secondary;
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + ", GPIB address: " + primary + "," + secondary + "";
+	}
 
 }

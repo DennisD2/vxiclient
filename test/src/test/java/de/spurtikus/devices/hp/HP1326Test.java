@@ -58,7 +58,7 @@ public class HP1326Test extends DeviceBaseTest {
 	}
 
 	@Test
-	public void HP1326_DMM_Test() throws Exception {
+	public void testMeasureChannels() throws Exception {
 		System.out.println(
 				"Tests using channels require DVM+Switch configuration!");
 		System.out.println("Start...");

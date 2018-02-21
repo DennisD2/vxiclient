@@ -16,15 +16,21 @@ import javax.ws.rs.core.Response;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
 public class MultimeterBoundaryTest extends BaseBoundaryTest {
 	public final String DEVICECLASS = Constants.URL_MULTIMETER;
-	public final String MAINFRAME = "mfb";
-	public final String DEVICENAME = "hp1326";
-	public final String URI = BASE_URI + "/" + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
+	//public final String MAINFRAME = "mfb";
+	//public final String DEVICENAME = "hp1326";
+	//public final String DEVICE_IDN_ANSWER = "HEWLETT-PACKARD,E1326B,0,A.05.00";
+	public final String MAINFRAME = "mfc";
+	public final String DEVICENAME = "hp1411";
+	public final String DEVICE_IDN_ANSWER = "HEWLETT-PACKARD,E1411B,0,D.06.03";
+
+	public final String URI = BASE_URI + DEVICECLASS + "/" + MAINFRAME + "/" + DEVICENAME;
 
 	//@Ignore
 	@Test
@@ -53,15 +59,15 @@ public class MultimeterBoundaryTest extends BaseBoundaryTest {
 		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println(uri + " -> " + res);
-		assertEquals("HEWLETT-PACKARD,E1326B,0,A.05.00",res);
+		// TODO: make return value in RPC case also w/o \n
+		assertEquals(DEVICE_IDN_ANSWER,res.replace("\n", ""));
 	}
 
-	// @Ignore
 	@Test
 	@RunAsClient
 	public void read(@ArquillianResource URL contextPath) {
 		String range = "7.27";
-		String uri = URI + "/Fakeread/" + range;
+		String uri = URI + "/read/" + range;
 
 		Client client = ClientBuilder.newClient();
 		System.out.println("Call: " + contextPath + uri);

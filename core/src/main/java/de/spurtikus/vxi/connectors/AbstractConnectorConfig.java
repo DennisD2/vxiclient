@@ -41,7 +41,7 @@ public abstract class AbstractConnectorConfig implements ConnectorConfig {
 
 	@Override
 	public String toString() {
-		return "ID:" + id + (enabled ? "(" : "(not ") + "enabled):";
+		return "ID:" + id + " (" + (enabled ? "" : "not ") + "enabled)";
 	}
 
 	@Override

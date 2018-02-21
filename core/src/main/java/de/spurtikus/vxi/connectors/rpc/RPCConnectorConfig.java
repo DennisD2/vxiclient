@@ -53,7 +53,7 @@ public class RPCConnectorConfig extends AbstractConnectorConfig
 
 	@Override
 	public String toString() {
-		return super.toString() + " client:" + clientId + ", host:"+ host  ;
+		return super.toString() + ", clientId:" + clientId + ", host:"+ host  ;
 	}
 
 }

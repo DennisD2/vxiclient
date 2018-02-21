@@ -133,7 +133,7 @@ public class MultimeterBoundary extends AbstractBoundary<HP1326> {
 			getDevice(mainframe, devname).initializeVoltageMeasurement(range, channels);
 			m = getDevice(mainframe, devname).measureChannels(channels);
 		} catch (Exception e) {
-			logger.error("Error accessing device.");
+			logger.error("Error accessing device." + e.getMessage());
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		for (int channel : m.keySet()) {
@@ -160,11 +160,11 @@ public class MultimeterBoundary extends AbstractBoundary<HP1326> {
 		logger.debug("Range: {}", range);
 		logger.debug("Channels: {}", channels);
 
-		try {
+		/*try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		// {"100":0.2712517,"101":-0.2288322}
 		// String answer = "{\"100\":"+n+",\"101\":"+m+"}";
