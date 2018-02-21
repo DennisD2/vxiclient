@@ -207,9 +207,9 @@ public class RPCConnector extends AbstractConnector implements VXIConnector {
 			logger.error(es);
 			throw new Exception(es);
 		}
-		logger.debug("Response Data size: {}", response.data.length);
-		logger.debug("{}", ConversionUtil.toString(response.data));
-		return ConversionUtil.toString(response.data);
+		String resStr =  ConversionUtil.toString(response.data).replace("\n", "");
+		logger.debug("Received ({} bytes): {}", response.data.length, resStr );
+		return resStr;
 	}
 
 	@Override

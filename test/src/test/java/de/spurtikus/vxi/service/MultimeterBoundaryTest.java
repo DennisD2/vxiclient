@@ -59,8 +59,7 @@ public class MultimeterBoundaryTest extends BaseBoundaryTest {
 		assertTrue(response.getStatus()<400);
 		String res = response.readEntity(String.class);
 		System.out.println(uri + " -> " + res);
-		// TODO: make return value in RPC case also w/o \n
-		assertEquals(DEVICE_IDN_ANSWER,res.replace("\n", ""));
+		assertEquals(DEVICE_IDN_ANSWER,res);
 	}
 
 	@Test
