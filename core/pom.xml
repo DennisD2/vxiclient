@@ -2,9 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.spurtikus</groupId>
 	<artifactId>vxiclient-core</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
 	<name>VXI Client Core</name>
 	<description>VXI Client Core</description>
 	<packaging>jar</packaging>
