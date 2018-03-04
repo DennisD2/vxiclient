@@ -1,8 +1,10 @@
 package de.spurtikus.devices.hp;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.spurtikus.vxi.connectors.ConnectorConfig;
@@ -27,7 +29,8 @@ public class HP3478Test extends DeviceBaseTest {
 		// Load configuration
 		Configuration.load();
 		// get configuration for standalone device
-		ConnectorConfig config = Configuration.findConfigByName("hp3478standalone");
+		ConnectorConfig config = Configuration
+				.findConfigByName("hp3478standalone");
 		System.out.println(config);
 
 		TEST_DEVICE_NAME = "hp3478";
@@ -45,8 +48,8 @@ public class HP3478Test extends DeviceBaseTest {
 		System.out.println("Start...");
 		testee.initialize();
 		testee.initializeMeasurement(HP3478.Function.DC_VOLTAGE,
-				HP3478.Range.Auto, HP3478.AutoZero.On,
-				HP3478.Digits.DIGITS5, HP3478.Trigger.INTERNAL);
+				HP3478.Range.Auto, HP3478.AutoZero.On, HP3478.Digits.DIGITS5,
+				HP3478.Trigger.INTERNAL);
 
 		Double s = testee.measureSingle();
 		System.out.println(s);
@@ -66,12 +69,22 @@ public class HP3478Test extends DeviceBaseTest {
 		assertTrue(b);
 	}
 
-	//@Test
+	// TODO: this test fails. Why? 5 bytes are returned where bit 7 can be 1. Is
+	// that a problem?
+	@Ignore
+	@Test
+	public void testReadStatus() throws Exception {
+		testee.initialize();
+		String s = testee.getStatus();
+		assertNotNull(s);
+	}
+
+	// @Test
 	public void testMeasureLoop() throws Exception {
 		testee.initialize();
 		testee.initializeMeasurement(HP3478.Function.DC_VOLTAGE,
-				HP3478.Range.Auto, HP3478.AutoZero.On,
-				HP3478.Digits.DIGITS5, HP3478.Trigger.INTERNAL);
+				HP3478.Range.Auto, HP3478.AutoZero.On, HP3478.Digits.DIGITS5,
+				HP3478.Trigger.INTERNAL);
 
 		long start = System.currentTimeMillis();
 		int max = 100;

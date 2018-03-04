@@ -1,7 +1,5 @@
 package de.spurtikus.devices.hp;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,7 +119,7 @@ public class HP3478 extends BaseHPDevice {
 
 		private AutoZero(int key, String value) {
 			if (key < 1 || key > 2) {
-				// log.xxx("Illegal Range value");
+				// log.xxx("Illegal AutoZero value");
 				key = 0;
 			}
 			this.key = key;
@@ -147,7 +145,7 @@ public class HP3478 extends BaseHPDevice {
 		UNDEFINED(0, "UNDEFINED"), 
 		DIGITS3(1, "3"), 
 		DIGITS4(2, "4"),
-		DIGITS5(2, "5");
+		DIGITS5(3, "5");
 		// @formatter:on
 
 		private int key = 0;
@@ -155,8 +153,8 @@ public class HP3478 extends BaseHPDevice {
 		private String value;
 
 		private Digits(int key, String value) {
-			if (key < 1 || key > 2) {
-				// log.xxx("Illegal Function value");
+			if (key < 1 || key > 3) {
+				// log.xxx("Illegal Digits value");
 				key = 0;
 			}
 			this.key = key;
@@ -192,8 +190,8 @@ public class HP3478 extends BaseHPDevice {
 		private String value;
 
 		private Trigger(int key, String value) {
-			if (key < 1 || key > 7) {
-				// log.xxx("Illegal Function value");
+			if (key < 1 || key > 5) {
+				// log.xxx("Illegal Trigger value");
 				key = 0;
 			}
 			this.key = key;
@@ -227,10 +225,6 @@ public class HP3478 extends BaseHPDevice {
 	 * @throws Exception
 	 */
 	public void initialize() throws Exception {
-		/*
-		 * vxiConnector.send(deviceLink, "*RST"); vxiConnector.send(deviceLink,
-		 * "ABOR"); vxiConnector.send(deviceLink, "CAL:LFR 50");
-		 */
 	}
 
 	/**
@@ -238,8 +232,8 @@ public class HP3478 extends BaseHPDevice {
 	 * 
 	 * @throws Exception
 	 */
-	public void initializeMeasurement(Function f, Range r, AutoZero z,
-			Digits d, Trigger t) throws Exception {
+	public void initializeMeasurement(Function f, Range r, AutoZero z, Digits d,
+			Trigger t) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		// Function
 		sb.append("F" + f.value);
@@ -251,7 +245,7 @@ public class HP3478 extends BaseHPDevice {
 		sb.append("N" + d.value);
 		// Trigger mode
 		sb.append("T" + t.value);
-		
+
 		logger.debug("Initialization string: " + sb.toString());
 		vxiConnector.send(deviceLink, sb.toString());
 	}
@@ -269,7 +263,7 @@ public class HP3478 extends BaseHPDevice {
 	}
 
 	/**
-	 * CHeck if front panel inputs are selected.
+	 * Check if front panel inputs are selected.
 	 * 
 	 * @return True if front panel inputs are selected. false if back panel
 	 *         inputs are selected.
@@ -281,6 +275,13 @@ public class HP3478 extends BaseHPDevice {
 		return s.startsWith("1");
 	}
 
+	/**
+	 * Sets a display text
+	 * 
+	 * @param s
+	 *            text to display.
+	 * @throws Exception
+	 */
 	public void setDisplay(String s) throws Exception {
 		logger.debug("set display text: " + s);
 		// See p.60
@@ -289,14 +290,22 @@ public class HP3478 extends BaseHPDevice {
 	}
 
 	public void homeCommand() {
+		// See p.60
 		// H
 		// 1..7
 	}
-	
+
+	/**
+	 * Read status in 5 bytes.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	String getStatus() throws Exception {
 		// See p.61
 		String s = vxiConnector.send_and_receive(deviceLink, "B");
-		// Byte 0,1,2,3
+		// Byte 0,1,2,3,4
+		logger.debug("DEV: " + s);
 		return s;
 	}
 }
