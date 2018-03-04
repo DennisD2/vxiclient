@@ -53,10 +53,9 @@ public class GPIBSerialConnector extends SerialConnector {
 		super.initialize(config, deviceId);
 		/** Create new device link for GPIB */
 		GPIBSerialConnectorConfig c = getConfig();
-		GPIBDeviceLink glink = new GPIBDeviceLink();
+		GPIBDeviceLink glink = createDeviceLinkFor(deviceId);
+		// Add config reference to device link
 		glink.config = c;
-		glink.primary = getPrimaryAddressFrom(deviceId);
-		glink.secondary = getSecondaryAddressFrom(deviceId);
 		DeviceLink l = new DeviceLink(glink);
 
 		if (!initialized) {
@@ -86,7 +85,7 @@ public class GPIBSerialConnector extends SerialConnector {
 		}
 
 		// Select device if not yet selected.
-		selectDevice(l, glink.primary, glink.secondary);
+		selectDevice(l, glink);
 
 		// Put new link to deviceLink map
 		deviceLinks.put(deviceId, l);
@@ -99,20 +98,30 @@ public class GPIBSerialConnector extends SerialConnector {
 	@Override
 	public void send(DeviceLink link, String message) throws Exception {
 		GPIBDeviceLink glink = (GPIBDeviceLink) link.getWrapped();
-		selectDevice(link, glink.primary, glink.secondary);
+		selectDevice(link, glink);
 		super.send(link, message);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String receive(DeviceLink link) throws Exception {
 		GPIBDeviceLink glink = (GPIBDeviceLink) link.getWrapped();
-		selectDevice(link, glink.primary, glink.secondary);
+		selectDevice(link, glink);
 		return super.receive(link);
 	}
-	
+
+	protected GPIBDeviceLink createDeviceLinkFor(String deviceId) {
+		GPIBDeviceLink l = new GPIBDeviceLink();
+		l.secondary = GPIBDeviceLink.UNDEFINED;
+		l.primary = getPrimaryAddressFrom(deviceId);
+		if (deviceId.contains(",")) {
+			l.secondary = getSecondaryAddressFrom(deviceId);
+		}
+		return l;
+	}
+
 	private int getPrimaryAddressFrom(String deviceId) {
 		String[] p = deviceId.split(",");
 		int r = Integer.parseInt(p[0]);
@@ -195,25 +204,44 @@ public class GPIBSerialConnector extends SerialConnector {
 	 * @param secondary
 	 * @throws Exception
 	 */
-	public void selectDevice(DeviceLink link, int primary, int secondary)
+	public void selectDevice(DeviceLink link, GPIBDeviceLink glink)
 			throws Exception {
+		int primary = glink.primary;
+		int secondary = glink.secondary;
 		if (isSelected(primary, secondary)) {
-			//logger.debug("Device already selected");
+			// logger.debug("Device already selected");
 			return;
 		}
-		logger.debug("Select device: " + primary + "," + secondary);
+		if (secondary != GPIBDeviceLink.UNDEFINED) {
+			logger.debug("Select device: {},{}", primary, secondary);
+		} else {
+			logger.debug("Select device: {}", primary);
+		}
 
 		if (theConfig
 				.getAdapterType() == SerialConnectorConfig.ADAPTER_SERIAL_GPIB) {
-			String s = send_and_receive(link,
-					".a " + primary + " " + secondary);
+			StringBuilder sb = new StringBuilder();
+			sb.append(".a ");
+			sb.append(primary);
+			if (secondary != GPIBDeviceLink.UNDEFINED) {
+				sb.append(" ");
+				sb.append(secondary);
+			}
+			String s = send_and_receive(link, sb.toString());
 			logger.debug("DEV: " + s);
 		}
 		if (theConfig
 				.getAdapterType() == SerialConnectorConfig.ADAPTER_PROLOGIX) {
-			// Prologix wants for secondary adress: gpib-adress+96
-			int realAdr = secondary + 96;
-			super.send(link, "++addr " + primary + " " + realAdr);
+			StringBuilder sb = new StringBuilder();
+			sb.append("++addr ");
+			sb.append(primary);
+			if (secondary != GPIBDeviceLink.UNDEFINED) {
+				// Prologix wants for secondary adress: gpib-adress+96
+				int realAdr = secondary + 96;
+				sb.append(" ");
+				sb.append(realAdr);
+			}
+			super.send(link, sb.toString());
 		}
 		selectedPrimary = primary;
 		selectedSecondary = secondary;
@@ -256,15 +284,12 @@ public class GPIBSerialConnector extends SerialConnector {
 	 *            Device name
 	 * @throws Exception
 	 */
-	@Deprecated
-	public void selectDevice(DeviceLink deviceLink, String device)
-			throws Exception {
-		if (theConfig.getAdapterType() == ADAPTER_SERIAL_DIRECT) {
-			String s = send_and_receive(deviceLink, CRTL_D_STRING);
-			logger.debug("DEV: " + s);
-			s = send_and_receive(deviceLink, SELECT_INSTRUMENT + " " + device);
-			logger.debug("DEV: " + s);
-		}
-		throw new Exception("???");
-	}
+	/*
+	 * @Deprecated public void selectDevice(DeviceLink deviceLink, String
+	 * device) throws Exception { if (theConfig.getAdapterType() ==
+	 * ADAPTER_SERIAL_DIRECT) { String s = send_and_receive(deviceLink,
+	 * CRTL_D_STRING); logger.debug("DEV: " + s); s =
+	 * send_and_receive(deviceLink, SELECT_INSTRUMENT + " " + device);
+	 * logger.debug("DEV: " + s); } throw new Exception("???"); }
+	 */
 }

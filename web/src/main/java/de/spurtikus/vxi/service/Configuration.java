@@ -329,7 +329,7 @@ public class Configuration {
 	}
 
 	/**
-	 * Gets device id (like "iscpi,37" or "9,0") for a device name (like
+	 * Gets device id (like "iscpi,37" or "9,0" or "21") for a device name (like
 	 * "hp1330"). Name to device id mapping is user defined in file
 	 * vxiserver.properties.
 	 * 

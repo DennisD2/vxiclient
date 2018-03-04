@@ -11,8 +11,6 @@ import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
-import de.spurtikus.vxi.connectors.serial.GPIBSerialConnector;
-import de.spurtikus.vxi.connectors.serial.GPIBSerialConnectorConfig;
 import de.spurtikus.waveform.Waveforms;
 
 /**
@@ -43,12 +41,12 @@ public class HP1340Test extends DeviceBaseTest {
 		testee = new HP1340(vxiConnector, theLid);
 
 		// TODO: do we really need next 6 lines?
-		if (((GPIBSerialConnectorConfig) config)
+		/*if (((GPIBSerialConnectorConfig) config)
 				.getAdapterType() == ((GPIBSerialConnectorConfig) config).ADAPTER_SERIAL_DIRECT) {
 			((GPIBSerialConnector) vxiConnector).selectDevice(theLid, "AFG");
 		} else {
 			((GPIBSerialConnector) vxiConnector).selectDevice(theLid, 9, 10);
-		}
+		}*/
 		testee.initialize();
 
 		String answer = vxiConnector.send_and_receive(theLid, "*IDN?");
