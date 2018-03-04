@@ -68,10 +68,12 @@ public class ConnectionManager {
 		if (deviceId == null) {
 			logger.error("Device not found: " + deviceName);
 		}
+		// get device type
+		String deviceType = config.getDeviceTypeByName(deviceName);
 		// Create device link
 		linkId = vxiConnector.initialize(config, deviceId);
 		// initialize device class for the target identified by (connector,link)
-		device = DeviceFactory.create(deviceClass, vxiConnector, linkId);
+		device = DeviceFactory.create(deviceClass, deviceType, vxiConnector, linkId);
 
 		// Create new connection info object and add it to list
 		DeviceConnectionInfo mf = new DeviceConnectionInfo(deviceId, config,

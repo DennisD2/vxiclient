@@ -58,4 +58,9 @@ public abstract class AbstractConnectorConfig implements ConnectorConfig {
 	public String getDeviceIdByName(String name) {
 		return devices.stream().filter(d -> d.getName().equals(name)).findAny().get().getAddress();
 	}
+	
+	@Override
+	public String getDeviceTypeByName(String name) {
+		return devices.stream().filter(d -> d.getName().equals(name)).findAny().get().getType();
+	}
 }

@@ -11,6 +11,7 @@ import de.spurtikus.devices.hp.HP1326;
 import de.spurtikus.devices.hp.HP1333;
 import de.spurtikus.devices.hp.HP1340;
 import de.spurtikus.devices.hp.HP1351;
+import de.spurtikus.devices.hp.HP3478;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 
@@ -25,11 +26,12 @@ public class DeviceFactory {
 	private static Logger logger = LoggerFactory.getLogger(DeviceFactory.class);
 
 	public static BaseHPDevice create(
-			Class<? extends AbstractBoundary<?>> deviceClass, VXIConnector parent,
-			DeviceLink link) throws Exception {
+			Class<? extends AbstractBoundary<?>> deviceClass, String deviceType,
+			VXIConnector parent, DeviceLink link) throws Exception {
 		BaseHPDevice device = null;
-		
-		switch (deviceClass.getSimpleName().replaceAll("Boundary", "").toLowerCase()) {
+
+		switch (deviceClass.getSimpleName().replaceAll("Boundary", "")
+				.toLowerCase()) {
 		case Constants.URL_MAINFRAME:
 			device = new HP1300b(parent, link);
 			break;
@@ -37,7 +39,20 @@ public class DeviceFactory {
 			device = new HP1300Pacer(parent, link);
 			break;
 		case Constants.URL_MULTIMETER:
-			device = new HP1326(parent, link);
+			switch (deviceType) {
+			case "multimeter":
+				// HP E1326 and E1411
+				device = new HP1326(parent, link);
+				break;
+			case "multimeter/hp3478a":
+				// HP 3478A
+				device = new HP3478(parent, link);
+				break;
+			default:
+				String msg = "Unknown multimeter type: " + deviceClass;
+				logger.error(msg);
+				throw new Exception(msg);
+			}
 			break;
 		case Constants.URL_DIGITALIO:
 			device = new DigitalIO(parent, link);

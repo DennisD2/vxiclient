@@ -25,7 +25,7 @@
 <h3>Multimeters</h3>
 <app-multimeter deviceName="sample" mainframe="mainframe"></app-multimeter>
 <ul *ngFor="let dev of getDevices()">
-  <li *ngIf="dev.type==='multimeter'">
+  <li *ngIf="dev.type.startsWith('multimeter')">
     A {{dev.type}} named {{dev.name}} in {{dev.mainframe}} with service URL {{dev.URL}}
     <app-multimeter deviceName="{{dev.name}}" mainframe="{{dev.mainframe}}"></app-multimeter>
   </li>

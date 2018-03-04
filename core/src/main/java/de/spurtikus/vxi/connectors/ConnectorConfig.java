@@ -48,4 +48,12 @@ public interface ConnectorConfig {
 	 */
 	public String getDeviceIdByName(String name);
 
+	/**
+	 * Get a device type by device name.
+	 * 
+	 * @param name
+	 *            device name.
+	 * @return type.
+	 */	String getDeviceTypeByName(String name);
+
 }

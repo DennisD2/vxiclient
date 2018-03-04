@@ -70,7 +70,7 @@ public class SystemBoundary {
 		try {
 			Configuration.load();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			logger.error("Cannot load configuration");
 			e.printStackTrace();
 		}
 		List<ConnectorConfig> confs = Configuration.getEnabledConfigs();
@@ -78,7 +78,7 @@ public class SystemBoundary {
 		for (ConnectorConfig c: confs) {
 			for (DeviceInfo d: c.getDevices()) {
 				String name = d.getName();
-				String url = /*Constants.SERVICE_ROOT +*/ restUrlForType(d.getType()) + '/' + d.getMainframe() + '/' + d.getName();
+				String url = restUrlForType(d.getType()) + '/' + d.getMainframe() + '/' + d.getName();
 				String type = d.getType();
 				String mf = d.getMainframe();
 				ExternalVXIDescriptor de = new ExternalVXIDescriptor(name, type, url, mf);
@@ -91,14 +91,19 @@ public class SystemBoundary {
 	private String restUrlForType(String type) {
 		String u="?";
 		switch (type) {
-		case "mainframe": u=Constants.URL_MAINFRAME; break;
-		case "multimeter": u=Constants.URL_MULTIMETER; break;
-		case "pacer":     u=Constants.URL_PACER; break;
-		case "counter": u=Constants.URL_COUNTER; break;
-		case "switch": u=Constants.URL_SWITCH; break;
-		case "afg": u=Constants.URL_AFG; break;
-		case "digitalIO": u=Constants.URL_DIGITALIO; break;
-		
+			case "mainframe": u=Constants.URL_MAINFRAME; break;
+			case "multimeter": u=Constants.URL_MULTIMETER; break;
+			case "pacer": u=Constants.URL_PACER; break;
+			case "counter": u=Constants.URL_COUNTER; break;
+			case "switch": u=Constants.URL_SWITCH; break;
+			case "afg": u=Constants.URL_AFG; break;
+			case "digitalIO": u=Constants.URL_DIGITALIO; break;
+			default: logger.error("Cannot derive REST URL for device type : {}", type);
+		}
+		// handle complex types 
+		if (type.startsWith("multimeter/")) {
+			//String subType = type.replace("multimeter/", "");
+			u=Constants.URL_MULTIMETER;
 		}
 		return u;
 	}
