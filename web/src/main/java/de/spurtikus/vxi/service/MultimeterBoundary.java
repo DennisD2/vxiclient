@@ -23,19 +23,21 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.spurtikus.devices.hp.HP1326;
+import de.spurtikus.devices.hp.BaseHPMultimeter;
 
 /**
  * Boundary for multimeters.
  * 
  * Tested with:
- * * HP1326/1411 voltmeter. See class {HP1326}.
+ * * HP1326 multimeter. See class {HP1326}.
+ * * HP1411 multimeter. The HP1411 is just a resized HP1326. See class {HP1326}.
+ * * HP3478 multimeter. See class {HP3478}.
  * 
  * @author dennis
  *
  */
 @Path("/" + Constants.URL_MULTIMETER)
-public class MultimeterBoundary extends AbstractBoundary<HP1326> {
+public class MultimeterBoundary extends AbstractBoundary<BaseHPMultimeter> {
 	private Logger logger = LoggerFactory.getLogger(MultimeterBoundary.class);
 	
 	public MultimeterBoundary() {
@@ -156,7 +158,7 @@ public class MultimeterBoundary extends AbstractBoundary<HP1326> {
 
 		Map<Integer, Double> m = new HashMap<>();
 		try {
-			getDevice(mainframe, devname).initializeVoltageMeasurement(range, channels);
+			//getDevice(mainframe, devname).initializeVoltageMeasurement(range, channels);
 			m = getDevice(mainframe, devname).measureChannels(channels);
 		} catch (Exception e) {
 			logger.error("Error accessing device." + e.getMessage());
@@ -216,58 +218,6 @@ public class MultimeterBoundary extends AbstractBoundary<HP1326> {
 				sb.append(",");
 			}
 		}
-		sb.append("}");
-		
-		logger.debug(sb.toString());
-		return Response.ok(sb.toString()).build();
-	}
-
-	/**
-	 * HP1326 voltage range change.
-	 * 
-	 * TODO: make sure it works for both DC and AC.
-	 * 
-	 * @param uriInfo
-	 * @param mainframe
-	 * @param devname
-	 * @param acdc range change for 'AC' or 'DC' range.
-	 * @param range
-	 * @return
-	 */
-	@POST
-	@Path("{mainframe}/{devname}/FakesetVoltageRange/{acdc}/{range}")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response setVoltageRange(@Context UriInfo uriInfo,
-			@PathParam("mainframe") String mainframe,
-			@PathParam("devname") String devname,
-			@PathParam("acdc") String acdc, 
-			@PathParam("range") Double range,
-			List<Integer> channels) {
-		logger.debug("Incoming URI : {}", uriInfo.getPath());
-		logger.debug("Mainframe: {}", mainframe);
-		logger.debug("Device name: {}", devname);
-		logger.debug("acdc: {}", acdc);
-		logger.debug("Range: {}", range);
-		logger.debug("Channels: {}", channels);
-
-		try {
-			connManager = ConnectionManager.getInstance(this.getClass(), mainframe, devname);
-		} catch (Exception e) {
-			logger.error(
-					"Cannot get wrapper instance. This is usually an initialization problem.");
-			return Response.status(Status.NOT_FOUND).build();
-		}
-		try {
-			getDevice(mainframe, devname).setVoltageRange(range, channels);
-		} catch (Exception e) {
-			logger.error("Error accessing device.");
-			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-		}
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("{");
-		sb.append(acdc);
 		sb.append("}");
 		
 		logger.debug(sb.toString());

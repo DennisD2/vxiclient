@@ -3,6 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { MaterialModule } from '@angular/material';
 
@@ -26,6 +27,7 @@ import { FrequencyGeneratorComponent } from './devices/frequency-generator/frequ
 import { DigitalIOComponent } from './devices/digital-io/digital-io.component';
 import { SystemComponent } from './devices/system/system.component';
 import { StyleComponent } from './examples/style/style.component';
+import { ScopeComponent } from './views/scope/scope.component';
 
 @NgModule({
   declarations: [
@@ -38,13 +40,15 @@ import { StyleComponent } from './examples/style/style.component';
     DigitalIOComponent,
     EventLogComponent,
     SystemComponent,
-    StyleComponent
+    StyleComponent,
+    ScopeComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     BrowserAnimationsModule,
     HttpModule,
+    HttpClientModule,
     MaterialModule
   ],
   providers: [

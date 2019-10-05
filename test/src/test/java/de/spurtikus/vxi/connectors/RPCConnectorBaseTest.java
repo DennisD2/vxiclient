@@ -13,7 +13,9 @@ import de.spurtikus.vxi.service.Configuration;
 
 public class RPCConnectorBaseTest {
 
-	static final String TEST_DEVICE_NAME = "hp1326/hp1411";
+	//static final String TEST_DEVICE_NAME = "hp1330";
+	//static final String TEST_DEVICE_NAME = "hp1333";
+	static final String TEST_DEVICE_NAME = "hp1411";
 
 	RPCConnectorConfig config  = null;
 	VXIConnector vxiConnector = null;
