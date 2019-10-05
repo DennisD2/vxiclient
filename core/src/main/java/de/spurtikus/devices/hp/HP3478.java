@@ -16,7 +16,7 @@ import de.spurtikus.vxi.util.ConversionUtil;
  * @author dennis
  *
  */
-public class HP3478 extends BaseHPDevice {
+public class HP3478 extends BaseHPMultimeter {
 	static Logger logger = LoggerFactory.getLogger(HP3478.class);
 
 	/**
@@ -224,6 +224,7 @@ public class HP3478 extends BaseHPDevice {
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	public void initialize() throws Exception {
 	}
 
@@ -256,6 +257,7 @@ public class HP3478 extends BaseHPDevice {
 	 * @return Measurement value.
 	 * @throws Exception
 	 */
+	@Override
 	public Double measureSingle() throws Exception {
 		String s = vxiConnector.send_and_receive(deviceLink, "T3");
 		logger.trace("DEV: " + s);

@@ -27,7 +27,7 @@ import de.spurtikus.vxi.util.ConversionUtil;
  * @author dennis
  *
  */
-public class HP1326 extends BaseHPDevice {
+public class HP1326 extends BaseHPMultimeter {
 	static Logger logger = LoggerFactory.getLogger(HP1326.class);
 
 	public static final double OVERFLOW_VALUE = 9.9E37; // See manual page 67
@@ -67,6 +67,7 @@ public class HP1326 extends BaseHPDevice {
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	public void initialize() throws Exception {
 		vxiConnector.send(deviceLink, "*RST");
 		vxiConnector.send(deviceLink, "ABOR");
@@ -139,6 +140,7 @@ public class HP1326 extends BaseHPDevice {
 	 * @return Measurement value.
 	 * @throws Exception
 	 */
+	@Override
 	public Double measureSingle() throws Exception {
 		String s = vxiConnector.send_and_receive(deviceLink, "MEAS:VOLT:DC?");
 		s = s.replace("V", "");
@@ -157,6 +159,7 @@ public class HP1326 extends BaseHPDevice {
 	 *         the key is the channel name and value is the measured value.
 	 * @throws Exception
 	 */
+	@Override
 	public Map<Integer, Double> measureChannels(List<Integer> channels)
 			throws Exception {
 		String channelDefinition = ChannelHelper.toChannelString(channels);

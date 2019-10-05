@@ -135,7 +135,7 @@ public class RPCConnector extends AbstractConnector implements VXIConnector {
 	 * @return
 	 */
 	private static Device_Link createVXILink(int clientId, String deviceId) {
-		// Create a link to an instrument
+		logger.info( "Create a link to an instrument named {}", deviceId );
 		Create_LinkParms params = new Create_LinkParms();
 		params.clientId = clientId;
 		params.device = deviceId;

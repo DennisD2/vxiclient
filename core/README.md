@@ -3,27 +3,33 @@ Code to access VXI devices via serial, serial GPIB and LAN connections
 
 The idea of this project is to offer control of VXI devices via GPIB or LAN. The code has four major layers:
 
-* vxiclient-core: Basic access and device level. Basic access is via:
-	* Serial, 
-	* GPIB over serial
-	* LAN using ONC/RPC)
-	
-  Device level supports for now only HP devices
-  	* HP E1326 Voltmeter 
-  	* HP E1333 Counter
-  	* HP E1340 Arbitrary Frequency Generator
-
-  and several other devices.
-
-  REST API to access the devices using simple REST calls
-
-* vxiclient-web: Frontend application written in JavaScript accessing devices via REST API 
-
-
 NOTE: this is work in progress; Basic level and device level are usable. Boundaries are work in progress and the frontend layer is like a PoC. 
 
 
-# Basic access layer (vxiclient-core)
+## vxiclient-core: Basic access to devices 
+
+Basic access can be done via:
+* Serial
+* GPIB over serial
+* LAN using ONC/RPC)
+
+Device level supports for now mostly HP devices:
+* HP E1300 Mainframe
+* HP E1326 Multimeter 
+* HP E1411 Multimeter 
+* HP E1333 Counter
+* HP E1340 Arbitrary Frequency Generator
+* HP E1345 Relay Multiplexer
+* HP E1351 FET Multiplexer
+
+* HP 3478 Multimeter
+
+All devices are exposed as REST services.
+
+## vxiclient-web: Frontend application
+This application written in JavaScript (Angular) allows accessing devices 
+via their exposed REST API.
+
 
 A file vxiserver.properties contains information about devices. The following lines describe two mainframes, one accessible via GPIB over Serial connector, the other one accessible via LAN.
 
@@ -45,10 +51,10 @@ vxi.connector.2.enabled=true
 vxi.connector.2.type=net
 vxi.connector.2.clientid=12345
 vxi.connector.2.host=vxi1
-vxi.connector.2.devices=[{"name":"hp1411","type":"multimeter","address":"iscpi,8"},{"name":"hp1330","type":"digitalIO","address":"iscpi,37"}]
+vxi.connector.2.devices=[{"name":"hp1411","type":"multimeter","address":"iscpi,16"},{"name":"hp1330","type":"digitalIO","address":"iscpi,37"},{"name":"hp1333","type":"counter","address":"iscpi,6"},{"name":"hp1340","type":"afg","address":"iscpi,10"}]
 
 ```
 
-# Web application (vxiclient-web)
+# vxiclient-web: the web application
 
 All code together is compiled into a simple WAR file that can be deployed and run on e.g. Tomcat.
