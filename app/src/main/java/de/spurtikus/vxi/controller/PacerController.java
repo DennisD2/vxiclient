@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
  */
 
 @RestController
-@RequestMapping("/api/rest/" + Constants.URL_PACER)
+@RequestMapping(Constants.SERVICE_ROOT + Constants.URL_PACER)
 public class PacerController extends AbstractController<HP1300Pacer> {
     private Logger logger = LoggerFactory.getLogger(PacerController.class);
 

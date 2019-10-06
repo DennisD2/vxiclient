@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
  * @author dennis
  */
 @RestController
-@RequestMapping("/api/rest/" + Constants.URL_SWITCH)
+@RequestMapping(Constants.SERVICE_ROOT + Constants.URL_SWITCH)
 public class SwitchController extends AbstractController<HP1351> {
     private Logger logger = LoggerFactory.getLogger(SwitchController.class);
 

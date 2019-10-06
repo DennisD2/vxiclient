@@ -19,7 +19,7 @@ import java.util.List;
  * @author dennis
  */
 @RestController
-@RequestMapping("/api/rest/" + Constants.URL_MAINFRAME)
+@RequestMapping(Constants.SERVICE_ROOT + Constants.URL_MAINFRAME)
 public class MainframeController extends AbstractController<HP1300b> {
     private Logger logger = LoggerFactory.getLogger(MainframeController.class);
 

@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
  *
  */
 @RestController
-@RequestMapping("/api/rest/" + Constants.URL_DIGITALIO)
+@RequestMapping(Constants.SERVICE_ROOT + Constants.URL_DIGITALIO)
 public class DIOController extends AbstractController<DigitalIO> {
     private Logger logger = LoggerFactory.getLogger(DIOController.class);
 

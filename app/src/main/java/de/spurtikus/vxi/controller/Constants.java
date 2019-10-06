@@ -15,7 +15,7 @@ public class Constants {
      */
     public static final String CONFIGVAL_PREFIX = "vxi.connector.";
 
-    public static final String SERVICE_ROOT = "api/rest/";
+    public static final String SERVICE_ROOT = "/api/rest/";
 
     public static final String URL_SYSTEM = "system";
     public static final String URL_MAINFRAME = "mainframe";

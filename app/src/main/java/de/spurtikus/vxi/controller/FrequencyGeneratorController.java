@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
  * @author dennis
  */
 @RestController
-@RequestMapping("/api/rest/" + Constants.URL_AFG)
+@RequestMapping(Constants.SERVICE_ROOT + Constants.URL_AFG)
 public class FrequencyGeneratorController extends AbstractController<HP1340> {
     private static final String MSG_NO_WRAPPER = "Cannot get wrapper instance. This is usually an initialization problem.";
     private Logger logger = LoggerFactory.getLogger(FrequencyGeneratorController.class);

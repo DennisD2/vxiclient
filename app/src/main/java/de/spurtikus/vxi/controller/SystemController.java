@@ -19,7 +19,7 @@ import java.util.List;
  * Basically it provides the content of that file to the frontend.
  */
 @RestController
-@RequestMapping("/api/rest/" + Constants.URL_SYSTEM)
+@RequestMapping(Constants.SERVICE_ROOT + Constants.URL_SYSTEM)
 public class SystemController {
     private Logger logger = LoggerFactory.getLogger(SystemController.class);
 
