@@ -161,8 +161,6 @@ public class CounterBoundary extends AbstractBoundary<HP1333> {
 	 * @param uriInfo
 	 * @param mainframe
 	 * @param devname
-	 * @param channel
-	 *            1,2 or 3.
 	 * @param coupling
 	 *            "AC" or "DC".
 	 * @return
