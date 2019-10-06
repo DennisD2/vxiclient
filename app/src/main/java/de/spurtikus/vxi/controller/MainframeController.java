@@ -4,10 +4,7 @@ import de.spurtikus.devices.hp.HP1300b;
 import de.spurtikus.vxi.mainframes.hp1300b.VXIDevice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -21,7 +18,8 @@ import java.util.List;
  *
  * @author dennis
  */
-@RequestMapping("/" + Constants.URL_MAINFRAME)
+@RestController
+@RequestMapping("/api/rest/" + Constants.URL_MAINFRAME)
 public class MainframeController extends AbstractController<HP1300b> {
     private Logger logger = LoggerFactory.getLogger(MainframeController.class);
 

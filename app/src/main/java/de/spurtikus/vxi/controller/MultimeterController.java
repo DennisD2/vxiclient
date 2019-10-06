@@ -25,7 +25,7 @@ import java.util.Map;
  * @author dennis
  */
 @RestController
-@RequestMapping("/" + Constants.URL_MULTIMETER)
+@RequestMapping("/api/rest/" + Constants.URL_MULTIMETER)
 public class MultimeterController extends AbstractController<BaseHPMultimeter> {
     private Logger logger = LoggerFactory.getLogger(MultimeterController.class);
 

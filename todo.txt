@@ -3,6 +3,9 @@ Todos
 -----
 - Make multimeter view/service work without hardware switches
 - Move to SpringBoot
+- Make frontend copy into app project better or BETTER: add it to build like in old web project!
+- Improve copying of resources; see app pom, there its just copied to target/classes/resources. Check if
+  SpringBoot has some automatism for additional property files.
 - Fix URL issue in POM 
  - production build should define correct basedir
  - Make 'deployment' to external tomcat reliable (WAR file name versus context root)

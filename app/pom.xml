@@ -24,6 +24,24 @@
 
     <build>
         <plugins>
+
+            <!-- Copy frontend code to location fron where SpringBoot serves static content -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/classes/resources/</outputDirectory>
+                    <resources>
+                        <resource>
+                            <directory>${project.basedir}/../web/src/main/ng/vxiclient/dist/</directory>
+                        </resource>
+                        <resource>
+                            <directory>${project.basedir}/src/main/resources/</directory>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

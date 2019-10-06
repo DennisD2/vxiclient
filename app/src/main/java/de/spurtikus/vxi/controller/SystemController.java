@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,8 @@ import java.util.List;
  * This controller is the umbrella around a set of VXI mainframes defined in application.properties file.
  * Basically it provides the content of that file to the frontend.
  */
-@RequestMapping("/" + Constants.URL_SYSTEM)
+@RestController
+@RequestMapping("/api/rest/" + Constants.URL_SYSTEM)
 public class SystemController {
     private Logger logger = LoggerFactory.getLogger(SystemController.class);
 

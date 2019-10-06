@@ -9,6 +9,9 @@ import de.spurtikus.vxi.connectors.serial.SerialConnectorConfig;
 import de.spurtikus.vxi.service.DeviceInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,8 +62,13 @@ public class Configuration {
 
         logger.info("Read configuration from classpath resource {}",
                 Constants.CONFIGFILE_LOCATION);
-        is = Configuration.class.getClassLoader()
-                .getResourceAsStream(Constants.CONFIGFILE_LOCATION);
+        /*is = Configuration.class.getClassLoader()
+                .getResourceAsStream(Constants.CONFIGFILE_LOCATION);*/
+
+        // Code below searches from its root '/BOOT-INF/classes'
+        ApplicationContext appContext = new ClassPathXmlApplicationContext();
+        Resource resource = appContext.getResource("classpath:resources/" + Constants.CONFIGFILE_LOCATION);
+        is = resource.getInputStream();
         if (is == null) {
             logger.info("Configuration not found.");
             throw new Exception("Configuration not found.");
