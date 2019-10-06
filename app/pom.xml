@@ -5,7 +5,7 @@
     <artifactId>vxiclient-app</artifactId>
     <name>VXI Client Application</name>
     <description>VXI client SpringBoot application</description>
-    <version>0.1.0</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <!--<parent>
@@ -53,7 +53,7 @@
         <dependency>
             <groupId>de.spurtikus</groupId>
             <artifactId>vxiclient-core</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Spring REST -->

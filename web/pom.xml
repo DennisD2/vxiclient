@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>de.spurtikus</groupId>
 		<artifactId>vxiclient-parent</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -44,12 +44,12 @@
 							<goal>exec</goal>
 						</goals>
 						<configuration>
+							<executable>ng</executable>
 							<arguments>
-								<argument>run-script</argument>
 								<argument>build</argument>
-								<!--<argument>-dev</argument>
-                                <argument>-basedir</argument>
-                                <argument>.</argument> -->
+								<argument>-dev</argument>
+                                <argument>--base-href</argument>
+                                <argument>/${artifactId}-${version}/</argument>
 							</arguments>
 						</configuration>
 					</execution>
@@ -98,7 +98,7 @@
 		<dependency>
 			<groupId>de.spurtikus</groupId>
 			<artifactId>vxiclient-core</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- JAX REST services -->
