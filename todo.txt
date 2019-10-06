@@ -1,14 +1,10 @@
 
 Todos
 -----
-- Make multimeter view/service work without hardware switches
-- Move to SpringBoot
-- Make frontend copy into app project better or BETTER: add it to build like in old web project!
-- Improve copying of resources; see app pom, there its just copied to target/classes/resources. Check if
+- HREF setting in app-project: Make frontend copy into app project better or BETTER: add it to build like in old web project!
   SpringBoot has some automatism for additional property files.
-- Fix URL issue in POM 
- - production build should define correct basedir
- - Make 'deployment' to external tomcat reliable (WAR file name versus context root)
+- Improve copying of resources; see app pom, there its just copied to target/classes/resources. Check if
+- Make multimeter view/service work without hardware switches
 - Add all missing methods to Boundaries not yet implemented (see Device code)
  This means real testing and real measurements. DO this one by one device:
   - HP1300 boundary completion
@@ -24,6 +20,10 @@ Todos
 
 Done
 ----
+- Fix URL issue in POM
+ - production build should define correct basedir
+ - Make 'deployment' to external tomcat reliable (WAR file name versus context root)
+- Move to Spring Boot
 - HP1340 tests revival
 - Write SerialToGPIBConnector (much work)
 - Extend config to allow multiple devices per connector - OK
