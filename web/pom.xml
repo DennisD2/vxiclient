@@ -26,21 +26,37 @@
 				<version>1.6.0</version>
 				<executions>
 					<execution>
+						<id>Node install modules</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>exec</goal>
 						</goals>
+						<configuration>
+							<arguments>
+								<argument>install</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>Node build</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<arguments>
+								<argument>run-script</argument>
+								<argument>build</argument>
+								<!--<argument>-dev</argument>
+                                <argument>-basedir</argument>
+                                <argument>.</argument> -->
+							</arguments>
+						</configuration>
 					</execution>
 				</executions>
 				<configuration>
-					<executable>ng</executable>
+					<executable>npm</executable>
 					<workingDirectory>${project.basedir}/src/main/ng/vxiclient</workingDirectory>
-					<arguments>
-						<argument>build</argument>
-						<argument>-dev</argument>
-						<argument>-basedir</argument>
-						<argument>.</argument>
-					</arguments>
 				</configuration>
 			</plugin>
 
