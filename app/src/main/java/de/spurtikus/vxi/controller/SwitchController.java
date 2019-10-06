@@ -27,22 +27,17 @@ public class SwitchController extends AbstractController<HP1351> {
         className = Constants.URL_SWITCH;
     }
 
-    //@Produces(MediaType.TEXT_PLAIN)
     @GetMapping("{mainframe}/{devname}/info")
     public String info(@PathVariable("mainframe") String mainframe,
                        @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         return getClassName();
     }
 
     @PostMapping("{mainframe}/{devname}/idn")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String idn(@PathVariable("mainframe") String mainframe,
                       @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
 

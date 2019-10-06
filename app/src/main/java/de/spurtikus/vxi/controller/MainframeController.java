@@ -27,22 +27,17 @@ public class MainframeController extends AbstractController<HP1300b> {
         className = Constants.URL_MAINFRAME;
     }
 
-    //@Produces(MediaType.TEXT_PLAIN)
     @GetMapping("{mainframe}/{devname}/info")
     public String info(@PathVariable("mainframe") String mainframe,
                        @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         return getClassName();
     }
 
     @PostMapping("{mainframe}/{devname}/idn")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String idn(@PathVariable("mainframe") String mainframe,
                       @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
 
@@ -70,11 +65,8 @@ public class MainframeController extends AbstractController<HP1300b> {
     }
 
     @PostMapping("{mainframe}/{devname}/devices")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public List<VXIDevice> listDevices(@PathVariable("mainframe") String mainframe,
                                        @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
 
@@ -103,11 +95,8 @@ public class MainframeController extends AbstractController<HP1300b> {
 
     //[{"name":"hp1301","type":"mainframe","URL":"/hp1300/mfb/hp1301","mainframe":"mfb"},{"name":"hp1300pacer","type":"pacer","URL":"/hp1300pacer/mfb/hp1300pacer","mainframe":"mfb"},{"name":"hp1326","type":"multimeter","URL":"/hp1326/mfb/hp1326","mainframe":"mfb"},{"name":"hp1333","type":"counter","URL":"/hp1333/mfb/hp1333","mainframe":"mfb"},{"name":"hp1351","type":"switch","URL":"/hp1351/mfb/hp1351","mainframe":"mfb"},{"name":"hp1340","type":"afg","URL":"/hp1340/mfb/hp1340","mainframe":"mfb"},{"name":"hp1330","type":"digitalIO","URL":"/hp1330/mfb/hp1330","mainframe":"mfb"},{"name":"hp1411","type":"multimeter","URL":"/hp1326/mfc/hp1411","mainframe":"mfc"},{"name":"hp1330","type":"digitalIO","URL":"/hp1330/mfc/hp1330","mainframe":"mfc"}]
     @PostMapping("{mainframe}/{devname}/Fakedevices")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public List<VXIDevice> listDevicesFake(@PathVariable("mainframe") String mainframe,
                                            @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
 

@@ -25,22 +25,17 @@ public class PacerController extends AbstractController<HP1300Pacer> {
         className = Constants.URL_PACER;
     }
 
-    //@Produces(MediaType.TEXT_PLAIN)
     @GetMapping("{mainframe}/{devname}/info")
     public String info(@PathVariable("mainframe") String mainframe,
                        @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         return getClassName();
     }
 
     @PostMapping("{mainframe}/{devname}/startSelfTriggered")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String startSelfTriggered(@PathVariable("mainframe") String mainframe,
                                      @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
 
@@ -56,11 +51,8 @@ public class PacerController extends AbstractController<HP1300Pacer> {
     }
 
     @PostMapping("{mainframe}/{devname}/startExternalTriggered")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String startExternalTrigger(@PathVariable("mainframe") String mainframe,
                                        @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
 
@@ -76,8 +68,6 @@ public class PacerController extends AbstractController<HP1300Pacer> {
     }
 
     @PostMapping("{mainframe}/{devname}/stop")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String stop(@PathVariable("mainframe") String mainframe,
                        @PathVariable("devname") String devname) {
         logger.debug("Mainframe: {}", mainframe);
@@ -95,8 +85,6 @@ public class PacerController extends AbstractController<HP1300Pacer> {
     }
 
     @PostMapping("{mainframe}/{devname}/setCycles/{cycles}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setCycles(@PathVariable("mainframe") String mainframe,
                             @PathVariable("devname") String devname,
                             @PathVariable("cycles") Long cycles) {
@@ -116,8 +104,6 @@ public class PacerController extends AbstractController<HP1300Pacer> {
     }
 
     @PostMapping("{mainframe}/{devname}/setPeriod/{period}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setPeriod(@PathVariable("mainframe") String mainframe,
                             @PathVariable("devname") String devname,
                             @PathVariable("period") Double period) {

@@ -36,8 +36,6 @@ public class CounterController extends AbstractController<HP1333> {
     }
 
     @PostMapping("{mainframe}/{devname}/idn")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String idn(
             @PathVariable("mainframe") String mainframe,
             @PathVariable("devname") String devname) {
@@ -78,8 +76,6 @@ public class CounterController extends AbstractController<HP1333> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/configure/{channel}/{mode}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String configure(
             @PathVariable("mainframe") String mainframe,
             @PathVariable("devname") String devname,
@@ -141,8 +137,6 @@ public class CounterController extends AbstractController<HP1333> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/coupling/{coupling}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setCoupling(
             @PathVariable("mainframe") String mainframe,
             @PathVariable("devname") String devname,
@@ -180,8 +174,6 @@ public class CounterController extends AbstractController<HP1333> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/lowPassFilter/{onoff}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setLowPassFilter(
             @PathVariable("mainframe") String mainframe,
             @PathVariable("devname") String devname,
@@ -219,8 +211,6 @@ public class CounterController extends AbstractController<HP1333> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/impedance/{impedance}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setImpedance(
             @PathVariable("mainframe") String mainframe,
             @PathVariable("devname") String devname,
@@ -259,8 +249,6 @@ public class CounterController extends AbstractController<HP1333> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/aperture/{channel}/{aperture}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setAperture(
             @PathVariable("mainframe") String mainframe,
             @PathVariable("devname") String devname,
@@ -300,8 +288,6 @@ public class CounterController extends AbstractController<HP1333> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/attenuation/{atten}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setAttenuation(
             @PathVariable("mainframe") String mainframe,
             @PathVariable("devname") String devname,
@@ -339,8 +325,6 @@ public class CounterController extends AbstractController<HP1333> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/read/{channel}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String read(
             @PathVariable("mainframe") String mainframe,
             @PathVariable("devname") String devname,

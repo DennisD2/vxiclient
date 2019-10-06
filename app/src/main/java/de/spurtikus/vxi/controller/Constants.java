@@ -6,7 +6,6 @@ package de.spurtikus.vxi.controller;
  * @author dennis
  */
 public class Constants {
-    public static final String RETURNVAL_OK = "OK";
     /**
      * Config file relative path in classpath
      */

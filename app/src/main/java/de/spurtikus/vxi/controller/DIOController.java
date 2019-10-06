@@ -25,22 +25,17 @@ public class DIOController extends AbstractController<DigitalIO> {
         className = Constants.URL_DIGITALIO;
     }
 
-    ////@Produces(MediaType.TEXT_PLAIN)
     @GetMapping("{mainframe}/{devname}/info")
     public String info(@PathVariable("mainframe") String mainframe,
                          @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         return getClassName();
     }
 
     @PostMapping("{mainframe}/{devname}/idn")
-    ////@Consumes({ MediaType.APPLICATION_JSON })
-    ////@Produces(MediaType.APPLICATION_JSON)
     public String idn(@PathVariable("mainframe") String mainframe,
                         @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
 
@@ -78,14 +73,11 @@ public class DIOController extends AbstractController<DigitalIO> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/setBit/{byte}/{bit}/{value}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setBit(@PathVariable("mainframe") String mainframe,
                            @PathVariable("devname") String devname,
                            @PathVariable("byte") int bbyte,
                            @PathVariable("bit") int bit,
                            @PathVariable("value") boolean value) {
-       //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         logger.debug("Byte: {}", bbyte);
@@ -121,13 +113,10 @@ public class DIOController extends AbstractController<DigitalIO> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/getBit/{byte}/{bit}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setBit(@PathVariable("mainframe") String mainframe,
                            @PathVariable("devname") String devname,
                            @PathVariable("byte") int bbyte,
                            @PathVariable("bit") int bit) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         logger.debug("Byte: {}", bbyte);
@@ -161,14 +150,11 @@ public class DIOController extends AbstractController<DigitalIO> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/setPolarity/{byte}/{bit}/{polarity}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setPolarity(@PathVariable("mainframe") String mainframe,
                                 @PathVariable("devname") String devname,
                                 @PathVariable("byte") Integer bbyte,
                                 @PathVariable("bit") Integer bit,
                                 @PathVariable("polarity") Boolean polarity) {
-        // logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         logger.debug("Byte: {}", bbyte);

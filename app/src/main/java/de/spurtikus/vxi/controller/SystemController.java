@@ -33,25 +33,12 @@ public class SystemController {
         className = Constants.URL_SYSTEM.replace("/", "");
     }
 
-    /*
-     * TODO: the Path("/") produces tomcat startup warning:
-     * The following warnings have been detected: WARNING:
-     * The (sub)resource method defaultAnswer in de.spurtikus.vxi.service.SystemBoundary
-     * contains empty path annotation.
-     */
-    //@GetMapping("/")
-    //public String defaultAnswer() {
-    //    return defaultMessage;
-    //}
-
     @GetMapping("/info")
     public String info() {
         return className;
     }
 
     @PostMapping("/getConfig")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces({ MediaType.APPLICATION_JSON })
     public List<ExternalVXIDescriptor> getConfig() {
         // Load configuration
         try {
@@ -103,7 +90,7 @@ public class SystemController {
                 logger.error("Cannot derive REST URL for device type : {}", type);
         }
         // handle complex types
-        if (type.startsWith("multimeter/")) {
+        if (type.startsWith("multimeter-")) {
             //String subType = type.replace("multimeter/", "");
             u = Constants.URL_MULTIMETER;
         }

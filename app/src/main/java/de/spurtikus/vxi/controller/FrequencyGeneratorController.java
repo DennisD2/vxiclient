@@ -28,7 +28,6 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
     @GetMapping("{mainframe}/{devname}/info")
     public String info(@PathVariable("mainframe") String mainframe,
                        @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         return getClassName();
@@ -37,7 +36,6 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
     @PostMapping("{mainframe}/{devname}/idn")
     public String idn(@PathVariable("mainframe") String mainframe,
                       @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
 
@@ -74,7 +72,6 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
     @PostMapping("{mainframe}/{devname}/initialize")
     public String initialize(@PathVariable("mainframe") String mainframe,
                              @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
 
@@ -103,11 +100,8 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/getConfiguration")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String getConfiguration(@PathVariable("mainframe") String mainframe,
                                    @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
 
@@ -137,12 +131,9 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/setAmplitude/{amplitude}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setAmplitude(@PathVariable("mainframe") String mainframe,
                                @PathVariable("devname") String devname,
                                @PathVariable("amplitude") Double amplitude) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         logger.debug("Amplitude: {}", amplitude);
@@ -175,12 +166,9 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/setOffset/{offset}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setOffset(@PathVariable("mainframe") String mainframe,
                             @PathVariable("devname") String devname,
                             @PathVariable("offset") Double offset) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         logger.debug("offset: {}", offset);
@@ -214,12 +202,9 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/setFrequency/{frequency}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setFrequency(@PathVariable("mainframe") String mainframe,
                                @PathVariable("devname") String devname,
                                @PathVariable("frequency") Double frequency) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         logger.debug("Frequency: {}", frequency);
@@ -253,12 +238,9 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/setShape/standard/{waveform}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setStandardShape(@PathVariable("mainframe") String mainframe,
                                    @PathVariable("devname") String devname,
                                    @PathVariable("waveform") String waveform) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         logger.debug("waveform: {}", waveform);
@@ -295,13 +277,10 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/setShape/builtin/{waveform}/{segment}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setBuiltinShape(@PathVariable("mainframe") String mainframe,
                                   @PathVariable("devname") String devname,
                                   @PathVariable("waveform") String waveform,
                                   @PathVariable("segment") char segment) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         logger.debug("segment: {}", segment);
@@ -341,8 +320,6 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/setSweep/{start}/{stop}/{points}/{duration}/{amplitude}/{waveform}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setSweep(@PathVariable("mainframe") String mainframe,
                            @PathVariable("devname") String devname,
                            @PathVariable("start") double startFrequency,
@@ -351,7 +328,6 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
                            @PathVariable("duration") double duration,
                            @PathVariable("amplitude") double amplitude,
                            @PathVariable("waveform") String waveform) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         logger.debug("startFrequency: {}", startFrequency);
@@ -392,13 +368,10 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
      * @return
      */
     @PostMapping("{mainframe}/{devname}/setMarker/{source}/{polarity}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String setMarker(@PathVariable("mainframe") String mainframe,
                             @PathVariable("devname") String devname,
                             @PathVariable("source") String source,
                             @PathVariable("polarity") String polarity) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
         logger.debug("source: {}", source);

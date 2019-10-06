@@ -45,7 +45,6 @@ public class MultimeterController extends AbstractController<BaseHPMultimeter> {
     @GetMapping(value = "{mainframe}/{devname}/init")
     public String init(@PathVariable("mainframe") String mainframe,
                        @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
 
@@ -66,11 +65,8 @@ public class MultimeterController extends AbstractController<BaseHPMultimeter> {
     }
 
     @PostMapping(value = "{mainframe}/{devname}/idn")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String idn(@PathVariable("mainframe") String mainframe,
                       @PathVariable("devname") String devname) {
-        //logger.debug("Incoming URI : {}", uriInfo.getPath());
         logger.debug("Mainframe: {}", mainframe);
         logger.debug("Device name: {}", devname);
 
@@ -106,8 +102,6 @@ public class MultimeterController extends AbstractController<BaseHPMultimeter> {
      * @return
      */
     @PostMapping(value = "{mainframe}/{devname}/read/{range}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public Map readChannels(@PathVariable("mainframe") String mainframe,
                             @PathVariable("devname") String devname,
                             @PathVariable("range") Double range,
@@ -146,8 +140,6 @@ public class MultimeterController extends AbstractController<BaseHPMultimeter> {
     double oldy[] = new double[2 * MAXCHANNELS];
 
     @PostMapping(value = "{mainframe}/{devname}/Fakeread/{range}")
-    //@Consumes({ MediaType.APPLICATION_JSON })
-    //@Produces(MediaType.APPLICATION_JSON)
     public String readChannelsFake(@PathVariable("mainframe") String mainframe,
                                    @PathVariable("devname") String devname,
                                    @PathVariable("range") Double range,
@@ -157,12 +149,6 @@ public class MultimeterController extends AbstractController<BaseHPMultimeter> {
         logger.debug("Device name: {}", devname);
         logger.debug("Range: {}", range);
         logger.debug("Channels: {}", channels);
-
-		/*try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
 
         // {"100":0.2712517,"101":-0.2288322}
         // String answer = "{\"100\":"+n+",\"101\":"+m+"}";
