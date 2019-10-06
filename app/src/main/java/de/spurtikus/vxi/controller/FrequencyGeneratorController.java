@@ -92,7 +92,7 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
             logger.error("Error accessing device.");
             return Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase();
         }
-        return "done";
+        return Response.Status.OK.getReasonPhrase();
     }
 
     /**
@@ -163,7 +163,7 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
             logger.error("Error accessing device.");
             return Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase();
         }
-        return "done";
+        return Response.Status.OK.getReasonPhrase();
     }
 
     /**
@@ -201,7 +201,7 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
             logger.error("Error accessing device.");
             return Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase();
         }
-        return "done";
+        return Response.Status.OK.getReasonPhrase();
     }
 
     /**
@@ -240,7 +240,7 @@ public class FrequencyGeneratorController extends AbstractController<HP1340> {
             logger.error("Error accessing device.");
             return Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase();
         }
-        return "done";
+        return Response.Status.OK.getReasonPhrase();
     }
 
     /**

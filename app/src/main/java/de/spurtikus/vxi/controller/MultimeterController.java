@@ -62,7 +62,7 @@ public class MultimeterController extends AbstractController<BaseHPMultimeter> {
             logger.error("Error in initialize().");
             return Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase();
         }
-        return "initialized";
+        return Response.Status.OK.getReasonPhrase();
     }
 
     @PostMapping(value = "{mainframe}/{devname}/idn")

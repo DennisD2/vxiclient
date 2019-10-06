@@ -129,7 +129,7 @@ public class CounterController extends AbstractController<HP1333> {
             logger.error("Error accessing device.");
             return Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase();
         }
-        return Constants.RETURNVAL_OK;
+        return Response.Status.OK.getReasonPhrase();
     }
 
     /**
@@ -168,7 +168,7 @@ public class CounterController extends AbstractController<HP1333> {
             logger.error("Error accessing device.");
             return Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase();
         }
-        return Constants.RETURNVAL_OK;
+        return Response.Status.OK.getReasonPhrase();
     }
 
     /**
@@ -205,7 +205,7 @@ public class CounterController extends AbstractController<HP1333> {
             logger.error("Error accessing device.");
             return Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase();
         }
-        return Constants.RETURNVAL_OK;
+        return Response.Status.OK.getReasonPhrase();
     }
 
     /**
@@ -246,7 +246,7 @@ public class CounterController extends AbstractController<HP1333> {
             logger.error("Error accessing device.");
             return Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase();
         }
-        return Constants.RETURNVAL_OK;
+        return Response.Status.OK.getReasonPhrase();
     }
 
     /**
@@ -286,7 +286,7 @@ public class CounterController extends AbstractController<HP1333> {
             logger.error("Error accessing device.");
             return Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase();
         }
-        return Constants.RETURNVAL_OK;
+        return Response.Status.OK.getReasonPhrase();
     }
 
     /**
@@ -327,7 +327,7 @@ public class CounterController extends AbstractController<HP1333> {
             logger.error("Error accessing device.");
             return Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase();
         }
-        return Constants.RETURNVAL_OK;
+        return Response.Status.OK.getReasonPhrase();
     }
 
     /**

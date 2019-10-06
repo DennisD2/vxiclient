@@ -52,7 +52,7 @@ public class PacerController extends AbstractController<HP1300Pacer> {
                     "Cannot get wrapper instance. This is usually an initialization problem.");
             return Response.Status.NOT_FOUND.getReasonPhrase();
         }
-        return "OK";
+        return Response.Status.OK.getReasonPhrase();
     }
 
     @PostMapping("{mainframe}/{devname}/startExternalTriggered")
@@ -72,7 +72,7 @@ public class PacerController extends AbstractController<HP1300Pacer> {
                     "Cannot get wrapper instance. This is usually an initialization problem.");
             return Response.Status.NOT_FOUND.getReasonPhrase();
         }
-        return "OK";
+        return Response.Status.OK.getReasonPhrase();
     }
 
     @PostMapping("{mainframe}/{devname}/stop")
@@ -91,7 +91,7 @@ public class PacerController extends AbstractController<HP1300Pacer> {
                     "Cannot get wrapper instance. This is usually an initialization problem.");
             return Response.Status.NOT_FOUND.getReasonPhrase();
         }
-        return "OK";
+        return Response.Status.OK.getReasonPhrase();
     }
 
     @PostMapping("{mainframe}/{devname}/setCycles/{cycles}")
@@ -112,7 +112,7 @@ public class PacerController extends AbstractController<HP1300Pacer> {
                     "Cannot get wrapper instance. This is usually an initialization problem.");
             return Response.Status.NOT_FOUND.getReasonPhrase();
         }
-        return "OK";
+        return Response.Status.OK.getReasonPhrase();
     }
 
     @PostMapping("{mainframe}/{devname}/setPeriod/{period}")
@@ -133,6 +133,6 @@ public class PacerController extends AbstractController<HP1300Pacer> {
                     "Cannot get wrapper instance. This is usually an initialization problem.");
             return Response.Status.NOT_FOUND.getReasonPhrase();
         }
-        return "OK";
+        return Response.Status.OK.getReasonPhrase();
     }
 }
