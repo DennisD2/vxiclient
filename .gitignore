@@ -1,4 +1,4 @@
-/target/**
+**/target/**
 .bzr/
 **/.bzr/**
 .jsdtscope
@@ -7,4 +7,3 @@
 **/*.iml
 .idea
 **/package-lock.json
-/app/target/
