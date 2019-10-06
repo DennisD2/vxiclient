@@ -25,7 +25,7 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
   devices: VXIDevice[] = [];
 
   // Channels to scan
-  channels: Channel[] = [ {name: '100', value: 0}, {name: '101', value: 0}, {name: '200', value: 0} ];
+  channels: Channel[] = [ {name: '100', value: 0}, {name: '101', value: 0} /*, {name: '200', value: 0}*/ ];
 
   // Meter modes
   allowedModes = [ {id: 0, value: 'U'}, {id: 1, value: 'I'}, {id: 2, value: 'R'}];
@@ -88,7 +88,7 @@ export class MultimeterComponent extends BaseDevice implements OnInit, Device {
           // forward to rest of chain
           chain(self.appRegistry);
     }, c => {
-          console.log('An error occured, releasing mutex');
+          console.log('An error occurred, releasing mutex');
           chain(self.appRegistry);
         });
         release();

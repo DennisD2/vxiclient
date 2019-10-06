@@ -1,6 +1,8 @@
 
 Todos
 -----
+- Make multimeter view/service work without hardware switches
+- Move to SpringBoot
 - Fix URL issue in POM 
  - production build should define correct basedir
  - Make 'deployment' to external tomcat reliable (WAR file name versus context root)

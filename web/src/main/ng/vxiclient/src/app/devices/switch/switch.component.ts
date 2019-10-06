@@ -24,7 +24,7 @@ export class SwitchComponent implements OnInit, MObject {
     }
     this.switch0[0] = true;
     this.switch0[1] = true;
-    this.switch1[0] = true;
+    //this.switch1[0] = true;
   }
 
   onSwitchChange(channel: number) {
