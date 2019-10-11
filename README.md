@@ -70,3 +70,6 @@ via their exposed REST API.
 
 All code together is compiled into a simple WAR file that can be deployed 
 and run on e.g. Tomcat.
+
+# Further reading
+For deeper discussion of `vxiclient` code, see [howitworks.md](howitwork.md).

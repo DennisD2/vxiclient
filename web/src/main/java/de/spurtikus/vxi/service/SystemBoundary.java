@@ -101,7 +101,7 @@ public class SystemBoundary {
 			default: logger.error("Cannot derive REST URL for device type : {}", type);
 		}
 		// handle complex types 
-		if (type.startsWith("multimeter/")) {
+		if (type.startsWith("multimeter-")) {
 			//String subType = type.replace("multimeter/", "");
 			u=Constants.URL_MULTIMETER;
 		}

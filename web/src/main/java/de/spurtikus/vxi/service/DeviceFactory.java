@@ -44,7 +44,7 @@ public class DeviceFactory {
 				// HP E1326 and E1411
 				device = new HP1326(parent, link);
 				break;
-			case "multimeter/hp3478a":
+			case "multimeter-hp3478a":
 				// HP 3478A
 				device = new HP3478(parent, link);
 				break;
