@@ -186,7 +186,7 @@ public class DigitalIO extends BaseHPDevice {
 	public Boolean setBit(PortDescription bit, boolean value) throws Exception {
 		int v = value ? 1 : 0;
 		String s = vxiConnector.send_and_receive(deviceLink, 
-				"DIG:" + createBitPortString(bit) + " " + v + ";*OPC?");
+				"SOUR:DIG:" + createBitPortString(bit) + " " + v + ";*OPC?");
 		logger.debug("DEV: " + s);
 		if (s.startsWith("1")) return true;
 		if (s.startsWith("0")) return false;
@@ -204,14 +204,14 @@ public class DigitalIO extends BaseHPDevice {
 	 */
 	public void setByte(PortDescription bit, byte value) throws Exception {
 		String s = vxiConnector.send_and_receive(deviceLink, 
-				"DIG:" + createBytePortString(bit) + " " + value + ";*OPC?");
+				"SOUR:DIG:" + createBytePortString(bit) + " " + value + ";*OPC?");
 		logger.debug("DEV: " + s);
 	}
 
 	public void setPolarity(PortDescription bit, Polarity polarity)
 			throws Exception {
 		String s = vxiConnector.send_and_receive(deviceLink, 
-				"DIG:" + createBytePortString(bit) + ":POL " + polarity);
+				"SOUR:DIG:" + createBytePortString(bit) + ":POL " + polarity);
 		logger.debug("DEV: " + s);
 	}
 

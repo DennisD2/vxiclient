@@ -1,7 +1,5 @@
 package de.spurtikus.devices.hp;
 
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -11,6 +9,8 @@ import de.spurtikus.vxi.connectors.ConnectorConfig;
 import de.spurtikus.vxi.connectors.DeviceLink;
 import de.spurtikus.vxi.connectors.VXIConnector;
 import de.spurtikus.vxi.connectors.VXIConnectorFactory;
+
+import static org.junit.Assert.*;
 
 /**
  * Digital IO tests.
@@ -36,29 +36,29 @@ public class HP1330Test extends DeviceBaseTest {
 		assertNotNull(deviceid);
 		DeviceLink theLid = vxiConnector.initialize(config, deviceid);
 		testee = new DigitalIO(vxiConnector, theLid);
+
+		testee.initialize();
 	}
 
 	// @Ignore
 	@Test
-	public void testGetAndSet() throws Exception {
-		testee.initialize();
-
-		PortDescription get = new PortDescription(DigitalIO.Port.DATA0,
-				DigitalIO.Bit.BIT0);
-		boolean b = testee.getBit(get);
-		System.out.println("Bit value: " + b);
-
+	public void testGetAndSet_true() throws Exception {
 		PortDescription set = new PortDescription(DigitalIO.Port.DATA0,
 				DigitalIO.Bit.BIT1);
 		testee.setBit(set, true);
-		b = testee.getBit(set);
+		boolean b = testee.getBit(set);
 		System.out.println("Bit value: " + b);
+		assertTrue(b);
+	}
 
-		testee.sleep(10);
-
+	@Test
+	public void testGetAndSet_false() throws Exception {
+		PortDescription set = new PortDescription(DigitalIO.Port.DATA0,
+				DigitalIO.Bit.BIT1);
 		testee.setBit(set, false);
-		b = testee.getBit(set);
+		boolean b = testee.getBit(set);
 		System.out.println("Bit value: " + b);
+		assertFalse(b);
 	}
 
 	@Ignore
