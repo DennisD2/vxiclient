@@ -1,19 +1,18 @@
 
 Todos
 -----
+- Hp1330 test fails (get returns always true for bits)
 - HREF setting in app-project: Make frontend copy into app project better or BETTER: add it to build like in old web project!
   SpringBoot has some automatism for additional property files.
 - Improve copying of resources; see app pom, there its just copied to target/classes/resources. Check if
 - Make multimeter view/service work without hardware switches
 - Add all missing methods to Boundaries not yet implemented (see Device code)
- This means real testing and real measurements. DO this one by one device:
+ This means real testing and real measurements. Do this one by one device:
   - HP1300 boundary completion
   - HP1300Pacer boundary completion
   - HP1326 boundary completion
   - HP1330 boundary completion
-  
- 
-- Hp1330 test fails (get returns always true for bits)
+
 - Fix Definite Block Length code, See TODO
 - Throw away methods in ConversionUtil (see @deprecated)
 - Frontend: Fix Pacer menu label and default selection
