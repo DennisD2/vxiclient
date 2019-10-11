@@ -120,7 +120,7 @@ public class HP1326 extends BaseHPMultimeter {
 	public void setVoltageRange(Double voltageRange, List<Integer> channels)
 			throws Exception {
 		if (channels == null) {
-			logger.error("Channels is null. Not yet implemented.");
+			logger.warn("Channels is null. Not yet implemented, but may work anyway.");
 			return;
 		}
 		String voltageRangeString = createVoltageRangeString(voltageRange);

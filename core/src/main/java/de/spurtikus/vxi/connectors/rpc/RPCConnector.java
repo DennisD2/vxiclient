@@ -185,7 +185,7 @@ public class RPCConnector extends AbstractConnector implements VXIConnector {
 			logger.error(es);
 			throw new Exception(es);
 		}
-		logger.debug("Response Data size: {}", response.size);
+		logger.debug("Write response size value: {}", response.size);
 	}
 
 	@Override

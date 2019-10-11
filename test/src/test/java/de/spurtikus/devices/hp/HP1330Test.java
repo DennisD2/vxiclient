@@ -23,7 +23,7 @@ public class HP1330Test extends DeviceBaseTest {
 
 	@Before
 	public void before() throws Exception {
-		final String test_Serial_or_RPC = "Serial"; // "RPC" or "Serial"
+		final String test_Serial_or_RPC = "RPC"; // "RPC" or "Serial"
 		final String TEST_DEVICE_NAME = "hp1330";
 
 		// Load configuration
