@@ -61,6 +61,26 @@ public class HP1330Test extends DeviceBaseTest {
 		assertFalse(b);
 	}
 
+	@Test
+	public void testGetAndSet_byte() throws Exception {
+		PortDescription set = new PortDescription(DigitalIO.Port.DATA1);
+
+		testee.setByte(set, 0);
+		int b = testee.getByte(set);
+		System.out.println("Byte value: " + b);
+		//assertFalse(b);
+	}
+
+	@Test
+	public void testGetAndSet_Polarity_NEG() throws Exception {
+		PortDescription set = new PortDescription(DigitalIO.Port.DATA0,
+				DigitalIO.Bit.BIT1);
+		testee.setPolarity(set, DigitalIO.Polarity.NEG);
+		String b = testee.getPolarity(set);
+		System.out.println("Polarity value: " + b);
+		assertEquals( "NEG", b);
+	}
+
 	@Ignore
 	@Test
 	public void testSetterLoop() throws Exception {

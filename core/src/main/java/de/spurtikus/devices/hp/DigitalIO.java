@@ -66,6 +66,10 @@ public class DigitalIO extends BaseHPDevice {
 		public PortDescription() {
 		}
 
+		public PortDescription(Port port) {
+			init(port, null, Line.DATA);
+		}
+
 		public PortDescription(Port port, Bit bitPos) {
 			init(port, bitPos, Line.DATA);
 		}
@@ -121,8 +125,11 @@ public class DigitalIO extends BaseHPDevice {
 	 * @throws Exception 
 	 */
 	public void initialize() throws Exception {
-		vxiConnector.send(deviceLink, "*RST;*OPC?");
+		// TODO: try with send_and_receive because OPC? returns a value (0 or 1)
+		//vxiConnector.send(deviceLink, "*RST;*OPC?");
+		String s = vxiConnector.send_and_receive(deviceLink, "*RST;*OPC?");
 		sleep(100);
+		logger.debug("DEV: " + s);
 	}
 
 	protected String createBitPortString(PortDescription bit) {
@@ -167,11 +174,11 @@ public class DigitalIO extends BaseHPDevice {
 	 * @return byte value
 	 * @throws Exception 
 	 */
-	public byte getByte(PortDescription bit) throws Exception {
+	public int getByte(PortDescription bit) throws Exception {
 		String s = vxiConnector.send_and_receive(deviceLink, "MEAS:DIG:" + createBytePortString(bit) + "?");
 		logger.debug("DEV: " + s);
-		byte b = Byte.parseByte(s);
-		return b;
+		int i = Integer.parseInt(s, 10);
+		return i;
 	}
 
 	/**
@@ -202,7 +209,7 @@ public class DigitalIO extends BaseHPDevice {
 	 *            value to set
 	 * @throws Exception 
 	 */
-	public void setByte(PortDescription bit, byte value) throws Exception {
+	public void setByte(PortDescription bit, int value) throws Exception {
 		String s = vxiConnector.send_and_receive(deviceLink, 
 				"SOUR:DIG:" + createBytePortString(bit) + " " + value + ";*OPC?");
 		logger.debug("DEV: " + s);
@@ -213,6 +220,16 @@ public class DigitalIO extends BaseHPDevice {
 		String s = vxiConnector.send_and_receive(deviceLink, 
 				"SOUR:DIG:" + createBytePortString(bit) + ":POL " + polarity);
 		logger.debug("DEV: " + s);
+	}
+
+
+	public String getPolarity(PortDescription bit) throws Exception {
+		String s = vxiConnector.send_and_receive(deviceLink, "SOUR:DIG:" + createBytePortString(bit) + "POL?");
+		logger.debug("DEV: " + s);
+		String polarity = new String(s);
+		if (polarity.startsWith("POS")) return "POS";
+		if (polarity.startsWith("NEG")) return "NEG";
+		return "???";
 	}
 
 	// multiple ports... IN and OUT
