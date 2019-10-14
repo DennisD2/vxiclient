@@ -125,8 +125,7 @@ public class DigitalIO extends BaseHPDevice {
 	 * @throws Exception 
 	 */
 	public void initialize() throws Exception {
-		// TODO: try with send_and_receive because OPC? returns a value (0 or 1)
-		//vxiConnector.send(deviceLink, "*RST;*OPC?");
+		// OPC? returns a value (0 or 1)
 		String s = vxiConnector.send_and_receive(deviceLink, "*RST;*OPC?");
 		sleep(100);
 		logger.debug("DEV: " + s);
